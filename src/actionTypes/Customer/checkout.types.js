@@ -1,0 +1,1 @@
+export const LIST_CHECKOUT = 'LIST_CHECKOUT';

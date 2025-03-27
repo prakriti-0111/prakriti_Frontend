@@ -1,0 +1,1 @@
+export const LIST_CATEGORIES = 'LIST_CATEGORIES';
