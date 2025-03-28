@@ -235,7 +235,7 @@ const Footer = () => {
             <Col xs={12} md={4}>
               <div className="copyright-right">
                 <h5>
-                  Copyright {today.getFullYear()} Prakriti.com, All rights
+                  Copyright {today.getFullYear()} prakriti.one, All rights
                   reserved.
                 </h5>
               </div>
