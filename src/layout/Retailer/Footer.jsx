@@ -63,7 +63,7 @@ const Footer = () => {
                 </Container>
             </section>
             <section className='copyright'>
-                <h5>Copyright {today.getFullYear()} Prakriti.com, All rights reserved.</h5>
+                <h5>Copyright {today.getFullYear()} Prakriti.one, All rights reserved.</h5>
             </section>
             
     </>

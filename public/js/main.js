@@ -30826,7 +30826,7 @@
                             children: [
                               "Copyright ",
                               t.getFullYear(),
-                              " Prakriti.com, All rights reserved.",
+                              " Prakriti.one, All rights reserved.",
                             ],
                           }),
                         }),
@@ -31551,7 +31551,7 @@
                   children: [
                     "Copyright ",
                     e.getFullYear(),
-                    " Prakriti.com, All rights reserved.",
+                    " Prakriti.one, All rights reserved.",
                   ],
                 }),
               }),
@@ -32322,7 +32322,7 @@
                   children: [
                     "Copyright ",
                     e.getFullYear(),
-                    " Prakriti.com, All rights reserved.",
+                    " Prakriti.one, All rights reserved.",
                   ],
                 }),
               }),
