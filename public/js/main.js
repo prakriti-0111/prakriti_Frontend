@@ -32563,7 +32563,7 @@
             (0, o.jsxs)(Un.m, {
               children: [
                 (0, o.jsx)("title", {
-                  children: "Prakriti(test) - Jewellers since 1990",
+                  children: "Prakriti - Jewellers since 1990",
                 }),
                 (0, o.jsx)("meta", { name: "description", content: "" }),
                 (0, o.jsx)("meta", { name: "keywords", content: "" }),
