@@ -560,7 +560,7 @@ class HomePage extends Component {
                                 <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever.</p>
                                 <ul className='address-info'>
                                     <li> <FaPhoneAlt /> 92732926392 </li>
-                                    <li> <IoMdMail /> info@Prakriti.com </li>
+                                    <li> <IoMdMail /> info@Prakriti.one </li>
                                 </ul>
                                 <div className='gap-100'></div>
                                 <a href='' className='view-more'>Learn More Branches</a>
