@@ -1135,7 +1135,7 @@ class HomePage extends Component {
                     <p>
                       <strong>Email:</strong>
                     </p>
-                    <p>support@Prakriti.com</p>
+                    <p>support@prakriti.one</p>
                   </div>
                 </div>
               </Col>
@@ -1549,7 +1549,7 @@ class HomePage extends Component {
                                   </p>
                                   <p>
                                     Contact: +91 98744 00341, Email:
-                                    support@Prakriti.com
+                                    support@prakriti.one
                                   </p>
                                 </div>
                                 <div className="list-name right-para">
@@ -1612,7 +1612,7 @@ class HomePage extends Component {
                                   </p>
                                   <p>
                                     Contact: +91 98744 45878, Email:
-                                    support@Prakriti.com
+                                    support@prakriti.one
                                   </p>
                                 </div>
                                 <div className="list-name right-para">
@@ -1627,7 +1627,7 @@ class HomePage extends Component {
                                     inquiries, contact us.
                                   </p>
                                   <p> Store Timings: 11am to 9pm </p>
-                                  <p> WEBSITE: www.Prakriti.com </p>
+                                  <p> WEBSITE: www.prakriti.one </p>
                                   <p> Contact Number: 9874445878</p>
                                   <div className="list-name margin-right">
                                     <a

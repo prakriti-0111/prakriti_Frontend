@@ -34,7 +34,7 @@ const Contact = () => {
                                     </li>
                                     <li>
                                         <span><MdEmail /></span>
-                                        <span>info@Prakriti.com</span>
+                                        <span>info@prakriti.one</span>
                                     </li>
                                     <li>
                                         <span><FaMapMarkerAlt /></span>
