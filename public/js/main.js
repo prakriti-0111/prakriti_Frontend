@@ -30826,7 +30826,7 @@
                             children: [
                               "Copyright ",
                               t.getFullYear(),
-                              " Prakriti.com, All rights reserved.",
+                              " Prakriti.one, All rights reserved.",
                             ],
                           }),
                         }),
@@ -31551,7 +31551,7 @@
                   children: [
                     "Copyright ",
                     e.getFullYear(),
-                    " Prakriti.com, All rights reserved.",
+                    " Prakriti.one, All rights reserved.",
                   ],
                 }),
               }),
@@ -32322,7 +32322,7 @@
                   children: [
                     "Copyright ",
                     e.getFullYear(),
-                    " Prakriti.com, All rights reserved.",
+                    " Prakriti.one, All rights reserved.",
                   ],
                 }),
               }),
@@ -32563,7 +32563,7 @@
             (0, o.jsxs)(Un.m, {
               children: [
                 (0, o.jsx)("title", {
-                  children: "Prakriti - Jewellers since 1990",
+                  children: "Prakriti(test) - Jewellers since 1990",
                 }),
                 (0, o.jsx)("meta", { name: "description", content: "" }),
                 (0, o.jsx)("meta", { name: "keywords", content: "" }),
