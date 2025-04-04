@@ -32,5 +32,8 @@ export const retailerRequest = (data) => {
     return axios.post(`/customer/retailer-request`, data)
 }
 
+export const newArrivalList = () => {
+    return axios.get(`/customer/new-arrivals`)
+}
 
 
