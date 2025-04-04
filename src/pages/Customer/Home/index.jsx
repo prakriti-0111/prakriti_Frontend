@@ -4,6 +4,7 @@ import {
     bannerList,
     bestRetailerList,
     promocodeList,
+    newArrivalList
 } from "actions/Customer/home.actions";
 import {
     current_stock,
@@ -53,6 +54,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 // import { current_stock } from "../../../actions/Customer/product.actions";
+import './marquee.css';
+
 class HomePage extends Component {
   constructor(props) {
     super(props);
@@ -70,6 +73,7 @@ class HomePage extends Component {
       current_stock_products: [],
       banners: [],
       promocodes: [],
+      newArrivals: [],
       auth: this.props.auth,
       bestRetailers: [],
       counts: null,
@@ -90,6 +94,60 @@ class HomePage extends Component {
 
   componentDidMount() {
     this.loadData();
+
+    //document.addEventListener('DOMContentLoaded', function () { alert("hi");
+    let marqueeInitTimer = setInterval(() => {
+        console.log("marquee ...");
+        const duration = 15000; //ms
+        const directionAnimation = 'right';  //left or right  
+      
+        const marquee = document.querySelector('.marquee');
+        const span = marquee.querySelector('span');
+        if(marquee && span){
+          
+          clearInterval(marqueeInitTimer);
+        
+          console.log("span.innerHTML before : ", span.innerHTML);
+          // Duplicate content for infinite scrolling effect
+          span.innerHTML += span.innerHTML; 
+          console.log("span.innerHTML after : ", span.innerHTML);
+          const marqueeWidth = marquee.offsetWidth;
+          const spanWidth = span.scrollWidth; // Half is enough since we duplicated
+        
+          let keyframes = [];
+          if('left' == directionAnimation){
+            // Define keyframes for smooth right-to-left scrolling
+            keyframes = [
+                { transform: `translateX(0)` },
+                { transform: `translateX(${-spanWidth}px)` }
+            ];
+          }
+          else if('right' == directionAnimation){
+            // Define keyframes for smooth left-to-right scrolling
+            keyframes = [
+              { transform: `translateX(-${spanWidth}px)` },
+              { transform: `translateX(0)` }
+            ];
+          }
+        
+          let options = {
+              duration: duration, // Durata dell'animazione in millisecondi
+              iterations: Infinity,
+              easing: "linear"
+          };
+      
+          const marqueeAnimation = span.animate(keyframes, options);
+          
+          marquee.addEventListener('mouseenter', () => {
+            marqueeAnimation.pause();
+          });
+      
+          marquee.addEventListener('mouseleave', () => {
+              marqueeAnimation.play();
+          });
+        }
+    //});
+    }, 2000);
   }
 
   loadData = () => {
@@ -100,6 +158,7 @@ class HomePage extends Component {
     this.loadPromocodes();
     this.loadBestReatailers();
     this.loadCounts();
+    this.loadNewArrivals();
   };
 
   loadBestSellingProducts = async () => {
@@ -179,6 +238,16 @@ class HomePage extends Component {
       });
     }
   };
+
+  loadNewArrivals = async () => {
+    let res = await newArrivalList();
+    if (res.data.success) {
+      this.setState({
+        newArrivals: res.data.data.items,
+      });
+    }
+  };
+
   handlePromise = (type) => {
     this.setState({
       promise_box: this.state.promise_box == type ? "" : type,
@@ -186,6 +255,10 @@ class HomePage extends Component {
   };
 
   getBannerLink = (item) => {
+    return item.url.replace(process.env.BASE_URL + "/", "/");
+  };
+
+  getNewArrivalLink = (item) => {
     return item.url.replace(process.env.BASE_URL + "/", "/");
   };
 
@@ -293,6 +366,7 @@ class HomePage extends Component {
       best_selling_products,
       current_stock_products,
       banners,
+      newArrivals,
       promocodes,
       bestRetailers,
       counts,
@@ -437,7 +511,7 @@ class HomePage extends Component {
           </section>
         ))}
         {/*<section className='diamond-offer'>
-                    <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${diamond}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
+                    <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(http://localhost:9090/public/uploads/products/e4366a65-7b1c-47b2-af70-0d43cca90921.jpeg) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
                         <div className='offer-header'>
                             <h2>Diamond Rings at
                                 30% OFF</h2>
@@ -447,7 +521,7 @@ class HomePage extends Component {
                     </Container>
                 </section>
                 <section className='earring-offer'>
-                    <Container className='earring-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${earring}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
+                    <Container className='earring-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(http://localhost:9090/public/uploads/products/e4366a65-7b1c-47b2-af70-0d43cca90921.jpeg) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
                         <div className='earring-header'>
                             <h2>Earrings at 40% OFF at AXIS
                                 Bank Debit & Credit Cards</h2>
@@ -476,6 +550,76 @@ class HomePage extends Component {
 
                     </Container>
                 </section>*/}
+        <section className=" pt-5">
+          <div class="marquee">
+              <span>
+                {newArrivals.map((item, key) => (
+                  
+                    <div key={key} >
+                      <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.image}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
+                          <div className='offer-header'>
+                              <h2>{item.title}</h2>
+                              <a href={this.getNewArrivalLink(item)} className='shop-now'>Shop Now</a>
+                          </div>
+
+                      </Container>
+                    </div>
+                 
+                ))}
+                 {/*<Link to={this.getNewArrivalLink(item)}>
+                      <div className="slider-banner">
+                        <img className="d-block w-100" src={item.image} alt="" />
+                      </div>
+                    </Link>*/}
+              </span>
+          </div>
+        </section>
+        <section className=" pt-5">
+          {/* <Container className='position-relative'>
+                    <Row>
+                        <Col xs={7} md={7}>
+                            <div className='header pt-7 pb-7'>
+                                <h1>FLAT 40% OFF on
+                                    Tanishq Jewelery</h1>
+                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever.</p>
+                                <a href='' className='shop-now'>Shop Now</a>
+                            </div>
+                        </Col>
+                        <Col xs={5} md={5}>
+                            <div className='banner-image'>
+                                <img src={bannerImage} alt='' />
+                            </div>
+                        </Col>
+                    </Row>
+                    </Container> */}
+          <div className="" style={{ padding: "0" }}>
+            <Carousel className="rounded-4">
+              {newArrivals.map((item, key) => (
+                <Carousel.Item key={key}>
+                  {/*<Link to={this.getNewArrivalLink(item)}>
+                    <div className="slider-banner">
+                      <img className="d-block w-100" src={item.image} alt="" />
+                    </div>
+                  </Link>*/}
+                  <section className='diamond-offer'>
+                    <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.image}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
+                        <div className='offer-header'>
+                            <h2>{item.title}</h2>
+                            <a href={this.getNewArrivalLink(item)} className='shop-now'>Shop Now</a>
+                        </div>
+
+                    </Container>
+                  </section>
+                </Carousel.Item>
+              ))}
+            </Carousel>
+            {!newArrivals.length ? (
+              <Placeholder animation="glow">
+                <Placeholder xs={12} className="slider-banner" />
+              </Placeholder>
+            ) : null}
+          </div>
+        </section>
         <section className="selling-product">
           <Container>
             <div className="selling-product-header d-flex justify-content-between mb-4">
@@ -486,7 +630,7 @@ class HomePage extends Component {
             </div>
             <Swiper
               spaceBetween={20}
-              onSlideChange={() => console.log("slide change")}
+              onSlideChange={() => console.log("slide change Current Stock Products")}
               onSwiper={(swiper) => console.log(swiper)}
               breakpoints={{
                 // when window width is >= 320px
@@ -1149,7 +1293,7 @@ class HomePage extends Component {
           id="staticBackdrop"
           // data-bs-backdrop="static"
           // data-bs-keyboard="false"
-          tabindex="-1"
+          tabIndex="-1"
           aria-labelledby="staticBackdropLabel"
           aria-hidden="false"
         >
@@ -1419,7 +1563,7 @@ class HomePage extends Component {
               </div>
               <Swiper
                 spaceBetween={20}
-                onSlideChange={() => console.log("slide change")}
+                onSlideChange={() => console.log("slide change Best Retailers")}
                 onSwiper={(swiper) => console.log(swiper)}
                 breakpoints={{
                   // when window width is >= 320px
