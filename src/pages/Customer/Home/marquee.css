@@ -1,34 +1,156 @@
+.marquee-wrapper {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.marquee-heading {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #222;
+  font-family: Arial, sans-serif;
+}
+
+.marquee-track {
+  display: flex;
+  transition: transform 1s ease-in-out;
+  will-change: transform;
+}
+
+.marquee-item {
+  flex: 0 0 auto;
+  min-width: 100%; /* each item takes full width of marquee */
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .marquee-heading {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .marquee-heading {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .marquee-heading {
+    font-size: 20px;
+  }
+}
+
 .marquee {
     position: relative;
     width: 100%;
     overflow: hidden;
-    border: 1px solid #000;
-    background-color: var(--marquee-bg-color);
-    padding: 30px;
+    background-color: var(--marquee-bg-color, #fff);
+    padding: 20px 0;
+    /*border: 1px solid #000;*/
+  }
+  
+  .marquee span {
     display: flex;
+    gap: 20px;
+    white-space: nowrap;
     align-items: center;
-}
-
-/* Making all items side by side with full width */
-.marquee span {
-    display: flex;
-    gap: 10px; /* Space between items */
-    font-size: 38px;
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    color: #000;
-    font-family: Arial, sans-serif;
     will-change: transform;
-    align-items: center;
-    width: max-content;
-}
-
-/* Ensure all items inside span take full width */
-.marquee span > div {
-    flex: 1; /* Makes each item take full width */
-    min-width: 80%; /* Ensures each item is full width */
+  }
+  
+  .marquee span > div {
+    flex: 0 0 auto; /* Prevent flex shrinking */
+    min-width: 300px; /* Base minimum width */
+    max-width: 90vw;  /* Don't let it overflow on small screens */
     box-sizing: border-box;
-}
+  }
+  
+  .diamond-inner {
+    background-size: auto 100% !important;
+    background-position: right bottom !important;
+    background-repeat: no-repeat !important;
+    padding: 20px;
+    color: #fff;
+    border-radius: 10px;
+    height: 325px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 1300px;
+  }
+
+  .diamond-inner .offer-header {
+    /*padding: 0*/
+  }
+
+  .diamond-inner .offer-header h2 {
+    white-space: normal;  /* Allow wrapping */
+    word-wrap: break-word; /* Optional: wrap long words */
+    overflow-wrap: break-word; /* Modern alternative */
+  }
+  
+  /* Responsive tweaks */
+  @media (max-width: 768px) {
+    .diamond-inner {
+      height: 150px;
+      padding: 5px;
+      font-size: 14px;
+    }
+
+    .diamond-inner .offer-header {
+      padding: 0;
+    }
+  
+    .marquee span {
+      gap: 10px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .diamond-inner {
+      height: 120px;
+      padding: 10px;
+      font-size: 12px;
+      width:300px;
+    }
+
+    .diamond-inner .offer-header {
+      padding: 0;
+    }
+  
+    .marquee {
+      padding: 10px 0;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .diamond-inner {
+      height: 250px;
+      padding: 15px;
+      font-size: 16px;
+      width: 600px; /* adjust to fit screen */
+      background-size: contain !important;
+      background-position: right bottom !important;
+    }
+  
+    .marquee span {
+      gap: 15px;
+    }
+  
+    .marquee {
+      padding: 15px 0;
+    }
+  
+    .diamond-inner .offer-header h2 {
+      font-size: 20px;
+      max-width: 300px;
+    }
+  
+    .shop-now {
+      font-size: 14px;
+    }
+  }
 
 /* Gradient fading effect */
 .marquee::before, .marquee::after {
