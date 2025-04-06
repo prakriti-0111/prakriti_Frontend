@@ -13,7 +13,7 @@ import {
 } from "actions/Customer/product.actions";
 import { WishListAdd } from "actions/Customer/wishlist.actions";
 import _ from "lodash";
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { Accordion, Button, Col, Placeholder, Row } from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
 import Container from "react-bootstrap/Container";
@@ -59,6 +59,9 @@ import './marquee.css';
 class HomePage extends Component {
   constructor(props) {
     super(props);
+    this.marqueeTrackRef = createRef();
+    this.marqueeRef = createRef();
+    this.intervalId = null;
     this.state = {
       PromiseData: {
         image: { jewelleryHome },
@@ -78,6 +81,7 @@ class HomePage extends Component {
       bestRetailers: [],
       counts: null,
       promise_box: "",
+      currentMarqueeIndex: 0
     };
   }
 
@@ -92,63 +96,143 @@ class HomePage extends Component {
     return update;
   }
 
+  setupNewArrivalMarqueeAnimation() {
+    let marqueeInitTimer = setInterval(() => {
+      console.log("marquee ...");
+      const duration = 35000; //ms
+      const directionAnimation = 'right';  //left or right  
+    
+      const marquee = document.querySelector('.marquee');
+      const span = marquee.querySelector('span');
+      if(marquee && span){
+        clearInterval(marqueeInitTimer);
+      
+        console.log("span.innerHTML before : ", span.innerHTML);
+        // Duplicate content for infinite scrolling effect
+        span.innerHTML += span.innerHTML; 
+        console.log("span.innerHTML after : ", span.innerHTML);
+        const marqueeWidth = marquee.offsetWidth;
+        const spanWidth = span.scrollWidth; // Half is enough since we duplicated
+      
+        let keyframes = [];
+        if('left' == directionAnimation){
+          // Define keyframes for smooth right-to-left scrolling
+          keyframes = [
+              { transform: `translateX(0)` },
+              { transform: `translateX(${-spanWidth}px)` }
+          ];
+        }
+        else if('right' == directionAnimation){
+          // Define keyframes for smooth left-to-right scrolling
+          keyframes = [
+            { transform: `translateX(-${spanWidth}px)` },
+            { transform: `translateX(0)` }
+          ];
+        }
+      
+        let options = {
+            duration: duration, // Durata dell'animazione in millisecondi
+            iterations: Infinity,
+            easing: "linear"
+        };
+
+        // Stop any existing animation
+        if (span.marqueeAnimation) {
+          span.marqueeAnimation.cancel();
+        }
+    
+        const animation = span.animate(keyframes, options);
+        span.marqueeAnimation = animation;
+        
+        marquee.addEventListener('mouseenter', () => {
+          span.marqueeAnimation.pause();
+        });
+    
+        marquee.addEventListener('mouseleave', () => {
+          span.marqueeAnimation.play();
+        });
+      }
+    }, 2000);
+  }
+
   componentDidMount() {
     this.loadData();
 
-    //document.addEventListener('DOMContentLoaded', function () { alert("hi");
-    let marqueeInitTimer = setInterval(() => {
-        console.log("marquee ...");
-        const duration = 15000; //ms
-        const directionAnimation = 'right';  //left or right  
-      
-        const marquee = document.querySelector('.marquee');
-        const span = marquee.querySelector('span');
-        if(marquee && span){
-          
-          clearInterval(marqueeInitTimer);
-        
-          console.log("span.innerHTML before : ", span.innerHTML);
-          // Duplicate content for infinite scrolling effect
-          span.innerHTML += span.innerHTML; 
-          console.log("span.innerHTML after : ", span.innerHTML);
-          const marqueeWidth = marquee.offsetWidth;
-          const spanWidth = span.scrollWidth; // Half is enough since we duplicated
-        
-          let keyframes = [];
-          if('left' == directionAnimation){
-            // Define keyframes for smooth right-to-left scrolling
-            keyframes = [
-                { transform: `translateX(0)` },
-                { transform: `translateX(${-spanWidth}px)` }
-            ];
-          }
-          else if('right' == directionAnimation){
-            // Define keyframes for smooth left-to-right scrolling
-            keyframes = [
-              { transform: `translateX(-${spanWidth}px)` },
-              { transform: `translateX(0)` }
-            ];
-          }
-        
-          let options = {
-              duration: duration, // Durata dell'animazione in millisecondi
-              iterations: Infinity,
-              easing: "linear"
-          };
-      
-          const marqueeAnimation = span.animate(keyframes, options);
-          
-          marquee.addEventListener('mouseenter', () => {
-            marqueeAnimation.pause();
-          });
-      
-          marquee.addEventListener('mouseleave', () => {
-              marqueeAnimation.play();
-          });
-        }
-    //});
-    }, 2000);
+    /*let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(this.setupNewArrivalMarqueeAnimation, 300); // Delay for performance
+    });*/
+    //this.setupNewArrivalMarqueeAnimation();
+
+    //this.startMarquee();
+    this.addPauseListeners();
   }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
+    this.removePauseListeners();
+  }
+
+  startMarquee = () => {
+    const track = this.marqueeTrackRef;
+    const itemWidth = track.children[0].offsetWidth;
+    //let currentMarqueeIndex = 0;
+    //let currentMarqueeIndex = track.children.length;
+    const { currentMarqueeIndex } = this.state;
+    let cIndex = currentMarqueeIndex;
+
+    this.scrollInterval = setInterval(() => {
+      //currentMarqueeIndex++;
+      cIndex--;
+      console.log("currentMarqueeIndex : ", cIndex);
+      // if (currentMarqueeIndex >= track.children.length) {
+      //   currentMarqueeIndex = 0;
+      // }
+
+      if (cIndex < 0) {
+        cIndex = track.children.length - 1;
+      }
+
+      this.setState({
+        currentMarqueeIndex: cIndex
+      });
+
+      // Animate scroll with transform
+      track.style.transition = 'transform 1s ease-in-out';
+      track.style.transform = `translateX(-${itemWidth * cIndex}px)`;
+    }, 3000); // 1s scroll + 2s pause
+  };
+
+  addPauseListeners = () => {
+    const marquee = this.marqueeRef;
+  
+    marquee.addEventListener('mouseenter', this.pauseMarquee);
+    marquee.addEventListener('mouseleave', this.resumeMarquee);
+    marquee.addEventListener('touchstart', this.pauseMarquee);
+    marquee.addEventListener('touchend', this.resumeMarquee);
+    marquee.addEventListener('focusin', this.pauseMarquee);
+    marquee.addEventListener('focusout', this.resumeMarquee);
+  };
+  
+  removePauseListeners = () => {
+    const marquee = this.marqueeRef;
+  
+    marquee.removeEventListener('mouseenter', this.pauseMarquee);
+    marquee.removeEventListener('mouseleave', this.resumeMarquee);
+    marquee.removeEventListener('touchstart', this.pauseMarquee);
+    marquee.removeEventListener('touchend', this.resumeMarquee);
+    marquee.removeEventListener('focusin', this.pauseMarquee);
+    marquee.removeEventListener('focusout', this.resumeMarquee);
+  };
+  
+  pauseMarquee = () => {
+    clearInterval(this.scrollInterval);
+  };
+  
+  resumeMarquee = () => {
+    this.startMarquee();
+  };
 
   loadData = () => {
     this.loadBestSellingProducts();
@@ -244,6 +328,9 @@ class HomePage extends Component {
     if (res.data.success) {
       this.setState({
         newArrivals: res.data.data.items,
+        currentMarqueeIndex: res.data.data.items.length
+      }, () => {
+        this.startMarquee();
       });
     }
   };
@@ -551,30 +638,32 @@ class HomePage extends Component {
                     </Container>
                 </section>*/}
         <section className=" pt-5">
-          <div class="marquee">
-              <span>
-                {newArrivals.map((item, key) => (
-                  
-                    <div key={key} >
-                      <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.image}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
-                          <div className='offer-header'>
-                              <h2>{item.title}</h2>
-                              <a href={this.getNewArrivalLink(item)} className='shop-now'>Shop Now</a>
-                          </div>
-
-                      </Container>
-                    </div>
-                 
-                ))}
-                 {/*<Link to={this.getNewArrivalLink(item)}>
-                      <div className="slider-banner">
-                        <img className="d-block w-100" src={item.image} alt="" />
+          <div className="marquee-wrapper">
+            <h2 className="marquee-heading container">New Arrivals</h2>
+            <div className="marquee" tabIndex="0"  ref={el => (this.marqueeRef = el)}>
+                <span className="marquee-track" ref={el => (this.marqueeTrackRef = el)}>
+                  {newArrivals.map((item, key) => (
+                    
+                      <div className="marquee-item" key={key} style={{cursor:"pointer"}} onClick={() => window.location = this.getNewArrivalLink(item)} >
+                        <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.image}) ` }}>
+                            <div className='offer-header'>
+                                <h2>{item.title}</h2>
+                                <a href={this.getNewArrivalLink(item)} className='shop-now'>Shop Now</a>
+                            </div>
+                        </Container>
                       </div>
-                    </Link>*/}
-              </span>
+                  
+                  ))}
+                  {/*<Link to={this.getNewArrivalLink(item)}>
+                        <div className="slider-banner">
+                          <img className="d-block w-100" src={item.image} alt="" />
+                        </div>
+                      </Link>*/}
+                </span>
+            </div>
           </div>
         </section>
-        <section className=" pt-5">
+        {/* <section className=" pt-5"> */}
           {/* <Container className='position-relative'>
                     <Row>
                         <Col xs={7} md={7}>
@@ -592,15 +681,11 @@ class HomePage extends Component {
                         </Col>
                     </Row>
                     </Container> */}
-          <div className="" style={{ padding: "0" }}>
+          {/*<div className="" style={{ padding: "0" }}>
             <Carousel className="rounded-4">
               {newArrivals.map((item, key) => (
                 <Carousel.Item key={key}>
-                  {/*<Link to={this.getNewArrivalLink(item)}>
-                    <div className="slider-banner">
-                      <img className="d-block w-100" src={item.image} alt="" />
-                    </div>
-                  </Link>*/}
+                  
                   <section className='diamond-offer'>
                     <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.image}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
                         <div className='offer-header'>
@@ -618,8 +703,8 @@ class HomePage extends Component {
                 <Placeholder xs={12} className="slider-banner" />
               </Placeholder>
             ) : null}
-          </div>
-        </section>
+          </div>*/}
+        {/* </section> */}
         <section className="selling-product">
           <Container>
             <div className="selling-product-header d-flex justify-content-between mb-4">
