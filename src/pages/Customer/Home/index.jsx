@@ -4,6 +4,8 @@ import {
     bannerList,
     bestRetailerList,
     promocodeList,
+    newArrivalList,
+    festiveOfferList
 } from "actions/Customer/home.actions";
 import {
     current_stock,
@@ -70,6 +72,8 @@ class HomePage extends Component {
       current_stock_products: [],
       banners: [],
       promocodes: [],
+      newArrivals: [],
+      festiveOffers: [],
       auth: this.props.auth,
       bestRetailers: [],
       counts: null,
@@ -100,6 +104,8 @@ class HomePage extends Component {
     this.loadPromocodes();
     this.loadBestReatailers();
     this.loadCounts();
+    this.loadNewArrivals();
+    this.loadFestiveOffers();
   };
 
   loadBestSellingProducts = async () => {
@@ -179,6 +185,28 @@ class HomePage extends Component {
       });
     }
   };
+
+  loadNewArrivals = async () => {
+    let res = await newArrivalList();
+    if (res.data.success) {
+      this.setState({
+        newArrivals: res.data.data.items,
+        currentMarqueeIndex: res.data.data.items.length
+      }, () => {
+        this.startMarquee();
+      });
+    }
+  };
+
+  loadFestiveOffers = async () => {
+    let res = await festiveOfferList();
+    if (res.data.success) {
+      this.setState({
+        festiveOffers: res.data.data.items
+      });
+    }
+  };
+
   handlePromise = (type) => {
     this.setState({
       promise_box: this.state.promise_box == type ? "" : type,
@@ -186,6 +214,14 @@ class HomePage extends Component {
   };
 
   getBannerLink = (item) => {
+    return item.url.replace(process.env.BASE_URL + "/", "/");
+  };
+
+  getNewArrivalLink = (item) => {
+    return item.url.replace(process.env.BASE_URL + "/", "/");
+  };
+
+  getfestiveOfferLink = (item) => {
     return item.url.replace(process.env.BASE_URL + "/", "/");
   };
 
@@ -293,6 +329,8 @@ class HomePage extends Component {
       best_selling_products,
       current_stock_products,
       banners,
+      newArrivals,
+      festiveOffers,
       promocodes,
       bestRetailers,
       counts,
@@ -476,6 +514,33 @@ class HomePage extends Component {
 
                     </Container>
                 </section>*/}
+        <section className=" pt-5">
+          <div className="marquee-wrapper">
+            <h2 className="marquee-heading container">New Arrivals</h2>
+            <div className="marquee" tabIndex="0"  ref={el => (this.marqueeRef = el)}>
+                <span className="marquee-track" ref={el => (this.marqueeTrackRef = el)}>
+                  {newArrivals.map((item, key) => (
+                    
+                      <div className="marquee-item" key={key} style={{cursor:"pointer"}} onClick={() => window.location = this.getNewArrivalLink(item)} >
+                        <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.image}) ` }}>
+                            <div className='offer-header'>
+                                <h2>{item.title}</h2>
+                                <a href={this.getNewArrivalLink(item)} className='shop-now'>Shop Now</a>
+                            </div>
+                        </Container>
+                      </div>
+                  
+                  ))}
+                  {/*<Link to={this.getNewArrivalLink(item)}>
+                        <div className="slider-banner">
+                          <img className="d-block w-100" src={item.image} alt="" />
+                        </div>
+                      </Link>*/}
+                </span>
+            </div>
+          </div>
+        </section>
+        
         <section className="selling-product">
           <Container>
             <div className="selling-product-header d-flex justify-content-between mb-4">
@@ -653,6 +718,66 @@ class HomePage extends Component {
                         </SwiperSlide> ---*/}
             </Swiper>
           </Container>
+        </section>
+        <section className=" pt-5">
+          {/* <Container className='position-relative'>
+                    <Row>
+                        <Col xs={7} md={7}>
+                            <div className='header pt-7 pb-7'>
+                                <h1>FLAT 40% OFF on
+                                    Tanishq Jewelery</h1>
+                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever.</p>
+                                <a href='' className='shop-now'>Shop Now</a>
+                            </div>
+                        </Col>
+                        <Col xs={5} md={5}>
+                            <div className='banner-image'>
+                                <img src={bannerImage} alt='' />
+                            </div>
+                        </Col>
+                    </Row>
+                    </Container> */}
+          <div className="festive-offer" style={{ padding: "0" }}>
+            <div className="festive-offer-header container">
+              <h1 style={{ color: "#001e38" }}>Festive Offers</h1>
+            </div>
+            <Carousel className="rounded-4">
+                {festiveOffers.map((item, key) => (
+                  <Carousel.Item key={key}>
+                    <Link
+                      to={
+                        isEmpty(item.products)
+                          ? "/products" +
+                            objectToQuery(
+                              {
+                                category: item.category_slug,
+                                subcategory: item.sub_category_slug,
+                              },
+                              true
+                            )
+                          : "/products?offer=" + item.products
+                      }
+                    >
+                    <section className='diamond-offer'>
+                      <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.banner}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
+                          <div className='offer-header'>
+                              <h2>{item.title}</h2>
+                              <a  className='shop-now'>Shop Now</a>
+                          </div>
+
+                      </Container>
+                    </section>
+                    </Link>
+                  </Carousel.Item>
+                ))}
+            </Carousel>
+            
+            {!festiveOffers.length ? (
+              <Placeholder animation="glow">
+                <Placeholder xs={12} className="slider-banner" />
+              </Placeholder>
+            ) : null}
+          </div>
         </section>
         {best_selling_products.length ? (
           <section className="selling-product">

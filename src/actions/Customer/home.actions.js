@@ -33,4 +33,8 @@ export const retailerRequest = (data) => {
 }
 
 
+export const festiveOfferList = () => {
+    return axios.get(`/customer/festive-offers`)
+}
+
 
