@@ -14,7 +14,7 @@ import {
 } from "actions/Customer/product.actions";
 import { WishListAdd } from "actions/Customer/wishlist.actions";
 import _ from "lodash";
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { Accordion, Button, Col, Placeholder, Row } from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
 import Container from "react-bootstrap/Container";
@@ -55,9 +55,14 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 // import { current_stock } from "../../../actions/Customer/product.actions";
+import './marquee.css';
+
 class HomePage extends Component {
   constructor(props) {
     super(props);
+    this.marqueeTrackRef = createRef();
+    this.marqueeRef = createRef();
+    this.intervalId = null;
     this.state = {
       PromiseData: {
         image: { jewelleryHome },
@@ -78,6 +83,7 @@ class HomePage extends Component {
       bestRetailers: [],
       counts: null,
       promise_box: "",
+      currentMarqueeIndex: 0
     };
   }
 
@@ -92,9 +98,143 @@ class HomePage extends Component {
     return update;
   }
 
+  setupNewArrivalMarqueeAnimation() {
+    let marqueeInitTimer = setInterval(() => {
+      console.log("marquee ...");
+      const duration = 35000; //ms
+      const directionAnimation = 'right';  //left or right  
+    
+      const marquee = document.querySelector('.marquee');
+      const span = marquee.querySelector('span');
+      if(marquee && span){
+        clearInterval(marqueeInitTimer);
+      
+        console.log("span.innerHTML before : ", span.innerHTML);
+        // Duplicate content for infinite scrolling effect
+        span.innerHTML += span.innerHTML; 
+        console.log("span.innerHTML after : ", span.innerHTML);
+        const marqueeWidth = marquee.offsetWidth;
+        const spanWidth = span.scrollWidth; // Half is enough since we duplicated
+      
+        let keyframes = [];
+        if('left' == directionAnimation){
+          // Define keyframes for smooth right-to-left scrolling
+          keyframes = [
+              { transform: `translateX(0)` },
+              { transform: `translateX(${-spanWidth}px)` }
+          ];
+        }
+        else if('right' == directionAnimation){
+          // Define keyframes for smooth left-to-right scrolling
+          keyframes = [
+            { transform: `translateX(-${spanWidth}px)` },
+            { transform: `translateX(0)` }
+          ];
+        }
+      
+        let options = {
+            duration: duration, // Durata dell'animazione in millisecondi
+            iterations: Infinity,
+            easing: "linear"
+        };
+
+        // Stop any existing animation
+        if (span.marqueeAnimation) {
+          span.marqueeAnimation.cancel();
+        }
+    
+        const animation = span.animate(keyframes, options);
+        span.marqueeAnimation = animation;
+        
+        marquee.addEventListener('mouseenter', () => {
+          span.marqueeAnimation.pause();
+        });
+    
+        marquee.addEventListener('mouseleave', () => {
+          span.marqueeAnimation.play();
+        });
+      }
+    }, 2000);
+  }
+
   componentDidMount() {
     this.loadData();
+
+    /*let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(this.setupNewArrivalMarqueeAnimation, 300); // Delay for performance
+    });*/
+    //this.setupNewArrivalMarqueeAnimation();
+
+    //this.startMarquee();
+    this.addPauseListeners();
   }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
+    this.removePauseListeners();
+  }
+
+  startMarquee = () => {
+    const track = this.marqueeTrackRef;
+    const itemWidth = track.children[0].offsetWidth;
+    //let currentMarqueeIndex = 0;
+    //let currentMarqueeIndex = track.children.length;
+    const { currentMarqueeIndex } = this.state;
+    let cIndex = currentMarqueeIndex;
+
+    this.scrollInterval = setInterval(() => {
+      //currentMarqueeIndex++;
+      cIndex--;
+      console.log("currentMarqueeIndex : ", cIndex);
+      // if (currentMarqueeIndex >= track.children.length) {
+      //   currentMarqueeIndex = 0;
+      // }
+
+      if (cIndex < 0) {
+        cIndex = track.children.length - 1;
+      }
+
+      this.setState({
+        currentMarqueeIndex: cIndex
+      });
+
+      // Animate scroll with transform
+      track.style.transition = 'transform 1s ease-in-out';
+      track.style.transform = `translateX(-${itemWidth * cIndex}px)`;
+    }, 3000); // 1s scroll + 2s pause
+  };
+
+  addPauseListeners = () => {
+    const marquee = this.marqueeRef;
+  
+    marquee.addEventListener('mouseenter', this.pauseMarquee);
+    marquee.addEventListener('mouseleave', this.resumeMarquee);
+    marquee.addEventListener('touchstart', this.pauseMarquee);
+    marquee.addEventListener('touchend', this.resumeMarquee);
+    marquee.addEventListener('focusin', this.pauseMarquee);
+    marquee.addEventListener('focusout', this.resumeMarquee);
+  };
+  
+  removePauseListeners = () => {
+    const marquee = this.marqueeRef;
+  
+    marquee.removeEventListener('mouseenter', this.pauseMarquee);
+    marquee.removeEventListener('mouseleave', this.resumeMarquee);
+    marquee.removeEventListener('touchstart', this.pauseMarquee);
+    marquee.removeEventListener('touchend', this.resumeMarquee);
+    marquee.removeEventListener('focusin', this.pauseMarquee);
+    marquee.removeEventListener('focusout', this.resumeMarquee);
+  };
+  
+  pauseMarquee = () => {
+    clearInterval(this.scrollInterval);
+  };
+  
+  resumeMarquee = () => {
+    this.startMarquee();
+  };
 
   loadData = () => {
     this.loadBestSellingProducts();
@@ -475,7 +615,7 @@ class HomePage extends Component {
           </section>
         ))}
         {/*<section className='diamond-offer'>
-                    <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${diamond}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
+                    <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(http://localhost:9090/public/uploads/products/e4366a65-7b1c-47b2-af70-0d43cca90921.jpeg) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
                         <div className='offer-header'>
                             <h2>Diamond Rings at
                                 30% OFF</h2>
@@ -485,7 +625,7 @@ class HomePage extends Component {
                     </Container>
                 </section>
                 <section className='earring-offer'>
-                    <Container className='earring-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${earring}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
+                    <Container className='earring-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(http://localhost:9090/public/uploads/products/e4366a65-7b1c-47b2-af70-0d43cca90921.jpeg) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
                         <div className='earring-header'>
                             <h2>Earrings at 40% OFF at AXIS
                                 Bank Debit & Credit Cards</h2>
@@ -540,7 +680,7 @@ class HomePage extends Component {
             </div>
           </div>
         </section>
-        
+
         <section className="selling-product">
           <Container>
             <div className="selling-product-header d-flex justify-content-between mb-4">
@@ -551,7 +691,7 @@ class HomePage extends Component {
             </div>
             <Swiper
               spaceBetween={20}
-              onSlideChange={() => console.log("slide change")}
+              onSlideChange={() => console.log("slide change Current Stock Products")}
               onSwiper={(swiper) => console.log(swiper)}
               breakpoints={{
                 // when window width is >= 320px
@@ -1274,7 +1414,7 @@ class HomePage extends Component {
           id="staticBackdrop"
           // data-bs-backdrop="static"
           // data-bs-keyboard="false"
-          tabindex="-1"
+          tabIndex="-1"
           aria-labelledby="staticBackdropLabel"
           aria-hidden="false"
         >
@@ -1544,7 +1684,7 @@ class HomePage extends Component {
               </div>
               <Swiper
                 spaceBetween={20}
-                onSlideChange={() => console.log("slide change")}
+                onSlideChange={() => console.log("slide change Best Retailers")}
                 onSwiper={(swiper) => console.log(swiper)}
                 breakpoints={{
                   // when window width is >= 320px
