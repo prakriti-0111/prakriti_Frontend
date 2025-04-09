@@ -5,7 +5,8 @@ import {
     bestRetailerList,
     promocodeList,
     newArrivalList,
-    festiveOfferList
+    festiveOfferList,
+    stockProductList
 } from "actions/Customer/home.actions";
 import {
     current_stock,
@@ -53,9 +54,13 @@ import withRouter from "src/helpers/withRouter";
 import getSlider from "src/json/slider_data";
 import "swiper/css";
 import "swiper/css/navigation";
+import 'swiper/css/autoplay';
 import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore, { Autoplay } from 'swiper';
 // import { current_stock } from "../../../actions/Customer/product.actions";
 import './marquee.css';
+
+SwiperCore.use([Autoplay]);
 
 class HomePage extends Component {
   constructor(props) {
@@ -79,6 +84,7 @@ class HomePage extends Component {
       promocodes: [],
       newArrivals: [],
       festiveOffers: [],
+      stockProductsSlider: [],
       auth: this.props.auth,
       bestRetailers: [],
       counts: null,
@@ -168,7 +174,7 @@ class HomePage extends Component {
     //this.setupNewArrivalMarqueeAnimation();
 
     //this.startMarquee();
-    this.addPauseListeners();
+    //this.addPauseListeners();
   }
 
   componentWillUnmount() {
@@ -208,24 +214,26 @@ class HomePage extends Component {
 
   addPauseListeners = () => {
     const marquee = this.marqueeRef;
-  
-    marquee.addEventListener('mouseenter', this.pauseMarquee);
-    marquee.addEventListener('mouseleave', this.resumeMarquee);
-    marquee.addEventListener('touchstart', this.pauseMarquee);
-    marquee.addEventListener('touchend', this.resumeMarquee);
-    marquee.addEventListener('focusin', this.pauseMarquee);
-    marquee.addEventListener('focusout', this.resumeMarquee);
+    if(marquee){
+      marquee.addEventListener('mouseenter', this.pauseMarquee);
+      marquee.addEventListener('mouseleave', this.resumeMarquee);
+      marquee.addEventListener('touchstart', this.pauseMarquee);
+      marquee.addEventListener('touchend', this.resumeMarquee);
+      marquee.addEventListener('focusin', this.pauseMarquee);
+      marquee.addEventListener('focusout', this.resumeMarquee);
+    }
   };
   
   removePauseListeners = () => {
     const marquee = this.marqueeRef;
-  
-    marquee.removeEventListener('mouseenter', this.pauseMarquee);
-    marquee.removeEventListener('mouseleave', this.resumeMarquee);
-    marquee.removeEventListener('touchstart', this.pauseMarquee);
-    marquee.removeEventListener('touchend', this.resumeMarquee);
-    marquee.removeEventListener('focusin', this.pauseMarquee);
-    marquee.removeEventListener('focusout', this.resumeMarquee);
+    if(marquee){
+      marquee.removeEventListener('mouseenter', this.pauseMarquee);
+      marquee.removeEventListener('mouseleave', this.resumeMarquee);
+      marquee.removeEventListener('touchstart', this.pauseMarquee);
+      marquee.removeEventListener('touchend', this.resumeMarquee);
+      marquee.removeEventListener('focusin', this.pauseMarquee);
+      marquee.removeEventListener('focusout', this.resumeMarquee);
+    }
   };
   
   pauseMarquee = () => {
@@ -246,6 +254,7 @@ class HomePage extends Component {
     this.loadCounts();
     this.loadNewArrivals();
     this.loadFestiveOffers();
+    this.loadStockProductsSlider();
   };
 
   loadBestSellingProducts = async () => {
@@ -343,6 +352,15 @@ class HomePage extends Component {
     if (res.data.success) {
       this.setState({
         festiveOffers: res.data.data.items
+      });
+    }
+  };
+
+  loadStockProductsSlider = async () => {
+    let res = await stockProductList();
+    if (res.data.success) {
+      this.setState({
+        stockProductsSlider: res.data.data.items
       });
     }
   };
@@ -471,6 +489,7 @@ class HomePage extends Component {
       banners,
       newArrivals,
       festiveOffers,
+      stockProductsSlider,
       promocodes,
       bestRetailers,
       counts,
@@ -654,7 +673,7 @@ class HomePage extends Component {
 
                     </Container>
                 </section>*/}
-        <section className=" pt-5">
+        {newArrivals.length > 0 ? <section className=" pt-5">
           <div className="marquee-wrapper">
             <h2 className="marquee-heading container">New Arrivals</h2>
             <div className="marquee" tabIndex="0"  ref={el => (this.marqueeRef = el)}>
@@ -679,20 +698,28 @@ class HomePage extends Component {
                 </span>
             </div>
           </div>
-        </section>
+        </section>:''}
 
         <section className="selling-product">
           <Container>
             <div className="selling-product-header d-flex justify-content-between mb-4">
-              <h2>Current Stock Products | {current_stock_products.length}</h2>
+              <h2>Current Stock Products | {stockProductsSlider.length}</h2>
               <Link className="ratn-shop-now bg-primary-emphasis rounded ">
                 Shop Now
               </Link>
             </div>
             <Swiper
-              spaceBetween={20}
-              onSlideChange={() => console.log("slide change Current Stock Products")}
+              spaceBetween={30}
+              onSlideChange={() => console.log("slide change Current Stock banner")}
               onSwiper={(swiper) => console.log(swiper)}
+              loop={false}
+              autoplay={{
+                delay: 5000, // Wait 2s before sliding
+                disableOnInteraction: false, // Keeps autoplay on after touch/swipe
+                reverseDirection: false, // false = left-to-right (default)
+              }}
+              speed={800} // Slide speed
+              dir="ltr" // Explicit left-to-right
               breakpoints={{
                 // when window width is >= 320px
                 320: {
@@ -713,10 +740,111 @@ class HomePage extends Component {
                 1440: {
                   width: 1440,
                   slidesPerView: 4,
+                  loop: stockProductsSlider.length > 4 ? true : false, // Fixed
                 },
               }}
             >
-              {current_stock_products.map((product, key) => (
+              {stockProductsSlider.map((item, key) => (
+                <SwiperSlide key={key}>
+                  <div className="slide-swipe-inner rounded overflow-hidden">
+                    <Link 
+                        to={
+                          isEmpty(item.products)
+                            ? "/products" +
+                              objectToQuery(
+                                {
+                                  category: item.category_slug,
+                                  subcategory: item.sub_category_slug,
+                                },
+                                true
+                              )
+                            : "/products?offer=" + item.products
+                        }
+                    >
+                      <div className="s-slider-image rounded-top">
+                      
+                          <img
+                            src={item.banner != ""?item.banner:''}
+                            className="rounded-top Scale_on_hover"
+                            alt="selling product"
+                          />
+                        
+                        {/*<div className="wishlist rounded-circle ">
+                          {product.has_wishlist ? (
+                            <BsHeartFill
+                              onClick={() => this.wishlistHandler(product)}
+                              className="wishlist_active"
+                              role="button"
+                            />
+                          ) : (
+                            <BsHeart
+                              onClick={() => this.wishlistHandler(product)}
+                              role="button"
+                            />
+                          )}
+                        </div>*/}
+                      </div>
+                      <div className="s-slider-content rounded-bottom">
+                        <div className="d-flex justify-content-between">
+                          <h2>{item.title}</h2>
+                          <Button variant="primary">{item.button_txt}</Button>
+                        </div>
+                        {/*<div>
+                          <Accordion flush>
+                            <Accordion.Item
+                              eventKey={key}
+                              className=""
+                            >
+                              <Accordion.Button className="p-0 w-auto m-auto"></Accordion.Button>
+                              <Accordion.Body className="p-0">
+                                <h6 className="d-flex justify-content-between">
+                                  <span className="fw-bold">
+                                    size:
+                                  </span>
+                                  <span>
+                                    {product.size_name}
+                                  </span>
+                                </h6>
+                                {
+                                      product.stock_materials.map((items,index)=>{
+                                          return (
+                                            <h6 key={index} className="d-flex justify-content-between">
+                                              <span  className="fw-bold">{items.material_name}</span>
+                                              <span>{items.quantity} x {(Number(items.weight)).toFixed(2)}{items.unit_name}</span>
+                                            </h6>
+                                          )
+                                      })
+                                    }
+                                    <h6 className="d-flex justify-content-between">
+                                      <span className="fw-bold">Total Weight:</span>
+                                      <span>{product .total_weight_display}</span>
+                                    </h6>
+                              </Accordion.Body>
+                            </Accordion.Item>
+                          </Accordion>
+                        </div>*/}
+                        <div className="ring-price">
+                          <span className="offer-price">
+                            {" "}
+                            {item.final_price}{" "}
+                          </span>
+                          {item.discount > 0 ? (
+                            <>
+                              <span className="item-price text-primary-emphasis">
+                                {" "}
+                                {item.price}{" "}
+                              </span>
+                              {" "}
+                              <span className="me-2 text-danger">Save&nbsp;{item.discount}</span>{" "}
+                            </>
+                          ) : null}
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                </SwiperSlide>
+              ))}
+              {/*current_stock_products.map((product, key) => (
                 <SwiperSlide key={key}>
                   <div className="slide-swipe-inner rounded overflow-hidden">
                     <div className="s-slider-image rounded-top">
@@ -800,7 +928,7 @@ class HomePage extends Component {
                     </div>
                   </div>
                 </SwiperSlide>
-              ))}
+              ))*/}
 
               {/*---- <SwiperSlide>
                                 <div className='s-slider-image'>
@@ -859,7 +987,7 @@ class HomePage extends Component {
             </Swiper>
           </Container>
         </section>
-        <section className=" pt-5">
+        {festiveOffers.length > 0 ?<section className=" pt-5">
           {/* <Container className='position-relative'>
                     <Row>
                         <Col xs={7} md={7}>
@@ -918,7 +1046,7 @@ class HomePage extends Component {
               </Placeholder>
             ) : null}
           </div>
-        </section>
+        </section>:''}
         {best_selling_products.length ? (
           <section className="selling-product">
             <Container>

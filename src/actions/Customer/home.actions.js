@@ -40,4 +40,7 @@ export const festiveOfferList = () => {
     return axios.get(`/customer/festive-offers`)
 }
 
+export const stockProductList = () => {
+    return axios.get(`/customer/stock-products-slider`)
+}
 
