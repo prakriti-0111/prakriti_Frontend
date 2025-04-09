@@ -59,6 +59,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Autoplay } from 'swiper';
 // import { current_stock } from "../../../actions/Customer/product.actions";
 import './marquee.css';
+import './slider.css';
 
 SwiperCore.use([Autoplay]);
 
@@ -723,23 +724,30 @@ class HomePage extends Component {
               breakpoints={{
                 // when window width is >= 320px
                 320: {
-                  width: 320,
+                  //width: 320,
                   slidesPerView: 2,
+                  spaceBetween: 10, // Space between slides
+                  loop: stockProductsSlider.length > 1 ? true : false, // Fixed
                 },
                 // when window width is >= 768px
                 768: {
-                  width: 768,
+                  //width: 768,
                   slidesPerView: 2,
+                  spaceBetween: 20,
+                  loop: stockProductsSlider.length > 2 ? true : false, // Fixed
                 },
                 // when window width is >= 1024px
                 1024: {
-                  width: 1024,
+                  //width: 1024,
                   slidesPerView: 3,
+                  spaceBetween: 30,
+                  loop: stockProductsSlider.length > 3 ? true : false, // Fixed
                 },
                 // when window width is >= 1024px
                 1440: {
-                  width: 1440,
+                  //width: 1440,
                   slidesPerView: 4,
+                  spaceBetween: 40,
                   loop: stockProductsSlider.length > 4 ? true : false, // Fixed
                 },
               }}
@@ -769,73 +777,27 @@ class HomePage extends Component {
                             alt="selling product"
                           />
                         
-                        {/*<div className="wishlist rounded-circle ">
-                          {product.has_wishlist ? (
-                            <BsHeartFill
-                              onClick={() => this.wishlistHandler(product)}
-                              className="wishlist_active"
-                              role="button"
-                            />
-                          ) : (
-                            <BsHeart
-                              onClick={() => this.wishlistHandler(product)}
-                              role="button"
-                            />
-                          )}
-                        </div>*/}
+                        
                       </div>
                       <div className="s-slider-content rounded-bottom">
                         <div className="d-flex justify-content-between">
                           <h2>{item.title}</h2>
-                          <Button variant="primary">{item.button_txt}</Button>
+                          <Button className="slider-button" variant="primary">{item.button_txt}</Button>
                         </div>
-                        {/*<div>
-                          <Accordion flush>
-                            <Accordion.Item
-                              eventKey={key}
-                              className=""
-                            >
-                              <Accordion.Button className="p-0 w-auto m-auto"></Accordion.Button>
-                              <Accordion.Body className="p-0">
-                                <h6 className="d-flex justify-content-between">
-                                  <span className="fw-bold">
-                                    size:
-                                  </span>
-                                  <span>
-                                    {product.size_name}
-                                  </span>
-                                </h6>
-                                {
-                                      product.stock_materials.map((items,index)=>{
-                                          return (
-                                            <h6 key={index} className="d-flex justify-content-between">
-                                              <span  className="fw-bold">{items.material_name}</span>
-                                              <span>{items.quantity} x {(Number(items.weight)).toFixed(2)}{items.unit_name}</span>
-                                            </h6>
-                                          )
-                                      })
-                                    }
-                                    <h6 className="d-flex justify-content-between">
-                                      <span className="fw-bold">Total Weight:</span>
-                                      <span>{product .total_weight_display}</span>
-                                    </h6>
-                              </Accordion.Body>
-                            </Accordion.Item>
-                          </Accordion>
-                        </div>*/}
+                        
                         <div className="ring-price">
                           <span className="offer-price">
                             {" "}
-                            {item.final_price}{" "}
+                            {item.final_price_display}{" "}
                           </span>
                           {item.discount > 0 ? (
                             <>
                               <span className="item-price text-primary-emphasis">
                                 {" "}
-                                {item.price}{" "}
+                                {item.price_display}{" "}
                               </span>
                               {" "}
-                              <span className="me-2 text-danger">Save&nbsp;{item.discount}</span>{" "}
+                              <span className="me-2 text-danger">Save&nbsp;{item.discount_display}</span>{" "}
                             </>
                           ) : null}
                         </div>
@@ -844,146 +806,7 @@ class HomePage extends Component {
                   </div>
                 </SwiperSlide>
               ))}
-              {/*current_stock_products.map((product, key) => (
-                <SwiperSlide key={key}>
-                  <div className="slide-swipe-inner rounded overflow-hidden">
-                    <div className="s-slider-image rounded-top">
-                      <Link to={"products/" + product.slug}>
-                        <img
-                          src={product.current_image==null?product.image:product.current_image}
-                          className="rounded-top Scale_on_hover"
-                          alt="selling product"
-                        />
-                      </Link>
-                      <div className="wishlist rounded-circle ">
-                        {product.has_wishlist ? (
-                          <BsHeartFill
-                            onClick={() => this.wishlistHandler(product)}
-                            className="wishlist_active"
-                            role="button"
-                          />
-                        ) : (
-                          <BsHeart
-                            onClick={() => this.wishlistHandler(product)}
-                            role="button"
-                          />
-                        )}
-                      </div>
-                    </div>
-                    <div className="s-slider-content rounded-bottom">
-                      <div className="d-flex justify-content-between">
-                        <h2>{product.mrp_display}</h2>
-                        <Button variant="primary">Add to Cart</Button>
-                      </div>
-                      <div>
-                        <Accordion flush>
-                          <Accordion.Item
-                            eventKey={key}
-                            className=""
-                          >
-                            <Accordion.Button className="p-0 w-auto m-auto"></Accordion.Button>
-                            <Accordion.Body className="p-0">
-                              <h6 className="d-flex justify-content-between">
-                                <span className="fw-bold">
-                                  size:
-                                </span>
-                                <span>
-                                  {product.size_name}
-                                </span>
-                              </h6>
-                              {
-                                    product.stock_materials.map((items,index)=>{
-                                        return (
-                                          <h6 key={index} className="d-flex justify-content-between">
-                                            <span  className="fw-bold">{items.material_name}</span>
-                                            <span>{items.quantity} x {(Number(items.weight)).toFixed(2)}{items.unit_name}</span>
-                                          </h6>
-                                        )
-                                    })
-                                  }
-                                  <h6 className="d-flex justify-content-between">
-                                    <span className="fw-bold">Total Weight:</span>
-                                    <span>{product .total_weight_display}</span>
-                                  </h6>
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Accordion>
-                      </div>
-                      <div className="ring-price">
-                        <span className="offer-price">
-                          {" "}
-                          {product.sale_price_display}{" "}
-                        </span>
-                        {product.have_offer ? (
-                          <>
-                            {" "}
-                            <span className="me-2 text-danger">Save</span>{" "}
-                            <span className="item-price text-primary-emphasis">
-                              {" "}
-                              {product.mrp_display}{" "}
-                            </span>
-                          </>
-                        ) : null}
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-              ))*/}
-
-              {/*---- <SwiperSlide>
-                                <div className='s-slider-image'>
-                                    <img src={sImage} alt='selling product' />
-                                    <div className='wishlist'>
-                                        <BiHeart />
-                                    </div>
-                                </div>
-                                <div className='s-slider-content'>
-                                    <h2>Gold Plated Ring</h2>
-                                    <div className='ring-price'>
-                                        <span className='offer-price'> ₹2999 </span>
-                                        <span className='item-price'> ₹2999 </span>
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                            <SwiperSlide>
-                                <div className='s-slider-image'>
-                                    <img src={sImage} alt='selling product' />
-                                    <div className='wishlist'>
-                                        <BiHeart />
-                                    </div>
-                                </div>
-                                <div className='s-slider-content'>
-                                    <h2>Gold Plated Ring</h2>
-                                    <div className='ring-price'>
-                                        <span className='offer-price'> ₹2999 </span>
-                                        <span className='item-price'> ₹2999 </span>
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                            <SwiperSlide>
-                                <div className='s-slider-image'>
-                                    <img src={sImage} alt='selling product' />
-                                </div>
-                                <div className='s-slider-content'>
-                                    <h2>Gold Plated Ring</h2>
-                                    <div className='ring-price'>
-                                        <span className='offer-price'> ₹2999 </span>
-                                        <span className='item-price'> ₹2999 </span>
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                            <SwiperSlide>
-                                <div className='s-slider-image'>
-                                    <img src={sImage} alt='selling product' />
-                                </div>
-                                <div className='s-slider-content'>
-                                    <h2>Gold Plated Ring</h2>
-                                    <div className='ring-price'>
-                                        <span className='offer-price'> ₹2999 </span>
-                                        <span className='item-price'> ₹2999 </span>
-                                    </div>
-                                </div>
-                        </SwiperSlide> ---*/}
+              
             </Swiper>
           </Container>
         </section>
