@@ -89,8 +89,11 @@
       align-items: center; /* Align items vertically */
       gap: 10px; /* Add spacing between elements */
     }
+
+    .selling-product .ring-price .offer-price{
+      font-size: 16px;
+    }
   
-    .selling-product .ring-price .offer-price,
     .selling-product .ring-price .item-price,
     .selling-product .ring-price .me-2 {
       font-size: 14px; /* Adjust font size for smaller screens */
@@ -105,8 +108,11 @@
       align-items: center; /* Align items vertically */
       gap: 5px; /* Reduce spacing */
     }
+
+    .selling-product .ring-price .offer-price{
+      font-size: 14px;
+    }
   
-    .selling-product .ring-price .offer-price,
     .selling-product .ring-price .item-price,
     .selling-product .ring-price .me-2 {
       font-size: 12px; /* Further reduce font size */
