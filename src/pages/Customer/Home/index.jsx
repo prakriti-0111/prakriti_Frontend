@@ -105,77 +105,8 @@ class HomePage extends Component {
     return update;
   }
 
-  setupNewArrivalMarqueeAnimation() {
-    let marqueeInitTimer = setInterval(() => {
-      console.log("marquee ...");
-      const duration = 35000; //ms
-      const directionAnimation = 'right';  //left or right  
-    
-      const marquee = document.querySelector('.marquee');
-      const span = marquee.querySelector('span');
-      if(marquee && span){
-        clearInterval(marqueeInitTimer);
-      
-        console.log("span.innerHTML before : ", span.innerHTML);
-        // Duplicate content for infinite scrolling effect
-        span.innerHTML += span.innerHTML; 
-        console.log("span.innerHTML after : ", span.innerHTML);
-        const marqueeWidth = marquee.offsetWidth;
-        const spanWidth = span.scrollWidth; // Half is enough since we duplicated
-      
-        let keyframes = [];
-        if('left' == directionAnimation){
-          // Define keyframes for smooth right-to-left scrolling
-          keyframes = [
-              { transform: `translateX(0)` },
-              { transform: `translateX(${-spanWidth}px)` }
-          ];
-        }
-        else if('right' == directionAnimation){
-          // Define keyframes for smooth left-to-right scrolling
-          keyframes = [
-            { transform: `translateX(-${spanWidth}px)` },
-            { transform: `translateX(0)` }
-          ];
-        }
-      
-        let options = {
-            duration: duration, // Durata dell'animazione in millisecondi
-            iterations: Infinity,
-            easing: "linear"
-        };
-
-        // Stop any existing animation
-        if (span.marqueeAnimation) {
-          span.marqueeAnimation.cancel();
-        }
-    
-        const animation = span.animate(keyframes, options);
-        span.marqueeAnimation = animation;
-        
-        marquee.addEventListener('mouseenter', () => {
-          span.marqueeAnimation.pause();
-        });
-    
-        marquee.addEventListener('mouseleave', () => {
-          span.marqueeAnimation.play();
-        });
-      }
-    }, 2000);
-  }
-
   componentDidMount() {
     this.loadData();
-
-    /*let resizeTimeout;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(this.setupNewArrivalMarqueeAnimation, 300); // Delay for performance
-    });*/
-    //this.setupNewArrivalMarqueeAnimation();
-
-    //this.startMarquee();
-    //this.addPauseListeners();
   }
 
   componentWillUnmount() {
@@ -185,32 +116,34 @@ class HomePage extends Component {
 
   startMarquee = () => {
     const track = this.marqueeTrackRef;
-    const itemWidth = track.children[0].offsetWidth;
-    //let currentMarqueeIndex = 0;
-    //let currentMarqueeIndex = track.children.length;
-    const { currentMarqueeIndex } = this.state;
-    let cIndex = currentMarqueeIndex;
+    if(track.children.length > 0){
+      const itemWidth = track.children[0].offsetWidth;
+      //let currentMarqueeIndex = 0;
+      //let currentMarqueeIndex = track.children.length;
+      const { currentMarqueeIndex } = this.state;
+      let cIndex = currentMarqueeIndex;
 
-    this.scrollInterval = setInterval(() => {
-      //currentMarqueeIndex++;
-      cIndex--;
-      console.log("currentMarqueeIndex : ", cIndex);
-      // if (currentMarqueeIndex >= track.children.length) {
-      //   currentMarqueeIndex = 0;
-      // }
+      this.scrollInterval = setInterval(() => {
+        //currentMarqueeIndex++;
+        cIndex--;
+        console.log("currentMarqueeIndex : ", cIndex);
+        // if (currentMarqueeIndex >= track.children.length) {
+        //   currentMarqueeIndex = 0;
+        // }
 
-      if (cIndex < 0) {
-        cIndex = track.children.length - 1;
-      }
+        if (cIndex < 0) {
+          cIndex = track.children.length - 1;
+        }
 
-      this.setState({
-        currentMarqueeIndex: cIndex
-      });
+        this.setState({
+          currentMarqueeIndex: cIndex
+        });
 
-      // Animate scroll with transform
-      track.style.transition = 'transform 1s ease-in-out';
-      track.style.transform = `translateX(-${itemWidth * cIndex}px)`;
-    }, 3000); // 1s scroll + 2s pause
+        // Animate scroll with transform
+        track.style.transition = 'transform 1s ease-in-out';
+        track.style.transform = `translateX(-${itemWidth * cIndex}px)`;
+      }, 3000); // 1s scroll + 2s pause
+    }
   };
 
   addPauseListeners = () => {
@@ -704,10 +637,8 @@ class HomePage extends Component {
         <section className="selling-product">
           <Container>
             <div className="selling-product-header d-flex justify-content-between mb-4">
-              <h2>Current Stock Products | {stockProductsSlider.length}</h2>
-              <Link className="ratn-shop-now bg-primary-emphasis rounded ">
-                Shop Now
-              </Link>
+              <h2>Current Stock Products</h2>
+              
             </div>
             <Swiper
               spaceBetween={30}
