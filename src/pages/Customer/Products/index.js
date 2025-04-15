@@ -268,7 +268,7 @@ class ProductsPage extends React.Component {
     }
   };
   handleProductDetails = (product) => {
-    this.props.navigate(product.slug);
+    this.props.navigate(product.certificate_no);
   };
 
   openVideo = (product) => {
@@ -594,14 +594,14 @@ class ProductsPage extends React.Component {
                           <div className="offers-wrapper">
                             <div className="offer rounded p-1">
                               <div className="making-chrg-offer">
-                                {product.making_charge_dis_percent > 0 ? (
+                                {product.discount_percent > 0 ? (
                                   <h4>
-                                    {product.making_charge_dis_percent}% Off
+                                    {product.discount_percent}% Off
                                   </h4>
                                 ) : (
                                   <>
-                                    {product.discount_percent > 0 ? (
-                                      <h4>{product.discount_percent}% Off</h4>
+                                    {product.making_charge_dis_percent > 0 ? (
+                                      <h4>{product.making_charge_dis_percent}% Off</h4>
                                     ) : null}
                                   </>
                                 )}
