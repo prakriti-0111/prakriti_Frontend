@@ -469,7 +469,7 @@ class ProductDetails extends React.Component {
 
     let data = {
       product_id: product.id,
-      stock_id: product.stock_id,
+      stock_id: null,
       total_weight: total_weight,
       size_id: product.type != "material" ? size_id : null,
       type: product.type,
@@ -478,7 +478,6 @@ class ProductDetails extends React.Component {
       certificate_no: product.certificate_no,
       quantity: quantity,
       is_manual: is_manual,
-      current_image: product.images[this.state.imageIndex]
     };
 
     console.log("-------------- Data of cart items ", data);
@@ -686,10 +685,6 @@ class ProductDetails extends React.Component {
                                   <div className="product-details-items-item">
                                     <span>Product Code</span>{" "}
                                     <span>{product.product_code}</span>
-                                  </div>
-                                  <div className="product-details-items-item">
-                                    <span>Certificate No.</span>{" "}
-                                    <span>{product.certificate_no}</span>
                                   </div>
                                   <div className="product-details-items-item">
                                     <span>Product Weight</span>{" "}

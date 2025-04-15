@@ -253,7 +253,7 @@ class OrderSummary extends React.Component {
                                                                                         <img src={item.image} alt='' />
                                                                                     </span>
                                                                                     <span>
-                                                                                        <h3><Link to={"/products/" + item.product_slug}>{item.product_name}</Link></h3>
+                                                                                        <h3><Link to={"/products/" + item.certificate_no}>{item.product_name} {`${item.certificate_no != ""?"(Certificate no. "+item.certificate_no+")":""}`}</Link></h3>
                                                                                         {
                                                                                             item.materials.map((val, key) => (
                                                                                                 <h4 key={key}>{val.material_name}: {val.quantity > 0 ? (val.quantity + ' ' + val.material_name + ', ') : ''} {val.purity_name}, {val.weight} {val.unit_name}</h4>

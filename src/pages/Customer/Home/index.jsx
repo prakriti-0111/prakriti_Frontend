@@ -607,9 +607,9 @@ class HomePage extends Component {
 
                     </Container>
                 </section>*/}
-        {newArrivals.length > 0 ? <section className=" pt-5">
+        {newArrivals.length > 0 ? <section className="new-arrival pt-5">
           <div className="marquee-wrapper">
-            <h2 className="marquee-heading container">New Arrivals</h2>
+            <h1 className="marquee-heading container">New Arrivals</h1>
             <div className="marquee" tabIndex="0"  ref={el => (this.marqueeRef = el)}>
                 <span className="marquee-track" ref={el => (this.marqueeTrackRef = el)}>
                   {newArrivals.map((item, key) => (
@@ -637,7 +637,7 @@ class HomePage extends Component {
         <section className="selling-product">
           <Container>
             <div className="selling-product-header d-flex justify-content-between mb-4">
-              <h2>Current Stock Products</h2>
+              <h1>Current Stock Products</h1>
               
             </div>
             <Swiper
@@ -741,7 +741,7 @@ class HomePage extends Component {
             </Swiper>
           </Container>
         </section>
-        {festiveOffers.length > 0 ?<section className=" pt-5">
+        {festiveOffers.length > 0 ?<section className="festive-offer pt-5">
           {/* <Container className='position-relative'>
                     <Row>
                         <Col xs={7} md={7}>
@@ -759,7 +759,7 @@ class HomePage extends Component {
                         </Col>
                     </Row>
                     </Container> */}
-          <div className="festive-offer" style={{ padding: "0" }}>
+          <div className="" style={{ padding: "0" }}>
             <div className="festive-offer-header container">
               <h1 style={{ color: "#001e38" }}>Festive Offers</h1>
             </div>
