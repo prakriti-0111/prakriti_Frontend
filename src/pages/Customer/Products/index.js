@@ -17,6 +17,11 @@ import { bindActionCreators } from "redux";
 import { connect, useSelector } from "react-redux";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import { productList, productFetch } from "actions/Customer/product.actions";
+import {
+  AddToCart,
+  CartList,
+  AddToCartRaw,
+} from "actions/Customer/addcart.actions";
 import { WishListAdd } from "actions/Customer/wishlist.actions";
 import withRouter from "src/helpers/withRouter";
 import { BsHeartFill, BsHeart } from "react-icons/bs";
@@ -209,6 +214,81 @@ class ProductsPage extends React.Component {
         }
       }
     );
+  };
+
+  handleAddToCart = async (product) => {
+    /*if (isEmpty(this.state.auth)) {
+            this.props.navigate('/login');
+            return;
+        }*/
+    //const { product } = this.state;
+    let weight = null,
+      quantity = 1,
+      is_manual = 0;
+    if (product && !product.certified && product.type == "material") {
+      
+    }
+
+    let selected_materials = product
+      ? product.size_materials[0].materials
+      : [];
+    let size_id = product
+      ? product.size_materials[0].size_id
+      : null;
+    let rate = product
+      ? product.size_materials[0].sale_price
+      : null;
+    let total_weight = 0;
+    let materials = [];
+
+    for (let i = 0; i < selected_materials.length; i++) {
+      let thisM = selected_materials[i];
+      let m = _.filter(thisM.purities, { is_selected: true });
+
+      let total_gram = convertUnitToGram(
+        thisM.unit_name,
+        weight ? weight : thisM.weight
+      );
+      total_gram = weightFormat(total_gram); //(product.type == 'material') ? weightFormat(total_gram / parseInt(thisM.quantity)) : weightFormat(total_gram);
+      total_weight += parseFloat(total_gram);
+
+      materials.push({
+        material_id: thisM.material_id,
+        purity_id: m[0].id,
+        weight: weight ? weight : thisM.weight,
+        unit_id: thisM.unit_id,
+        quantity: weight ? quantity : thisM.quantity,
+      });
+    }
+
+  
+
+    let data = {
+      product_id: product.id,
+      stock_id: product.stock_id,
+      total_weight: total_weight,
+      size_id: product.type != "material" ? size_id : null,
+      type: product.type,
+      rate: rate,
+      materials: materials,
+      certificate_no: product.certificate_no,
+      quantity: quantity,
+      is_manual: is_manual,
+      current_image: product.images.length > 0?product.images[0].path:""
+    };
+
+    console.log("-------------- Data of cart items ", data);
+    let res = await AddToCartRaw(data);
+    if (res.data.success) {
+      toast.success(res.data.message);
+      this.props.actions.CartList();
+      return true;
+    } else {
+      toast.error(res.data.message);
+      return false;
+    }
+
+    //this.props.actions.AddToCart(data);
   };
 
   wishlistHandler = async (product) => {
@@ -613,7 +693,7 @@ class ProductsPage extends React.Component {
                           <Button
                             variant="primary"
                             className="rounded "
-                            onClick={() => this.handleProductDetails(product)}
+                            onClick={() => this.handleAddToCart(product)}
                           >
                             <i class="bi bi-cart-plus-fill me-2 h6"></i> ADD TO
                             CART
@@ -722,7 +802,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators({ productList }, dispatch),
+  actions: bindActionCreators({ productList, AddToCart, CartList }, dispatch),
   dispatch,
 });
 
