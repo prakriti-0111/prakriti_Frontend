@@ -698,7 +698,7 @@ class HomePage extends Component {
                         <Link 
                             to={
                               isEmpty(item.products)
-                                ? "/products" +
+                                ? "/stock-products" +
                                   objectToQuery(
                                     {
                                       category: item.category_slug,
@@ -706,7 +706,7 @@ class HomePage extends Component {
                                     },
                                     true
                                   )
-                                : "/products?offer=" + item.products
+                                : "/stock-products?offer=" + item.products
                             }
                         >
                           <div className="s-slider-image rounded-top">

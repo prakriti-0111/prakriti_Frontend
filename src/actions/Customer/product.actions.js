@@ -29,6 +29,16 @@ export const productList = (params) => {
     return axios.get(`/customer/product${params}`)
 }
 
+export const stockProductList = (params) => {
+    if(!isObject(params)){
+        params = {slug: params}
+    }
+    params.cookie_id = GetCookieID();
+    params = objectToQuery(params, true);
+    
+    return axios.get(`/customer/stock-product${params}`)
+}
+
 export const productListRaw = (params) => {
     params = objectToQuery(params, true);
     return axios.get(`/customer/product${params}`)
@@ -43,6 +53,17 @@ export const productFetch = async (data) => {
     data = objectToQuery(data, true);
     console.log("---------cokkie id ois DAta  ",data);
     return await axios.get(`/customer/product/view${data}`);
+}
+
+export const stockProductFetch = async (data) => {
+    if(!isObject(data)){
+        data = {slug: data}
+    }
+    data.cookie_id = GetCookieID();
+    console.log("---------cokkie id ois ",data.cookie_id);
+    data = objectToQuery(data, true);
+    console.log("---------cokkie id ois DAta  ",data);
+    return await axios.get(`/customer/stock-product/view${data}`);
 }
 
 export const current_stock = async (params)=>{

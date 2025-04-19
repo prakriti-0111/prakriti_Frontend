@@ -49,6 +49,11 @@ export const AddToCartRaw = (data) => {
     return axios.post(`/customer/carts/store`,data)
 }
 
+export const AddToCartStockRaw = (data) => {
+    data.cookie_id = GetCookieID();
+    return axios.post(`/customer/carts/store-stock`,data)
+}
+
 
 export const AddFetch = (id) => {
     return (dispatch) => {
