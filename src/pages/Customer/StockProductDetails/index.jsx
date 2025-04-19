@@ -48,14 +48,14 @@ import withRouter from "helpers/withRouter";
 import { connect, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
-  productFetch,
+  stockProductFetch,
   recentlyViewCategories,
   prodductReviews,
 } from "actions/Customer/product.actions";
 import {
   AddToCart,
   CartList,
-  AddToCartRaw,
+  AddToCartStockRaw,
 } from "actions/Customer/addcart.actions";
 import { WishListAdd } from "actions/Customer/wishlist.actions";
 import DropdownButton from "react-bootstrap/DropdownButton";
@@ -131,7 +131,7 @@ class ProductDetails extends React.Component {
   };
 
   loadProduct = async () => {
-    let response = await productFetch({
+    let response = await stockProductFetch({
       slug: this.props.params.slug,
       recently_view: 1,
     });
@@ -469,7 +469,7 @@ class ProductDetails extends React.Component {
 
     let data = {
       product_id: product.id,
-      stock_id: null,
+      stock_id: product.stock_id,
       total_weight: total_weight,
       size_id: product.type != "material" ? size_id : null,
       type: product.type,
@@ -478,10 +478,11 @@ class ProductDetails extends React.Component {
       certificate_no: product.certificate_no,
       quantity: quantity,
       is_manual: is_manual,
+      current_image: product.images[this.state.imageIndex]
     };
 
     console.log("-------------- Data of cart items ", data);
-    let res = await AddToCartRaw(data);
+    let res = await AddToCartStockRaw(data);
     if (res.data.success) {
       toast.success(res.data.message);
       this.props.actions.CartList();
@@ -685,6 +686,10 @@ class ProductDetails extends React.Component {
                                   <div className="product-details-items-item">
                                     <span>Product Code</span>{" "}
                                     <span>{product.product_code}</span>
+                                  </div>
+                                  <div className="product-details-items-item">
+                                    <span>Certificate No.</span>{" "}
+                                    <span>{product.certificate_no}</span>
                                   </div>
                                   <div className="product-details-items-item">
                                     <span>Product Weight</span>{" "}
@@ -2172,7 +2177,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
-  actions: bindActionCreators({ productFetch, AddToCart, CartList }, dispatch),
+  actions: bindActionCreators({ stockProductFetch, AddToCart, CartList }, dispatch),
 });
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(ProductDetails)
