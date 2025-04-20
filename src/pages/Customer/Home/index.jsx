@@ -489,68 +489,76 @@ class HomePage extends Component {
               </div>
             </section></>);
           break;
-          case item.section_name.toLowerCase() == "promocodes":
-            return (<>{promocodes.map((item, key) => (
-              <section
-                className={key % 2 == 0 ? "diamond-offer" : "pendant-offer"}
-                key={key}
-              >
-                <Link
-                  to={
-                    isEmpty(item.products)
-                      ? "/products" +
-                        objectToQuery(
-                          {
-                            category: item.category_slug,
-                            subcategory: item.sub_category_slug,
-                          },
-                          true
-                        )
-                      : "/products?offer=" + item.products
-                  }
-                >
-                  <Container
-                    className={
-                      (key % 2 == 0 ? "diamond-inner" : "pendant-inner") +
-                      " mt-2 mb-3 mt-md-4 mb-md-2 position-relative rounded"
-                    }
-                    style={{
-                      backgroundImage: `url(${item.banner}) `,
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "right bottom",
-                      backgroundSize: "cover",
-                    }}
+          case item.section_name.toLowerCase().startsWith("promocodes"):
+            console.log("item.section_name.toLowerCase() : ", item.section_name.toLowerCase());
+            return ["platinum-jewelery", "diamond-jewellery", "gems-stone"].map((catSlug, k) => {
+              console.log("catSlug : ", catSlug);
+              console.log("item.section_name.toLowerCase().indexOf(catSlug) : ", item.section_name.toLowerCase().indexOf(catSlug));
+              if(item.section_name.toLowerCase().indexOf(catSlug) !== -1){
+                console.log("==================================");
+                return (<>{promocodes.map((item, key) => item.category_slug == catSlug?(
+                  <section
+                    className={key % 2 == 0 ? "diamond-offer" : "pendant-offer"}
+                    key={key}
                   >
-                    {/*<div className={(key%2==0) ? 'offer-header' : 'pendant-header'}>
-                                        <h2>{item.title}</h2>
-                                        <span className='shop-now'>Shop Now</span>
-                                    </div>*/}
-                  </Container>
-                  <Container style={{ padding: 0 }} className="mt-3">
-                    <div className="banner-heading-content text-primary-emphasis ">
-                      <h2 className="bg-light rounded px-xl-5">{item.title}</h2>
-                      <Link
-                        className="ratn-shop-now bg-primary-emphasis rounded"
-                        to={
-                          isEmpty(item.products)
-                            ? "/products" +
-                              objectToQuery(
-                                {
-                                  category: item.category_slug,
-                                  subcategory: item.sub_category_slug,
-                                },
-                                true
-                              )
-                            : "/products?offer=" + item.products
+                    <Link
+                      to={
+                        isEmpty(item.products)
+                          ? "/products" +
+                            objectToQuery(
+                              {
+                                category: item.category_slug,
+                                subcategory: item.sub_category_slug,
+                              },
+                              true
+                            )
+                          : "/products?offer=" + item.products
+                      }
+                    >
+                      <Container
+                        className={
+                          (key % 2 == 0 ? "diamond-inner" : "pendant-inner") +
+                          " mt-2 mb-3 mt-md-4 mb-md-2 position-relative rounded"
                         }
+                        style={{
+                          backgroundImage: `url(${item.banner}) `,
+                          backgroundRepeat: "no-repeat",
+                          backgroundPosition: "right bottom",
+                          backgroundSize: "cover",
+                        }}
                       >
-                        Shop Now
-                      </Link>
-                    </div>
-                  </Container>
-                </Link>
-              </section>
-            ))}</>);
+                        {/*<div className={(key%2==0) ? 'offer-header' : 'pendant-header'}>
+                                            <h2>{item.title}</h2>
+                                            <span className='shop-now'>Shop Now</span>
+                                        </div>*/}
+                      </Container>
+                      <Container style={{ padding: 0 }} className="mt-3">
+                        <div className="banner-heading-content text-primary-emphasis ">
+                          <h2 className="bg-light rounded px-xl-5">{item.title}</h2>
+                          <Link
+                            className="ratn-shop-now bg-primary-emphasis rounded"
+                            to={
+                              isEmpty(item.products)
+                                ? "/products" +
+                                  objectToQuery(
+                                    {
+                                      category: item.category_slug,
+                                      subcategory: item.sub_category_slug,
+                                    },
+                                    true
+                                  )
+                                : "/products?offer=" + item.products
+                            }
+                          >
+                            Shop Now
+                          </Link>
+                        </div>
+                      </Container>
+                    </Link>
+                  </section>
+                ):<></>)}</>);
+              } 
+            });
           break;
           case item.section_name.toLowerCase() == "newarrivals":
             return (<>{newArrivals.length > 0 ? <section className="new-arrival pt-5">
@@ -1192,7 +1200,7 @@ class HomePage extends Component {
                       unparalleled beauty and quality. Elevate your style with
                       confidence, knowing that your jewelry is not only stunning
                       but also authentically certified. Choose Prakriti Jewels
-                      for perfection you can trust.
+                      for perfection you can trust.
                     </p>
                   </div>
                 </div>
@@ -1215,7 +1223,7 @@ class HomePage extends Component {
                       satisfied, return your jewelry within 7 days for a full
                       refund. Our commitment is to your complete satisfaction
                       and confidence in every purchase. Shop with peace of mind,
-                      knowing your satisfaction is guaranteed.
+                      knowing your satisfaction is guaranteed.
                     </p>
                   </div>
                 </div>
@@ -1235,7 +1243,7 @@ class HomePage extends Component {
                       with no obligation to buy. Discover how our stunning
                       designs complement your style and make a confident choice.
                       Enjoy the luxury of a personal trial and find your perfect
-                      match, all from the comfort of your own space.
+                      match, all from the comfort of your own space.
                     </p>
                   </div>
                 </div>
@@ -1258,7 +1266,7 @@ class HomePage extends Component {
                       Experience the luxury of our elegant designs delivered
                       right to you, with no shipping fees. Shop with ease and
                       confidence, knowing that exceptional service is part of
-                      your Prakriti Jewels experience.
+                      your Prakriti Jewels experience.
                     </p>
                   </div>
                 </div>
@@ -1282,7 +1290,7 @@ class HomePage extends Component {
                       you receive true value for your investment. Enjoy
                       exquisite designs and authentic beauty without hidden
                       costs. Shop confidently, knowing that our prices reflect
-                      both integrity and the finest craftsmanship.
+                      both integrity and the finest craftsmanship.
                     </p>
                   </div>
                 </div>
@@ -1380,7 +1388,7 @@ class HomePage extends Component {
                         image: certificate,
                         title: "100% Certified jewellery",
                         description:
-                          "Discover the allure of Prakriti Jewels, where every diamond is 100% certified for brilliance and authenticity. Our collection showcases exquisite craftsmanship and timeless elegance, ensuring each piece radiates unparalleled beauty and quality. Elevate your style with confidence, knowing that your jewelry is not only stunning but also authentically certified. Choose Prakriti Jewels for perfection you can trust.",
+                          "Discover the allure of Prakriti Jewels, where every diamond is 100% certified for brilliance and authenticity. Our collection showcases exquisite craftsmanship and timeless elegance, ensuring each piece radiates unparalleled beauty and quality. Elevate your style with confidence, knowing that your jewelry is not only stunning but also authentically certified. Choose Prakriti Jewels for perfection you can trust.",
                       },
                     });
                   }}
