@@ -19942,3 +19942,9 @@ fieldset:disabled .btn {
     display: none !important;
   }
 }
+
+.festive-offer-header .festive-offer-header-header h1 {
+  font-family: "Muli";
+  font-size: 38px;
+  margin-bottom: 20px;
+}

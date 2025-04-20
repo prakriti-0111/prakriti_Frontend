@@ -352,7 +352,7 @@ class CartPage extends React.Component {
 
     let data = {
       product_id: cart.product_id,
-      stock_id: null,
+      stock_id: cart.stock_id,
       total_weight: total_weight,
       size_id: cart.product_type != "material" ? cart.size_id : null,
       type: cart.product_type,
@@ -495,7 +495,7 @@ class CartPage extends React.Component {
                             >
                               <div className="cart-inner">
                                 <div className="cart-image">
-                                  <Link to={"/products/" + val.product_slug}>
+                                  <Link to={"/products/" + val.certificate_no}>
                                                   <img
                                                       src={val.current_image == null ? val.product_image : val.current_image}
                                       className="rounded "
@@ -509,7 +509,7 @@ class CartPage extends React.Component {
                                       <div className="cart-image-title">
                                         <h2>
                                           <Link
-                                            to={"/products/" + val.product_slug}
+                                            to={"/products/" + val.certificate_no}
                                           >
                                             {val.product_name}
                                           </Link>
@@ -517,6 +517,10 @@ class CartPage extends React.Component {
                                         <p>
                                           Product Code :{" "}
                                           <span>{val.product_code}</span>
+                                        </p>
+                                        <p>
+                                          Certificate No :{" "}
+                                          <span>{val.certificate_no}</span>
                                         </p>
                                                       </div>
                                                       <div className="d-flex align-items-center">
