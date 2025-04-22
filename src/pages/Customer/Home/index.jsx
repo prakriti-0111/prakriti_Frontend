@@ -490,12 +490,12 @@ class HomePage extends Component {
             </section></>);
           break;
           case item.section_name.toLowerCase().startsWith("promocodes"):
-            console.log("item.section_name.toLowerCase() : ", item.section_name.toLowerCase());
+            //console.log("item.section_name.toLowerCase() : ", item.section_name.toLowerCase());
             return ["platinum-jewelery", "diamond-jewellery", "gems-stone"].map((catSlug, k) => {
-              console.log("catSlug : ", catSlug);
-              console.log("item.section_name.toLowerCase().indexOf(catSlug) : ", item.section_name.toLowerCase().indexOf(catSlug));
+              //console.log("catSlug : ", catSlug);
+              //console.log("item.section_name.toLowerCase().indexOf(catSlug) : ", item.section_name.toLowerCase().indexOf(catSlug));
               if(item.section_name.toLowerCase().indexOf(catSlug) !== -1){
-                console.log("==================================");
+                //console.log("==================================");
                 return (<>{promocodes.map((item, key) => item.category_slug == catSlug?(
                   <section
                     className={key % 2 == 0 ? "diamond-offer" : "pendant-offer"}
@@ -650,114 +650,360 @@ class HomePage extends Component {
               </div>
             </section>:''}</>);
           break;
-          case item.section_name.toLowerCase() == "stockproducts":
-            return (<><section className="selling-product" >  
+          case item.section_name.toLowerCase().startsWith("stockproducts"):
+            console.log("item.section_name.toLowerCase() : ", item.section_name.toLowerCase());
+            return ["platinum-jewelery", "diamond-jewellery", "gems-stone"].map((catSlug, k) => {
+              console.log("catSlug : ", catSlug);
+              console.log("item.section_name.toLowerCase() : ", item.section_name.toLowerCase());
+              console.log("item.section_name.toLowerCase().indexOf(catSlug) : ", item.section_name.toLowerCase().indexOf(catSlug));
+              let sliders = stockProductsSlider.filter((item) => item.category_slug == catSlug);
+              console.log("sliders.length : ", sliders.length);
+              if(item.section_name.toLowerCase().indexOf(catSlug) !== -1){
+                //console.log("=================================="+catSlug);
+                
+                return (<><section className={`${sliders.length > 0?"selling-product":""}`} > 
+                  <Container>
+                    {sliders.length > 0 && <div className="selling-product-header d-flex justify-content-between mb-4">
+                      <h1>Current Stock Products</h1>
+                      
+                    </div>}
+                    <Swiper
+                      spaceBetween={30}
+                      onSlideChange={() => console.log("slide change Current Stock banner")}
+                      onSwiper={(swiper) => console.log(swiper)}
+                      loop={false}
+                      autoplay={{
+                        delay: 5000, // Wait 2s before sliding
+                        disableOnInteraction: false, // Keeps autoplay on after touch/swipe
+                        reverseDirection: false, // false = left-to-right (default)
+                      }}
+                      speed={800} // Slide speed
+                      dir="ltr" // Explicit left-to-right
+                      breakpoints={{
+                        // when window width is >= 320px
+                        320: {
+                          //width: 320,
+                          slidesPerView: 2,
+                          spaceBetween: 10, // Space between slides
+                          loop: sliders.length > 1 ? true : false, // Fixed
+                        },
+                        // when window width is >= 768px
+                        768: {
+                          //width: 768,
+                          slidesPerView: 2,
+                          spaceBetween: 20,
+                          loop: sliders.length > 2 ? true : false, // Fixed
+                        },
+                        // when window width is >= 1024px
+                        1024: {
+                          //width: 1024,
+                          slidesPerView: 3,
+                          spaceBetween: 30,
+                          loop: sliders.length > 3 ? true : false, // Fixed
+                        },
+                        // when window width is >= 1024px
+                        1440: {
+                          //width: 1440,
+                          slidesPerView: 4,
+                          spaceBetween: 40,
+                          loop: sliders.length > 4 ? true : false, // Fixed
+                        },
+                      }}
+                    >
+                      {sliders.map((item, key) => (
+                        <SwiperSlide key={key}>
+                          <div className="slide-swipe-inner rounded overflow-hidden">
+                            <Link 
+                                to={
+                                  isEmpty(item.products)
+                                    ? "/stock-products" +
+                                      objectToQuery(
+                                        {
+                                          category: item.category_slug,
+                                          subcategory: item.sub_category_slug,
+                                        },
+                                        true
+                                      )
+                                    : "/stock-products?offer=" + item.products
+                                }
+                            >
+                              <div className="s-slider-image rounded-top">
+                              
+                                  <img
+                                    src={item.banner != ""?item.banner:''}
+                                    className="rounded-top Scale_on_hover"
+                                    alt="selling product"
+                                  />
+                                
+                                
+                              </div>
+                              <div className="s-slider-content rounded-bottom">
+                                <div className="d-flex justify-content-between">
+                                  <h2>{item.title}</h2>
+                                  <Button className="slider-button" variant="primary">{item.button_txt}</Button>
+                                </div>
+                                
+                                <div className="ring-price">
+                                  <span className="offer-price">
+                                    {" "}
+                                    {item.final_price_display}{" "}
+                                  </span>
+                                  {item.discount > 0 ? (
+                                    <>
+                                      <span className="item-price text-primary-emphasis">
+                                        {" "}
+                                        {item.price_display}{" "}
+                                      </span>
+                                      {" "}
+                                      <span className="me-2 text-danger">Save&nbsp;{item.discount_display}</span>{" "}
+                                    </>
+                                  ) : null}
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                        </SwiperSlide>
+                      ))}
+                      
+                    </Swiper>
+                  </Container>
+                </section></>);
+              }
+            });
+          break;
+          case item.section_name.toLowerCase() == "bestsellingproducts":
+            return (<>
+            {best_selling_products.length ? (
+            <section className="selling-product">
               <Container>
-                <div className="selling-product-header d-flex justify-content-between mb-4">
-                  <h1>Current Stock Products</h1>
-                  
+                <div className="selling-product-header">
+                  <h1>Best Selling Products</h1>
                 </div>
                 <Swiper
-                  spaceBetween={30}
-                  onSlideChange={() => console.log("slide change Current Stock banner")}
+                  spaceBetween={20}
+                  onSlideChange={() => console.log("slide change")}
                   onSwiper={(swiper) => console.log(swiper)}
-                  loop={false}
-                  autoplay={{
-                    delay: 5000, // Wait 2s before sliding
-                    disableOnInteraction: false, // Keeps autoplay on after touch/swipe
-                    reverseDirection: false, // false = left-to-right (default)
-                  }}
-                  speed={800} // Slide speed
-                  dir="ltr" // Explicit left-to-right
                   breakpoints={{
                     // when window width is >= 320px
                     320: {
-                      //width: 320,
+                      width: 320,
                       slidesPerView: 2,
-                      spaceBetween: 10, // Space between slides
-                      loop: stockProductsSlider.length > 1 ? true : false, // Fixed
                     },
                     // when window width is >= 768px
                     768: {
-                      //width: 768,
+                      width: 768,
                       slidesPerView: 2,
-                      spaceBetween: 20,
-                      loop: stockProductsSlider.length > 2 ? true : false, // Fixed
                     },
                     // when window width is >= 1024px
                     1024: {
-                      //width: 1024,
+                      width: 1024,
                       slidesPerView: 3,
-                      spaceBetween: 30,
-                      loop: stockProductsSlider.length > 3 ? true : false, // Fixed
                     },
                     // when window width is >= 1024px
                     1440: {
-                      //width: 1440,
+                      width: 1440,
                       slidesPerView: 4,
-                      spaceBetween: 40,
-                      loop: stockProductsSlider.length > 4 ? true : false, // Fixed
                     },
                   }}
                 >
-                  {stockProductsSlider.map((item, key) => (
+                  {best_selling_products.map((product, key) => (
                     <SwiperSlide key={key}>
                       <div className="slide-swipe-inner rounded overflow-hidden">
-                        <Link 
-                            to={
-                              isEmpty(item.products)
-                                ? "/stock-products" +
-                                  objectToQuery(
-                                    {
-                                      category: item.category_slug,
-                                      subcategory: item.sub_category_slug,
-                                    },
-                                    true
-                                  )
-                                : "/stock-products?offer=" + item.products
-                            }
-                        >
-                          <div className="s-slider-image rounded-top">
-                          
-                              <img
-                                src={item.banner != ""?item.banner:''}
-                                className="rounded-top Scale_on_hover"
-                                alt="selling product"
+                        <div className="s-slider-image rounded-top">
+                          <Link to={"products/" + product.slug}>
+                            <img
+                              src={product.default_image}
+                              className="rounded-top Scale_on_hover"
+                              alt="selling product"
+                            />
+                          </Link>
+                          <div className="wishlist rounded-circle ">
+                            {product.has_wishlist ? (
+                              <BsHeartFill
+                                onClick={() => this.wishlistHandler(product)}
+                                className="wishlist_active"
+                                role="button"
                               />
-                            
-                            
+                            ) : (
+                              <BsHeart
+                                onClick={() => this.wishlistHandler(product)}
+                                role="button"
+                              />
+                            )}
                           </div>
-                          <div className="s-slider-content rounded-bottom">
-                            <div className="d-flex justify-content-between">
-                              <h2>{item.title}</h2>
-                              <Button className="slider-button" variant="primary">{item.button_txt}</Button>
-                            </div>
-                            
-                            <div className="ring-price">
-                              <span className="offer-price">
+                        </div>
+                        <div className="s-slider-content rounded-bottom">
+                          <h2>{product.name}</h2>
+                          <div className="ring-price">
+                            <span className="offer-price">
+                              {" "}
+                              {product.sale_price_display}{" "}
+                            </span>
+                            {product.have_offer ? (
+                              <>
                                 {" "}
-                                {item.final_price_display}{" "}
-                              </span>
-                              {item.discount > 0 ? (
-                                <>
-                                  <span className="item-price text-primary-emphasis">
-                                    {" "}
-                                    {item.price_display}{" "}
-                                  </span>
+                                <span className="me-2 text-danger">
+                                  Save
+                                </span>{" "}
+                                <span className="item-price text-primary-emphasis">
                                   {" "}
-                                  <span className="me-2 text-danger">Save&nbsp;{item.discount_display}</span>{" "}
-                                </>
-                              ) : null}
-                            </div>
+                                  {product.mrp_display}{" "}
+                                </span>
+                              </>
+                            ) : null}
                           </div>
-                        </Link>
+                        </div>
                       </div>
                     </SwiperSlide>
                   ))}
-                  
-                </Swiper>
-              </Container>
-            </section></>);
+
+                  {/*---- <SwiperSlide>
+                                  <div className='s-slider-image'>
+                                      <img src={sImage} alt='selling product' />
+                                      <div className='wishlist'>
+                                          <BiHeart />
+                                      </div>
+                                  </div>
+                                  <div className='s-slider-content'>
+                                      <h2>Gold Plated Ring</h2>
+                                      <div className='ring-price'>
+                                          <span className='offer-price'> ₹2999 </span>
+                                          <span className='item-price'> ₹2999 </span>
+                                      </div>
+                                  </div>
+                              </SwiperSlide>
+                              <SwiperSlide>
+                                  <div className='s-slider-image'>
+                                      <img src={sImage} alt='selling product' />
+                                      <div className='wishlist'>
+                                          <BiHeart />
+                                      </div>
+                                  </div>
+                                  <div className='s-slider-content'>
+                                      <h2>Gold Plated Ring</h2>
+                                      <div className='ring-price'>
+                                          <span className='offer-price'> ₹2999 </span>
+                                          <span className='item-price'> ₹2999 </span>
+                                      </div>
+                                  </div>
+                              </SwiperSlide>
+                              <SwiperSlide>
+                                  <div className='s-slider-image'>
+                                      <img src={sImage} alt='selling product' />
+                                  </div>
+                                  <div className='s-slider-content'>
+                                      <h2>Gold Plated Ring</h2>
+                                      <div className='ring-price'>
+                                          <span className='offer-price'> ₹2999 </span>
+                                          <span className='item-price'> ₹2999 </span>
+                                      </div>
+                                  </div>
+                              </SwiperSlide>
+                              <SwiperSlide>
+                                  <div className='s-slider-image'>
+                                      <img src={sImage} alt='selling product' />
+                                  </div>
+                                  <div className='s-slider-content'>
+                                      <h2>Gold Plated Ring</h2>
+                                      <div className='ring-price'>
+                                          <span className='offer-price'> ₹2999 </span>
+                                          <span className='item-price'> ₹2999 </span>
+                                      </div>
+                                  </div>
+                          </SwiperSlide> ---*/}
+                      </Swiper>
+                </Container>
+              </section>
+            ) : null}
+          </>);
+          break;
+          case item.section_name.toLowerCase() == "featuredproducts":
+            return (<>
+              {featured_products.length ? (
+                <section className="feature-product bg-white ">
+                  <Container className="bg-light py-3">
+                    <div className="feature-product-header">
+                      <h1 style={{ color: "#001e38" }}>Featured Products</h1>
+                    </div>
+                    <Swiper
+                      spaceBetween={20}
+                      onSlideChange={() => console.log("slide change")}
+                      onSwiper={(swiper) => console.log(swiper)}
+                      breakpoints={{
+                        // when window width is >= 320px
+                        320: {
+                          width: 320,
+                          slidesPerView: 2,
+                        },
+                        // when window width is >= 768px
+                        768: {
+                          width: 768,
+                          slidesPerView: 2,
+                        },
+                        // when window width is >= 1024px
+                        1024: {
+                          width: 1024,
+                          slidesPerView: 3,
+                        },
+                        // when window width is >= 1024px
+                        1440: {
+                          width: 1440,
+                          slidesPerView: 4,
+                        },
+                      }}
+                    >
+                      {featured_products.map((product, key) => (
+                        <SwiperSlide className=" rounded" key={key}>
+                          <div className="slide-swipe-inner rounded overflow-hidden">
+                            <div className="s-slider-image rounded-top">
+                              <Link to={"products/" + product.slug}>
+                                <img
+                                  src={product.default_image}
+                                  className="rounded-top Scale_on_hover"
+                                  alt="feature product"
+                                />
+                              </Link>
+                              <div className="wishlist rounded-circle ">
+                                {product.has_wishlist ? (
+                                  <BsHeartFill
+                                    onClick={() => this.wishlistHandler(product)}
+                                    className="wishlist_active"
+                                    role="button"
+                                  />
+                                ) : (
+                                  <BsHeart
+                                    onClick={() => this.wishlistHandler(product)}
+                                    role="button"
+                                  />
+                                )}
+                              </div>
+                            </div>
+                            <div className="s-slider-content rounded-bottom">
+                              <h2>{product.name}</h2>
+                              <div className="ring-price">
+                                <span className="offer-price">
+                                  {" "}
+                                  {product.sale_price_display}{" "}
+                                </span>
+                                {product.have_offer ? (
+                                  <span>
+                                    <span className="me-2 text-danger">Save</span>
+                                    <span className="item-price text-primary-emphasis">
+                                      {" "}
+                                      {product.mrp_display}{" "}
+                                    </span>
+                                  </span>
+                                ) : null}
+                              </div>
+                            </div>
+                          </div>
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                  </Container>
+                </section>
+              ) : null}
+            </>);
           break;
         }
       })}
@@ -847,233 +1093,9 @@ class HomePage extends Component {
 
         
         
-        {best_selling_products.length ? (
-          <section className="selling-product">
-            <Container>
-              <div className="selling-product-header">
-                <h1>Best Selling Products</h1>
-              </div>
-              <Swiper
-                spaceBetween={20}
-                onSlideChange={() => console.log("slide change")}
-                onSwiper={(swiper) => console.log(swiper)}
-                breakpoints={{
-                  // when window width is >= 320px
-                  320: {
-                    width: 320,
-                    slidesPerView: 2,
-                  },
-                  // when window width is >= 768px
-                  768: {
-                    width: 768,
-                    slidesPerView: 2,
-                  },
-                  // when window width is >= 1024px
-                  1024: {
-                    width: 1024,
-                    slidesPerView: 3,
-                  },
-                  // when window width is >= 1024px
-                  1440: {
-                    width: 1440,
-                    slidesPerView: 4,
-                  },
-                }}
-              >
-                {best_selling_products.map((product, key) => (
-                  <SwiperSlide key={key}>
-                    <div className="slide-swipe-inner rounded overflow-hidden">
-                      <div className="s-slider-image rounded-top">
-                        <Link to={"products/" + product.slug}>
-                          <img
-                            src={product.default_image}
-                            className="rounded-top Scale_on_hover"
-                            alt="selling product"
-                          />
-                        </Link>
-                        <div className="wishlist rounded-circle ">
-                          {product.has_wishlist ? (
-                            <BsHeartFill
-                              onClick={() => this.wishlistHandler(product)}
-                              className="wishlist_active"
-                              role="button"
-                            />
-                          ) : (
-                            <BsHeart
-                              onClick={() => this.wishlistHandler(product)}
-                              role="button"
-                            />
-                          )}
-                        </div>
-                      </div>
-                      <div className="s-slider-content rounded-bottom">
-                        <h2>{product.name}</h2>
-                        <div className="ring-price">
-                          <span className="offer-price">
-                            {" "}
-                            {product.sale_price_display}{" "}
-                          </span>
-                          {product.have_offer ? (
-                            <>
-                              {" "}
-                              <span className="me-2 text-danger">
-                                Save
-                              </span>{" "}
-                              <span className="item-price text-primary-emphasis">
-                                {" "}
-                                {product.mrp_display}{" "}
-                              </span>
-                            </>
-                          ) : null}
-                        </div>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                ))}
-
-                {/*---- <SwiperSlide>
-                                <div className='s-slider-image'>
-                                    <img src={sImage} alt='selling product' />
-                                    <div className='wishlist'>
-                                        <BiHeart />
-                                    </div>
-                                </div>
-                                <div className='s-slider-content'>
-                                    <h2>Gold Plated Ring</h2>
-                                    <div className='ring-price'>
-                                        <span className='offer-price'> ₹2999 </span>
-                                        <span className='item-price'> ₹2999 </span>
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                            <SwiperSlide>
-                                <div className='s-slider-image'>
-                                    <img src={sImage} alt='selling product' />
-                                    <div className='wishlist'>
-                                        <BiHeart />
-                                    </div>
-                                </div>
-                                <div className='s-slider-content'>
-                                    <h2>Gold Plated Ring</h2>
-                                    <div className='ring-price'>
-                                        <span className='offer-price'> ₹2999 </span>
-                                        <span className='item-price'> ₹2999 </span>
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                            <SwiperSlide>
-                                <div className='s-slider-image'>
-                                    <img src={sImage} alt='selling product' />
-                                </div>
-                                <div className='s-slider-content'>
-                                    <h2>Gold Plated Ring</h2>
-                                    <div className='ring-price'>
-                                        <span className='offer-price'> ₹2999 </span>
-                                        <span className='item-price'> ₹2999 </span>
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                            <SwiperSlide>
-                                <div className='s-slider-image'>
-                                    <img src={sImage} alt='selling product' />
-                                </div>
-                                <div className='s-slider-content'>
-                                    <h2>Gold Plated Ring</h2>
-                                    <div className='ring-price'>
-                                        <span className='offer-price'> ₹2999 </span>
-                                        <span className='item-price'> ₹2999 </span>
-                                    </div>
-                                </div>
-                        </SwiperSlide> ---*/}
-              </Swiper>
-            </Container>
-          </section>
-        ) : null}
+        
         {/*<div className='gap-100'></div>*/}
-        {featured_products.length ? (
-          <section className="feature-product bg-white ">
-            <Container className="bg-light py-3">
-              <div className="feature-product-header">
-                <h1 style={{ color: "#001e38" }}>Featured Products</h1>
-              </div>
-              <Swiper
-                spaceBetween={20}
-                onSlideChange={() => console.log("slide change")}
-                onSwiper={(swiper) => console.log(swiper)}
-                breakpoints={{
-                  // when window width is >= 320px
-                  320: {
-                    width: 320,
-                    slidesPerView: 2,
-                  },
-                  // when window width is >= 768px
-                  768: {
-                    width: 768,
-                    slidesPerView: 2,
-                  },
-                  // when window width is >= 1024px
-                  1024: {
-                    width: 1024,
-                    slidesPerView: 3,
-                  },
-                  // when window width is >= 1024px
-                  1440: {
-                    width: 1440,
-                    slidesPerView: 4,
-                  },
-                }}
-              >
-                {featured_products.map((product, key) => (
-                  <SwiperSlide className=" rounded" key={key}>
-                    <div className="slide-swipe-inner rounded overflow-hidden">
-                      <div className="s-slider-image rounded-top">
-                        <Link to={"products/" + product.slug}>
-                          <img
-                            src={product.default_image}
-                            className="rounded-top Scale_on_hover"
-                            alt="feature product"
-                          />
-                        </Link>
-                        <div className="wishlist rounded-circle ">
-                          {product.has_wishlist ? (
-                            <BsHeartFill
-                              onClick={() => this.wishlistHandler(product)}
-                              className="wishlist_active"
-                              role="button"
-                            />
-                          ) : (
-                            <BsHeart
-                              onClick={() => this.wishlistHandler(product)}
-                              role="button"
-                            />
-                          )}
-                        </div>
-                      </div>
-                      <div className="s-slider-content rounded-bottom">
-                        <h2>{product.name}</h2>
-                        <div className="ring-price">
-                          <span className="offer-price">
-                            {" "}
-                            {product.sale_price_display}{" "}
-                          </span>
-                          {product.have_offer ? (
-                            <span>
-                              <span className="me-2 text-danger">Save</span>
-                              <span className="item-price text-primary-emphasis">
-                                {" "}
-                                {product.mrp_display}{" "}
-                              </span>
-                            </span>
-                          ) : null}
-                        </div>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </Container>
-          </section>
-        ) : null}
+        
         <section className="blue-pearl mt-3 mb-3 mt-md-4 mb-md-4 position-relative">
           <Container>
             <Row>
