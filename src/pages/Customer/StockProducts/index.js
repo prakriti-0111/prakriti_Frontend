@@ -16,11 +16,11 @@ import { BsFilterLeft, BsFillPlayFill, BsCheck2 } from "react-icons/bs";
 import { bindActionCreators } from "redux";
 import { connect, useSelector } from "react-redux";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
-import { productList, productFetch } from "actions/Customer/product.actions";
+import { stockProductList, productFetch } from "actions/Customer/product.actions";
 import {
   AddToCart,
   CartList,
-  AddToCartRaw,
+  AddToCartStockRaw,
 } from "actions/Customer/addcart.actions";
 import { WishListAdd } from "actions/Customer/wishlist.actions";
 import withRouter from "src/helpers/withRouter";
@@ -150,7 +150,7 @@ class ProductsPage extends React.Component {
     this.setState({
       processing: true,
     });
-    productList({ ...params, page: 1, limit: limit }).then((res) => {
+    stockProductList({ ...params, page: 1, limit: limit }).then((res) => {
       if (res.data.success) {
         this.setState(
           {
@@ -172,7 +172,7 @@ class ProductsPage extends React.Component {
   softLoadProducts = (params, total) => {
     let totalPage = Math.ceil(total / params.limit);
     if (totalPage >= params.page) {
-      productList(params).then((res) => {
+      stockProductList(params).then((res) => {
         if (res.data.success) {
           this.setState(
             {
@@ -278,7 +278,7 @@ class ProductsPage extends React.Component {
     };
 
     console.log("-------------- Data of cart items ", data);
-    let res = await AddToCartRaw(data);
+    let res = await AddToCartStockRaw(data);
     if (res.data.success) {
       toast.success(res.data.message);
       this.props.actions.CartList();
@@ -348,7 +348,7 @@ class ProductsPage extends React.Component {
     }
   };
   handleProductDetails = (product) => {
-    this.props.navigate(product.slug);
+    this.props.navigate(product.certificate_no);
   };
 
   openVideo = (product) => {
@@ -802,7 +802,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators({ productList, AddToCart, CartList }, dispatch),
+  actions: bindActionCreators({ stockProductList, AddToCart, CartList }, dispatch),
   dispatch,
 });
 

@@ -111,7 +111,7 @@ class OrdersPage extends React.Component {
                             />
                             <div className="total">
                               <h5 className="text-primary-emphasis">
-                                {item.orderProducts[0].product_name}
+                                {item.orderProducts[0].product_name} {`${item.orderProducts[0].certificate_no != ""?"(Certificate no. "+item.orderProducts[0].certificate_no+")":""}`}
                               </h5>
                               <h6 className="my-2">{item.total_amount}</h6>
                               <h6>

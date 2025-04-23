@@ -1,0 +1,154 @@
+.selling-product {
+  /*margin-top: 0px !important;*/
+  padding: 20px 0;
+  background-color: #1C4848 !important; /*#235C5A*/
+}
+
+.selling-product .selling-product-header h1 {
+  color: #ffffff;
+}
+
+.selling-product .s-slider-content {
+    padding: 10px;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+  }
+  .selling-product .s-slider-content h2 {
+    color: #2c2a2b;
+    font-family: "Muli";
+    font-size: 24px;
+  }
+  .selling-product .s-slider-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  .selling-product .s-slider-content button {
+    font-size: 16px;
+  }
+
+  @media (max-width: 1024px) {
+    .selling-product .s-slider-content button {
+      font-size: 16px;
+    }
+
+    .selling-product .s-slider-content h2 {
+        color: #2c2a2b;
+        font-family: "Muli";
+        font-size: 16px;
+        padding-top:3%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .selling-product .s-slider-content button {
+      font-size: 14px;
+    }
+
+    .selling-product .s-slider-content h2 {
+        color: #2c2a2b;
+        font-family: "Muli";
+        font-size: 14px;
+        padding-top:1%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .selling-product .s-slider-content button {
+      font-size: 12px;
+    }
+
+    .selling-product .s-slider-content h2 {
+        color: #2c2a2b;
+        font-family: "Muli";
+        font-size: 12px;
+        padding-top:5%;
+    }
+  }
+
+  /* Default styles for the ring-price section */
+  .selling-product .ring-price {
+    flex-direction: row; /* Switch to row layout */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+    align-items: center; /* Align items vertically */
+    gap: 5px;
+  }
+  
+  .selling-product .ring-price .offer-price {
+    font-size: 18px; /* Default font size for offer price */
+    font-weight: bold;
+    color: #2c2a2b; /* Highlighted color for offer price */
+  }
+  
+  .selling-product .ring-price .item-price {
+    font-size: 16px; /* Default font size for item price */
+    text-decoration: line-through;
+    color: #757575; /* Muted color for original price */
+  }
+  
+  .selling-product .ring-price .me-2 {
+    font-size: 14px; /* Default font size for discount text */
+    color: #d32f2f; /* Highlighted color for discount */
+  }
+  
+  /* For tablets and smaller screens (max-width: 768px) */
+  @media (max-width: 768px) {
+    .selling-product .ring-price {
+      flex-direction: row; /* Switch to row layout */
+      flex-wrap: wrap; /* Allow wrapping if needed */
+      align-items: center; /* Align items vertically */
+      gap: 10px; /* Add spacing between elements */
+    }
+
+    .selling-product .ring-price .offer-price{
+      font-size: 16px;
+    }
+  
+    .selling-product .ring-price .item-price,
+    .selling-product .ring-price .me-2 {
+      font-size: 14px; /* Adjust font size for smaller screens */
+    }
+  }
+  
+  /* For mobile screens (max-width: 480px) */
+  @media (max-width: 480px) {
+    .selling-product .ring-price {
+      flex-direction: row; /* Keep row layout */
+      flex-wrap: wrap; /* Allow wrapping for very small screens */
+      align-items: center; /* Align items vertically */
+      gap: 5px; /* Reduce spacing */
+    }
+
+    .selling-product .ring-price .offer-price{
+      font-size: 14px;
+    }
+  
+    .selling-product .ring-price .item-price,
+    .selling-product .ring-price .me-2 {
+      font-size: 12px; /* Further reduce font size */
+    }
+  }
+
+  .festive-offer {
+    background-color: #9f9999 !important;
+  }
+
+  .festive-offer .festive-offer-header h1 {
+    color: #ffffff !important;
+  }
+
+  .new-arrival {
+    background-color: #9f9999 !important;
+  }
+
+  .new-arrival .marquee {
+    background-color: #9f9999 !important;
+  }
+
+  .new-arrival .marquee-heading {
+    color: #ffffff !important;
+  }
+
+  .new-arrival .marquee-wrapper{
+    margin-bottom: 0px !important;
+  }
