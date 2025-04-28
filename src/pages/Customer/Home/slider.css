@@ -1,3 +1,13 @@
+.selling-product {
+  /*margin-top: 0px !important;*/
+  padding: 20px 0;
+  background-color: #1C4848 !important; /*#235C5A*/
+}
+
+.selling-product .selling-product-header h1 {
+  color: #ffffff;
+}
+
 .selling-product .s-slider-content {
     padding: 10px;
     background-color: #fff;
@@ -117,4 +127,28 @@
     .selling-product .ring-price .me-2 {
       font-size: 12px; /* Further reduce font size */
     }
+  }
+
+  .festive-offer {
+    background-color: #9f9999 !important;
+  }
+
+  .festive-offer .festive-offer-header h1 {
+    color: #ffffff !important;
+  }
+
+  .new-arrival {
+    background-color: #9f9999 !important;
+  }
+
+  .new-arrival .marquee {
+    background-color: #9f9999 !important;
+  }
+
+  .new-arrival .marquee-heading {
+    color: #ffffff !important;
+  }
+
+  .new-arrival .marquee-wrapper{
+    margin-bottom: 0px !important;
   }

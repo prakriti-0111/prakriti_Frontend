@@ -5,7 +5,9 @@ import {
     LOGOUT_FAILURE,
     UPDATE_GLOBAL_AUTH,
     SIGNUP_SUCCESS,
-    SIGNUP_FAILURE
+    SIGNUP_FAILURE,
+    FORGOTPASSWORD_SUCCESS,
+    FORGOTPASSWORD_FAILURE
 } from 'actionTypes/global.types';
 import secureLocalStorage  from  "react-secure-storage";
 
@@ -82,11 +84,25 @@ export default function (state = initialState, action) {
                 loginError: null
             }
             return signupData;
-        case  SIGNUP_FAILURE:
+        case SIGNUP_FAILURE:
             return {
                 ...state,
                 isLoggedIn: false,
                 signupErr: payload
+            }
+        case FORGOTPASSWORD_SUCCESS:
+            return {
+                ...state,
+                isLoggedIn: false,
+                forgotError: null,
+                forgotSuccess: payload
+            }
+        case FORGOTPASSWORD_FAILURE:
+            return {
+                ...state,
+                isLoggedIn: false,
+                forgotSuccess: false,
+                forgotError: payload
             }
         default:
             return state;

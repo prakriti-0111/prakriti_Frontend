@@ -268,6 +268,7 @@ class OrderSuccessful extends React.Component {
                                                                         <div><img src={item.image} alt='' /></div>
                                                                         <div className='order-success-inner'>
                                                                             <span><p>Product Details: </p> <p>{item.product_name}</p></span>
+                                                                            <span><p>Certificate No.: </p> <p>{item.certificate_no}</p></span>
                                                                             <span><p>Expected Delivery Date: </p> <p>{order.expected_delivery_date}</p></span>
                                                                         </div>
                                                                     </div>

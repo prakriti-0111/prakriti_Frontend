@@ -6,6 +6,8 @@ import {
   LOGOUT_FAILURE,
   SIGNUP_SUCCESS,
   SIGNUP_FAILURE,
+  FORGOTPASSWORD_SUCCESS,
+  FORGOTPASSWORD_FAILURE,
 } from "actionTypes/global.types";
 import { Axios } from "axios";
 import secureLocalStorage from "react-secure-storage";
@@ -95,6 +97,28 @@ export const logout = () => {
         } else {
           dispatch({
             type: LOGOUT_FAILURE,
+            payload: response.data.message,
+          });
+        }
+      })
+      .catch((error) => {});
+  };
+};
+
+export const forgotPassword = (data) => {
+  data.cookie_id = GetCookieID();
+  return (dispatch) => {
+    axios
+      .post(`/customer/sendpassword`, data)
+      .then((response) => {
+        if (response.data.success) {
+          dispatch({
+            type: FORGOTPASSWORD_SUCCESS,
+            payload: response.data.message,
+          });
+        } else {
+          dispatch({
+            type: FORGOTPASSWORD_FAILURE,
             payload: response.data.message,
           });
         }

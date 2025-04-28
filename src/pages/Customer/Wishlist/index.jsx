@@ -115,6 +115,10 @@ const Wishlist = (props) => {
                                     Product Code :{" "}
                                     <span>{val.product_code}</span>
                                   </p>
+                                  <p>
+                                    Certificate No :{" "}
+                                    <span>{val.certificate_no}</span>
+                                  </p>
                                 </div>
                                 <div>
                                   <div className="price-wrapper">
@@ -191,7 +195,7 @@ const Wishlist = (props) => {
                                     variant="default"
                                     className="rounded"
                                     onClick={() => {
-                                      navigate(`/products/${val.product_slug}`);
+                                      navigate(`/products/${val.certificate_no}`);
                                     }}
                                   >
                                     Open Product

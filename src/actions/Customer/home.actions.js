@@ -44,3 +44,7 @@ export const stockProductList = () => {
     return axios.get(`/customer/stock-products-slider`)
 }
 
+export const homePageSetting = () => {
+    return axios.get(`/customer/homepagesettings`)
+}
+
