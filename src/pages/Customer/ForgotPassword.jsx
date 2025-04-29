@@ -9,37 +9,32 @@ import LoginImage from "src/assets/images/login.png";
 import { bindActionCreators } from "redux";
 import { connect, useSelector } from "react-redux";
 import withRouter from "src/helpers/withRouter";
-import Loader from "../../pages/Customer/Loader";
-import { login } from "actions/Customer/auth.actions";
+import Loader from "./Loader";
+import { forgotPassword } from "actions/Customer/auth.actions";
 import { toast } from "react-toastify";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { FaFacebookF } from "react-icons/fa";
 import { getLastVisitPage, setLastVisitPage } from "src/helpers/helper";
-import GoogleLogin from "react-google-login";
-import {
-  GoogleOAuthProvider,
-  GoogleLogin as NewGoogleLogin,
-  useGoogleLogin,
-} from "@react-oauth/google";
+
 import jwtDecode from "jwt-decode";
 
-class Login extends React.Component {
+class ForgotPassword extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      loginError: this.props.loginError,
+      forgotError: this.props.forgotError,
       isLoggedIn: this.props.isLoggedIn,
       formValaues: {
         mobile: "",
-        password: "",
+        //password: "",
       },
       formErrors: {
         mobile: null,
-        password: null,
+        //password: null,
       },
-      passwordShow: false,
-      googleBtnTxt: "LOGIN WITH GOOGLE",
+      //passwordShow: false,
+      //googleBtnTxt: "LOGIN WITH GOOGLE",
     };
   }
 
@@ -62,26 +57,27 @@ class Login extends React.Component {
       update.isLoggedIn = props.isLoggedIn;
     }
 
-    if (props.loginError !== state.loginError) {
-      update.loginError = props.loginError;
+    if (props.forgotError !== state.forgotError) {
+      update.forgotError = props.forgotError;
     }
 
     return update;
   }
 
   componentDidUpdate(prevProps) {
-    if (this.state.isLoggedIn) {
-      let lastVisitPage = getLastVisitPage();
-      toast.success("Login Successfully!");
-      setLastVisitPage("");
-      let url = lastVisitPage
-        ? lastVisitPage.replace(process.env.BASE_URL, "/")
-        : "/";
-      let startFirstTwo = url.substring(0, 2);
-      url =
-        startFirstTwo == "//" || startFirstTwo == "///" ? url.substr(1) : url;
-      console.log("url", url);
-      this.props.navigate(url);
+    if (this.state.forgotSuccess) {
+      //let lastVisitPage = getLastVisitPage();
+      toast.success(this.state.forgotSuccess);
+      // setLastVisitPage("");
+      // let url = lastVisitPage
+      //   ? lastVisitPage.replace(process.env.BASE_URL, "/")
+      //   : "/";
+      // let startFirstTwo = url.substring(0, 2);
+      // url =
+      //   startFirstTwo == "//" || startFirstTwo == "///" ? url.substr(1) : url;
+      // console.log("url", url);
+      // this.props.navigate(url);
+      this.props.navigate("/login");
       //window.location.href = process.env.BASE_URL;
     }
   }
@@ -100,7 +96,7 @@ class Login extends React.Component {
     event.preventDefault();
 
     if (this.formValidate()) {
-      this.props.actions.login(this.state.formValaues);
+      this.props.actions.forgotPassword(this.state.formValaues);
     }
   };
 
@@ -114,67 +110,16 @@ class Login extends React.Component {
     } else {
       formErrors.mobile = null;
     }
-    if (!formValaues.password) {
-      formErrors.password = "Password # is required.";
-      hasErr = true;
-    } else {
-      formErrors.password = null;
-    }
+    
     this.setState({
       formErrors: formErrors,
     });
     return !hasErr;
   };
 
-  handleGoogleRespone = (response) => {
-    console.log("google", response);
-    if (
-      typeof response === "object" &&
-      response !== null &&
-      response.profileObj
-    ) {
-      let params = {
-        name: "name" in response.profileObj ? response.profileObj.name : "",
-        email: "email" in response.profileObj ? response.profileObj.email : "",
-        mobile: "name" in response.profileObj ? response.profileObj.mobile : "",
-        social_type: "google",
-        social_id: "googleId" in response ? response.googleId : "",
-      };
-      this.setState({
-        googleBtnTxt: "Processing...",
-      });
-      /*CustomerDataAccess.SocialLogin(params,(res: BaseResponse) => {
-				this.state.Model.googleBtnTxt = 'LOGIN WITH GOOGLE';
-				if(!res.success){
-					this.state.Model.loginErrorMsg = res.message;
-					this.UpdateViewModel();
-					return;
-				}
-				this.UpdateViewModel();
-				SessionHelper.SetSession(res.data as CustomerModel);
-				this.ShowToast(res.message,"success");
-				window.location.href = '/';
-				
-			});*/
-    } else {
-      if (!response.error) {
-        this.state.Model.loginErrorMsg = "Login failed";
-        this.UpdateViewModel();
-      }
-    }
-  };
-
-  handleGoogleLogin = () => {
-    useGoogleLogin({
-      onSuccess: (codeResponse) => {
-        console.log(codeResponse);
-      },
-      flow: "auth-code",
-    });
-  };
-
   render() {
-    const { loginError, formValaues, formErrors, passwordShow } = this.state;
+    const { forgotError, formValaues, formErrors, passwordShow } = this.state;
+    console.log("forgotError", forgotError);
     return (
       <div className="login-wrapper pt-0">
         <Container>
@@ -238,11 +183,11 @@ Note -: In our place jewellery is made by applying gold, silver and diamond in P
             </Col>
             <Col xs={12} md={5}>
               <div className="login-form-wrapper shadow">
-                <h2 className="text-danger text-center">Login</h2>
+                <h2 className="text-danger text-center">Forgot Password</h2>
                 <hr />
-                <span className="h5">Welcome Back</span>
-                {loginError ? (
-                  <Alert variant="danger">{loginError}</Alert>
+                <span className="h5">Forgot your password?</span>
+                {forgotError ? (
+                  <Alert variant="danger">{forgotError}</Alert>
                 ) : null}
                 <form onSubmit={this.onSubmit}>
                   <Form.Group
@@ -264,99 +209,27 @@ Note -: In our place jewellery is made by applying gold, silver and diamond in P
                     </span>
                   </Form.Group>
 
-                  <Form.Group
-                    className="mb-2 position-relative"
-                    controlId="formBasicPassword"
-                  >
-                    <Form.Control
-                      name="password"
-                      onChange={(e) => this.handleChange(e)}
-                      value={formValaues.password}
-                      type={passwordShow ? "text" : "password"}
-                      placeholder="Enter Password"
-                      className="rounded"
-                      required
-                    />
-
-                    <span type="invalid" style={{ color: "red" }}>
-                      {" "}
-                      {formErrors.password}{" "}
-                    </span>
-                    <span className="show-pass">
-                      {!this.state.passwordShow ? (
-                        <AiOutlineEyeInvisible
-                          onClick={() => this.setState({ passwordShow: true })}
-                        />
-                      ) : (
-                        <AiOutlineEye
-                          onClick={() => this.setState({ passwordShow: false })}
-                        />
-                      )}
-                    </span>
-                  </Form.Group>
-                  <Form.Group
-                    className="mt-2 d-flex justify-content-between forgot-password"
-                    controlId="formBasicCheckbox"
-                  >
-                    <Form.Check type="checkbox" label="Remember Me" />
-                    <a href="/forgot-password">Forgot Password?</a>
-                  </Form.Group>
+                  
                   <div className="login-button mb-0 mt-3">
                     <Button variant="primary" type="submit" className="rounded">
-                      LOGIN
+                      SEND PASSWORD
                     </Button>
                   </div>
                   <p className="login-text mt-2 mb-2">
-                    Do not have an account with us?{" "}
-                    <a href="/signup">Sign Up</a>
+                    Already Have an Account?{" "}
+                    <a href="/login">Login</a>
                   </p>
                   <hr />
                   <div className="login-button-mob mb-4 mt-0">
                     <Button
                       variant="primary"
-                      href="/signup"
+                      href="/login"
                       className="rounded"
                     >
-                      CREATE ACCOUNT
+                      LOGIN
                     </Button>
                   </div>
-                  <div className="login-footer-button">
-                    {/*<GoogleOAuthProvider clientId="701708035160-86p8d20lg8etmlk4r8ltck35mnua681r.apps.googleusercontent.com">
-                                        <NewGoogleLogin
-                                            onSuccess={credentialResponse => {
-                                                console.log(credentialResponse);
-                                                const USER_CREDENTIAL = jwtDecode(credentialResponse.credential);
-                                                console.log(USER_CREDENTIAL);
-                                            }}
-                                            onError={() => {
-                                                console.log('Login Failed');
-                                            }}
-                                        />
-                                        </GoogleOAuthProvider>*/}
-                    <GoogleLogin
-                      clientId={
-                        "701708035160-86p8d20lg8etmlk4r8ltck35mnua681r.apps.googleusercontent.com"
-                      }
-                      render={(renderProps) => (
-                        <button
-                          onClick={renderProps.onClick}
-                          className="btn btn-google bg-danger email-btn rounded"
-                        >
-                          {this.state.googleBtnTxt}
-                        </button>
-                      )}
-                      onSuccess={this.handleGoogleRespone}
-                      onFailure={this.handleGoogleRespone}
-                      cookiePolicy={"single_host_origin"}
-                    />
-                    <Button
-                      variant="primary"
-                      className="fb-btn rounded"
-                      href=""
-                    >
-                      <FaFacebookF /> &nbsp; LOGIN WITH FACEBOOK
-                    </Button>
-                  </div>
+                  
                 </form>
               </div>
             </Col>
@@ -370,11 +243,12 @@ Note -: In our place jewellery is made by applying gold, silver and diamond in P
 const mapStateToProps = (state) => ({
   auth: state.auth,
   isLoggedIn: "isLoggedIn" in state.auth ? state.auth.isLoggedIn : false,
-  loginError: "loginError" in state.auth ? state.auth.loginError : "",
+  forgotError: "forgotError" in state.auth ? state.auth.forgotError : "",
+  forgotSuccess: "forgotSuccess" in state.auth ? state.auth.forgotSuccess : "",
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators({ login }, dispatch),
+  actions: bindActionCreators({ forgotPassword }, dispatch),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ForgotPassword));

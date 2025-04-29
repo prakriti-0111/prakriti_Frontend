@@ -16,6 +16,7 @@ const ForgotPassword = Loadable(lazy(() => import('pages/Customer/ForgotPassword
 const PageNotFound = Loadable(lazy(() => import('pages/Customer/PageNotFound')));
 const PrivacyPolicy = Loadable(lazy(() => import('pages/Customer/PrivacyPolicy')));
 const ProductDetails = Loadable(lazy(() => import('pages/Customer/ProductDetails')));
+const StockProductDetails = Loadable(lazy(() => import('pages/Customer/StockProductDetails')));
 const ReturnPolicy = Loadable(lazy(() => import('pages/Customer/ReturnPolicy')));
 const TermsCondition = Loadable(lazy(() => import('pages/Customer/TermsCondition')));
 const Support = Loadable(lazy(() => import('pages/Customer/Support')));
@@ -31,11 +32,13 @@ const Vision = Loadable(lazy(() => import('pages/Customer/Vision')));
 const WhyBuyFromUs = Loadable(lazy(() => import('pages/Customer/WhyBuyFromUs')));
 const CustomerLogin = Loadable(lazy(()=>import('pages/Customer/Login')));
 const CustomerSignup= Loadable(lazy(()=> import('pages/Customer/Signup')));
+const CustomerForgotPassword = Loadable(lazy(()=>import('pages/Customer/ForgotPassword')));
 const OrderSuccessful= Loadable(lazy(()=> import('pages/Customer/Orders/OrderSuccess')));
 const Wishlist = Loadable(lazy(()=>import('pages/Customer/Wishlist')));
 const ChangePassword = Loadable(lazy(()=>import('pages/Customer/ChangePassword')));
 const MyAddress = Loadable(lazy(()=>import('pages/Customer/MyAddress')));
 const ProductsPage = Loadable(lazy(()=>import('pages/Customer/Products')));
+const StockProductsPage = Loadable(lazy(()=>import('pages/Customer/StockProducts')));
 const RetailersCreatePage = Loadable(lazy(()=>import('pages/Customer/Retailers/create')));
 
 const routePrefix = '/';
@@ -79,6 +82,14 @@ const CustomerRoutes = (isLoggedIn) => [
             {
                 path: 'products/:slug',
                 element: <ProductDetails />
+            },
+            {
+                path: 'stock-products',
+                element: <StockProductsPage />
+            },
+            {
+                path: 'stock-products/:slug',
+                element: <StockProductDetails />
             },
             {
                 path: 'return-policy',
@@ -135,6 +146,10 @@ const CustomerRoutes = (isLoggedIn) => [
             {
                 path: `login`,
                 element: <CustomerLogin />
+            },
+            {
+                path: `forgot-password`,
+                element: <CustomerForgotPassword />
             },
             {
                 path: 'cart',
