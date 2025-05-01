@@ -1,5 +1,5 @@
 .selling-product {
-  /*margin-top: 0px !important;*/
+  margin-top: 0px !important;
   padding: 20px 0;
   background-color: #1C4848 !important; /*#235C5A*/
 }
@@ -112,6 +112,10 @@
   
   /* For mobile screens (max-width: 480px) */
   @media (max-width: 480px) {
+    section.selling-product {
+      margin-top: 0px !important;
+    }
+
     .selling-product .ring-price {
       flex-direction: row; /* Keep row layout */
       flex-wrap: wrap; /* Allow wrapping for very small screens */
@@ -126,6 +130,38 @@
     .selling-product .ring-price .item-price,
     .selling-product .ring-price .me-2 {
       font-size: 12px; /* Further reduce font size */
+    }
+
+    .selling-product .selling-product-header h1 {
+      margin-bottom: 10px !important;
+    }
+
+    .festive-offer {
+      padding-top: 5px !important;
+    }
+
+    .festive-offer .slide {
+      margin: -20px 0px 0px 0px;
+    }
+
+    .festive-offer .festive-offer-header h1{
+      font-size: 18px;
+    }
+
+    .promocode {
+      margin-bottom: 10px !important;
+    }
+
+    .promocode .diamond-inner{
+      width:300px;
+    }
+
+    .feature-product{
+      padding: 0px !important;
+    }
+
+    section.ornament-slider .swiper{
+      margin-bottom: -175px !important;
     }
   }
 
