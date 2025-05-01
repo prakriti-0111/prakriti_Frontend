@@ -141,9 +141,11 @@ class HomePage extends Component {
           currentMarqueeIndex: cIndex
         });
 
+        let deltaWidth = "25px";
+
         // Animate scroll with transform
-        track.style.transition = 'transform 1s ease-in-out';
-        track.style.transform = `translateX(-${itemWidth * cIndex}px)`;
+        track.style.transition = 'transform 2s ease-in-out';
+        track.style.transform = `translateX(-${(itemWidth) * (cIndex*1)}px)`;
       }, 3000); // 1s scroll + 2s pause
     }
   };
@@ -489,6 +491,45 @@ class HomePage extends Component {
               </div>
             </section></>);
           break;
+          case item.section_name.toLowerCase() == "mobilecategories":
+            return (<section className="ornament-slider">
+                <Container>
+                  <Swiper
+                    spaceBetween={10}
+                    slidesPerView={4}
+                    onSwiper={(swiper) => console.log(swiper)}
+                    onSlideChange={() => console.log("slide change")}
+                  >
+                    {this.state.categories.map((item, key) => (
+                      <SwiperSlide key={key}>
+                        <Link to={"/products?category=" + item.slug}>
+                          <div className="ornament-image">
+                            <Dropdown>
+                              <img
+                                src={item.icon ? item.icon : ring}
+                                alt=""
+                                className="border shadow"
+                                width={80}
+                              />
+                              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                <h4>{item.name}</h4>
+                              </Dropdown.Toggle>
+                              {/*<Dropdown.Menu>
+                                                          {
+                                                              item.subCategories.map((sub, i) => (
+                                                                  <Dropdown.Item href={`/products?category=${item.slug}&subcategory=${sub.slug}`} key={i}>{sub.name}</Dropdown.Item>
+                                                              ))
+                                                          }
+                              </Dropdown.Menu>*/}
+                            </Dropdown>
+                          </div>
+                        </Link>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </Container>
+              </section>);
+          break;
           case item.section_name.toLowerCase().startsWith("promocodes"):
             //console.log("item.section_name.toLowerCase() : ", item.section_name.toLowerCase());
             return ["platinum-jewelery", "diamond-jewellery", "gems-stone"].map((catSlug, k) => {
@@ -498,7 +539,7 @@ class HomePage extends Component {
                 //console.log("==================================");
                 return (<>{promocodes.map((item, key) => item.category_slug == catSlug?(
                   <section
-                    className={key % 2 == 0 ? "diamond-offer" : "pendant-offer"}
+                    className={`promocode ${key % 2 == 0 ? "diamond-offer" : "pendant-offer"}`}
                     key={key}
                   >
                     <Link
@@ -1008,46 +1049,6 @@ class HomePage extends Component {
         }
       })}
 
-            
-        
-        {/*---- only mob screen -----*/}
-        <section className="ornament-slider">
-          <Container>
-            <Swiper
-              spaceBetween={10}
-              slidesPerView={4}
-              onSwiper={(swiper) => console.log(swiper)}
-              onSlideChange={() => console.log("slide change")}
-            >
-              {this.state.categories.map((item, key) => (
-                <SwiperSlide key={key}>
-                  <Link to={"/products?category=" + item.slug}>
-                    <div className="ornament-image">
-                      <Dropdown>
-                        <img
-                          src={item.icon ? item.icon : ring}
-                          alt=""
-                          className="border shadow"
-                          width={80}
-                        />
-                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                          <h4>{item.name}</h4>
-                        </Dropdown.Toggle>
-                        {/*<Dropdown.Menu>
-                                                    {
-                                                        item.subCategories.map((sub, i) => (
-                                                            <Dropdown.Item href={`/products?category=${item.slug}&subcategory=${sub.slug}`} key={i}>{sub.name}</Dropdown.Item>
-                                                        ))
-                                                    }
-                        </Dropdown.Menu>*/}
-                      </Dropdown>
-                    </div>
-                  </Link>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </Container>
-        </section>
         
         {/*<section className='diamond-offer'>
                     <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(http://localhost:9090/public/uploads/products/e4366a65-7b1c-47b2-af70-0d43cca90921.jpeg) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
