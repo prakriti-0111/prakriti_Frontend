@@ -14,14 +14,17 @@
 
 .marquee-track {
   display: flex;
-  transition: transform 1s ease-in-out;
+  /* transition: transform 1s ease-in-out; */
   will-change: transform;
+  width: max-content;
 }
 
 .marquee-item {
   flex: 0 0 auto;
   min-width: 100%; /* each item takes full width of marquee */
   box-sizing: border-box;
+  /* padding: 10px 20px; */
+  white-space: nowrap;
 }
 
 @media (max-width: 1024px) {
@@ -131,7 +134,7 @@
     }
 
     .new-arrival .marquee span {
-      gap: 5px;
+      gap: 20px;
     }
   }
 
@@ -181,4 +184,14 @@
 .marquee::after {
     right: 0;
     background: linear-gradient(to left, rgba(var(--marquee-bg-color-rgba), 1), rgba(var(--marquee-bg-color-rgba), 0));
+}
+
+/* Animation: left to right (scrolling to the left) */
+@keyframes scroll-marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
