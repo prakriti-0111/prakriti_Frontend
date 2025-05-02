@@ -69,6 +69,7 @@ class HomePage extends Component {
     super(props);
     this.marqueeTrackRef = createRef();
     this.marqueeRef = createRef();
+    this.animationFrameId = null;
     this.intervalId = null;
     this.state = {
       PromiseData: {
@@ -94,6 +95,9 @@ class HomePage extends Component {
       promise_box: "",
       currentMarqueeIndex: 0
     };
+
+    this.position = 0;
+    this.speed = 1; // pixels per frame
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -114,12 +118,14 @@ class HomePage extends Component {
   componentWillUnmount() {
     clearInterval(this.intervalId);
     this.removePauseListeners();
+    cancelAnimationFrame(this.animationFrameId);
   }
 
   startMarquee = () => {
     const track = this.marqueeTrackRef;
     if(track && track.children && track.children.length > 0){
       const itemWidth = track.children[0].offsetWidth;
+      console.log("track.children.length :", track.children.length);
       //let currentMarqueeIndex = 0;
       //let currentMarqueeIndex = track.children.length;
       const { currentMarqueeIndex } = this.state;
@@ -133,9 +139,9 @@ class HomePage extends Component {
         //   currentMarqueeIndex = 0;
         // }
 
-        if (cIndex < 0) {
+        /* if (cIndex < 0) {
           cIndex = track.children.length - 1;
-        }
+        } */
 
         this.setState({
           currentMarqueeIndex: cIndex
@@ -144,10 +150,64 @@ class HomePage extends Component {
         let deltaWidth = "25px";
 
         // Animate scroll with transform
-        track.style.transition = 'transform 2s ease-in-out';
-        track.style.transform = `translateX(-${(itemWidth) * (cIndex*1)}px)`;
-      }, 3000); // 1s scroll + 2s pause
+        //track.style.transition = 'transform 1.5s ease-in-out';
+        track.style.animation = `scroll-marquee 2s linear infinite`;
+        //track.style.transform = `translateX(-${(itemWidth) * (cIndex*1)}px)`;
+      }, 5000); // 1s scroll + 4s pause
     }
+  };
+
+  
+
+  setupMarquee = () => {
+    const track = this.marqueeTrackRef;
+    if(this.animationFrameId == null){
+      // Duplicate the content for infinite loop
+      const originalContent = track.innerHTML;
+      track.innerHTML += originalContent;
+    }
+
+    const itemWidth = track.children[0].offsetWidth;
+
+    console.log("this.position : ", this.position);
+    console.log("this.speed : ", this.speed);
+
+    const scroll = () => {
+      this.position -= this.speed;
+      /* console.log("inside scroll : ");
+      console.log("this.position : ", this.position);
+      console.log("this.speed : ", this.speed); */
+
+      // Reset when half the content has scrolled (i.e. one full set)
+      if (Math.abs(this.position) >= track.scrollWidth / 2) {
+        this.position = 0;
+      }
+
+      if(-this.position % (itemWidth+20) == 0){
+        console.log("===============================================");
+        console.log("itemWidth : ", itemWidth);
+        console.log("this.position : ", this.position);
+        console.log("this.speed : ", this.speed);
+        cancelAnimationFrame(this.animationFrameId);
+        setTimeout(() => {
+          scroll();
+        }, 4000);
+      } else {
+        track.style.transform = `translateX(${this.position}px)`;
+        this.animationFrameId = requestAnimationFrame(scroll);
+      }
+    };
+
+    scroll();
+
+    /* this.scrollInterval = setInterval(() => {
+      //alert("Marquee paused");
+      console.log("this.animationFrameId : ", this.animationFrameId);
+      cancelAnimationFrame(this.animationFrameId);
+      setTimeout(() => {
+        scroll();
+      }, 2000);
+    }, 4300);    */ 
   };
 
   addPauseListeners = () => {
@@ -176,10 +236,11 @@ class HomePage extends Component {
   
   pauseMarquee = () => {
     clearInterval(this.scrollInterval);
+    cancelAnimationFrame(this.animationFrameId);
   };
   
   resumeMarquee = () => {
-    this.startMarquee();
+    this.setupMarquee();
   };
 
   loadData = () => {
@@ -291,7 +352,7 @@ class HomePage extends Component {
         newArrivals: res.data.data.items,
         currentMarqueeIndex: res.data.data.items.length
       }, () => {
-        this.startMarquee();
+        this.setupMarquee();
       });
     }
   };
@@ -609,16 +670,17 @@ class HomePage extends Component {
                     <span className="marquee-track" ref={el => (this.marqueeTrackRef = el)}>
                       {newArrivals.map((item, key) => (
                         
-                          <div className="marquee-item" key={key} style={{cursor:"pointer"}} onClick={() => window.location = this.getNewArrivalLink(item)} >
+                          <div className="marquee-item" key={`NewArrivals_${key}`} style={{cursor:"pointer"}} onClick={() => window.location = this.getNewArrivalLink(item)} >
                             <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.image}) ` }}>
-                                <div className='offer-header'>
+                                {/*<div className='offer-header'>
                                     <h2>{item.title}</h2>
                                     <a href={this.getNewArrivalLink(item)} className='shop-now'>Shop Now</a>
-                                </div>
+                                </div>*/}
                             </Container>
                           </div>
                       
                       ))}
+                      
                       {/*<Link to={this.getNewArrivalLink(item)}>
                             <div className="slider-banner">
                               <img className="d-block w-100" src={item.image} alt="" />
