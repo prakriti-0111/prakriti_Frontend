@@ -229,7 +229,7 @@ class ProductsPage extends React.Component {
     if (product && !product.certified && product.type == "material") {
       
     }
-
+    console.log("product : ", product);
     let selected_materials = product
       ? product.size_materials[0].materials
       : [];
@@ -255,7 +255,7 @@ class ProductsPage extends React.Component {
 
       materials.push({
         material_id: thisM.material_id,
-        purity_id: m[0].id,
+        purity_id: m[0]?m[0].id:null,
         weight: weight ? weight : thisM.weight,
         unit_id: thisM.unit_id,
         quantity: weight ? quantity : thisM.quantity,
@@ -283,6 +283,7 @@ class ProductsPage extends React.Component {
     if (res.data.success) {
       toast.success(res.data.message);
       this.props.actions.CartList();
+      this.props.navigate("/cart");
       return true;
     } else {
       toast.error(res.data.message);
@@ -318,7 +319,7 @@ class ProductsPage extends React.Component {
 
         materials.push({
           material_id: thisM.material_id,
-          purity_id: m[0].id,
+          purity_id: m[0]?m[0].id:null,
           weight: thisM.weight,
           unit_id: thisM.unit_id,
           quantity: thisM.quantity,
@@ -345,6 +346,7 @@ class ProductsPage extends React.Component {
           type: UPDATE_WISHLIST_COUNT,
           payload: res.data.data.total,
         });
+        this.props.navigate("/wishlist");
       }
     }
   };
@@ -712,7 +714,19 @@ class ProductsPage extends React.Component {
                         className="s-slider-content"
                         onClick={() => this.handleProductDetails(product)}
                       >
-                        <h2>{product.name}</h2>
+                        <div className="content-name-action">
+                          <h2>{product.name}</h2>
+                          <Button
+                            variant="primary"
+                            className="rounded mt-1"
+                            onClick={() => this.handleAddToCart(product)}
+                          >
+                            <i class="bi bi-cart-plus-fill h6"></i> 
+                          </Button>
+                        </div>
+                        <div className="content-name">
+                          <h2>{product.name}</h2>
+                        </div>
                         <div className="ring-price">
                           {product.have_offer ? (
                             <>

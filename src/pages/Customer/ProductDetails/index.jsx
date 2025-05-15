@@ -336,11 +336,11 @@ class ProductDetails extends React.Component {
   };
 
   handleWishlist = async () => {
-    // if (isEmpty(this.state.auth)) {
-    //   setLastVisitPage();
-    //   this.props.navigate("/login");
-    //   return;
-    // }
+    if (isEmpty(this.state.auth)) {
+      setLastVisitPage();
+      this.props.navigate("/login");
+      return;
+    }
 
     const { product } = this.state;
     if (!product) {
@@ -363,7 +363,7 @@ class ProductDetails extends React.Component {
 
       materials.push({
         material_id: thisM.material_id,
-        purity_id: m[0].id,
+        purity_id: m[0]?m[0].id:null,
         weight: thisM.weight,
         unit_id: thisM.unit_id,
         quantity: thisM.quantity,
@@ -434,7 +434,7 @@ class ProductDetails extends React.Component {
         is_manual = 1;
       }
     }
-
+    console.log("product : ", product);
     let selected_materials = product
       ? product.size_materials[this.state.sizeMaterialIndex].materials
       : [];
@@ -446,11 +446,11 @@ class ProductDetails extends React.Component {
       : null;
     let total_weight = 0;
     let materials = [];
-
+    console.log("selected_materials : ", selected_materials);
     for (let i = 0; i < selected_materials.length; i++) {
       let thisM = selected_materials[i];
       let m = _.filter(thisM.purities, { is_selected: true });
-
+      console.log("m : ", m);
       let total_gram = convertUnitToGram(
         thisM.unit_name,
         weight ? weight : thisM.weight
@@ -460,7 +460,7 @@ class ProductDetails extends React.Component {
 
       materials.push({
         material_id: thisM.material_id,
-        purity_id: m[0].id,
+        purity_id: m[0]?m[0].id:null,
         weight: weight ? weight : thisM.weight,
         unit_id: thisM.unit_id,
         quantity: weight ? quantity : thisM.quantity,
@@ -497,6 +497,11 @@ class ProductDetails extends React.Component {
   };
 
   handleOrderNow = async () => {
+    if (isEmpty(this.state.auth)) {
+      setLastVisitPage();
+      this.props.navigate("/login");
+      return;
+    }
     let res = await this.handleAddToCart();
     if (res) {
       this.props.navigate("/checkout"); //"/cart"
@@ -1981,7 +1986,7 @@ class ProductDetails extends React.Component {
                           >
                             <i class="bi bi-cart-plus me-3"></i> ADD TO CART
                           </Button>
-                          <Button variant="primary" className="rounded">
+                          <Button variant="primary" onClick={this.handleOrderNow} className="rounded">
                             ORDER NOW
                           </Button>
                         </div>
