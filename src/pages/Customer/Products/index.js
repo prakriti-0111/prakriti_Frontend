@@ -41,6 +41,7 @@ import Searchbanner from "src/assets/images/ratn_banner.png";
 import { CUSTOMER_PRODUCT_WISHLIST_UPDATE } from "actionTypes/Customer/product.types";
 import { UPDATE_WISHLIST_COUNT } from "actionTypes/Customer/wishlist.type";
 import _ from "lodash";
+import "./style.css";
 
 class ProductsPage extends React.Component {
   constructor(props) {
