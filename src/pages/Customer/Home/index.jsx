@@ -62,15 +62,17 @@ import 'swiper/css/autoplay';
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Autoplay } from 'swiper';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import Loader from "../Loader";
 // import { current_stock } from "../../../actions/Customer/product.actions";
 import './marquee.css';
 import './slider.css';
+import withIsMobileView from "src/helpers/responsiveViewCheck";
 
 SwiperCore.use([Autoplay]);
-
 class HomePage extends Component {
   constructor(props) {
     super(props);
+
     this.marqueeTrackRef = createRef();
     this.marqueeRef = createRef();
     this.retailerMarqueeTrackRef = createRef();
@@ -257,7 +259,9 @@ class HomePage extends Component {
           
           
           // Reset when half the content has scrolled (i.e. one full set)
-          if (Math.abs(this.retailerPosition) >= document.querySelector(".marquee-track-retailer").scrollWidth / 2) {
+          if(this.props.isMobileView && Math.abs(this.retailerPosition) >= (document.querySelector(".marquee-track-retailer").scrollWidth / 2)){
+            this.retailerPosition = -5;
+          }else if (!this.props.isMobileView && Math.abs(this.retailerPosition) >= (document.querySelector(".marquee-track-retailer").scrollWidth / 2) - 600) {
             this.retailerPosition = -5;
           }
 
@@ -1258,52 +1262,6 @@ class HomePage extends Component {
           break;
         }
       })}
-
-        
-        {/*<section className='diamond-offer'>
-                    <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(http://localhost:9090/public/uploads/products/e4366a65-7b1c-47b2-af70-0d43cca90921.jpeg) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
-                        <div className='offer-header'>
-                            <h2>Diamond Rings at
-                                30% OFF</h2>
-                            <a href='/products' className='shop-now'>Shop Now</a>
-                        </div>
-
-                    </Container>
-                </section>
-                <section className='earring-offer'>
-                    <Container className='earring-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(http://localhost:9090/public/uploads/products/e4366a65-7b1c-47b2-af70-0d43cca90921.jpeg) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
-                        <div className='earring-header'>
-                            <h2>Earrings at 40% OFF at AXIS
-                                Bank Debit & Credit Cards</h2>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the</p>
-                            <a href='/products' className='shop-now'>Explore <CgArrowLongRight /></a>
-                        </div>
-
-                    </Container>
-                </section>
-                <section className='pendant-offer'>
-                    <Container className='pendant-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${pendant}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
-                        <div className='pendant-header'>
-                            <h2>Get Beautiful Pendants at only ₹8999</h2>
-                            <a href='/products' className='shop-now'>Shop Now</a>
-                        </div>
-
-                    </Container>
-                </section>
-                <section className='affordable-earring'>
-                    <Container className='affordable-earring-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${affordableearring}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
-                        <div className='affordable-earring-header'>
-                            <h2>Affordable Earrings at ₹9,999</h2>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever.</p>
-                            <a href='/products' className='shop-now'>Explore <CgArrowLongRight /></a>
-                        </div>
-
-                    </Container>
-                </section>*/}
-        
-
-        
-        
         
         {/*<div className='gap-100'></div>*/}
         
@@ -1862,61 +1820,6 @@ class HomePage extends Component {
                   />
                 </div>
               </div>
-              {/*<Swiper
-                spaceBetween={20}
-                onSlideChange={() => console.log("slide change Best Retailers")}
-                onSwiper={(swiper) => console.log(swiper)}
-                breakpoints={{
-                  // when window width is >= 320px
-                  320: {
-                    width: 320,
-                    slidesPerView: 2,
-                  },
-                  // when window width is >= 768px
-                  768: {
-                    width: 768,
-                    slidesPerView: 2,
-                  },
-                  // when window width is >= 1024px
-                  1024: {
-                    width: 1024,
-                    slidesPerView: 4,
-                  },
-                  // when window width is >= 1024px
-                  1440: {
-                    width: 1440,
-                    slidesPerView: 4,
-                  },
-                }}
-              >
-                {bestRetailers.map((item, key) => (
-                  <SwiperSlide key={key}>
-                    <div className="slide-swipe-inner rounded overflow-hidden">
-                      <div className="b-slider-image">
-                        <img
-                          src={item.image}
-                          className=""
-                          alt="feature product"
-                        />
-                      </div>
-                      <div className="b-slider-content">
-                        <h2>{item.name}</h2>
-                        <span className="seller-description">
-                          <ul>
-                            <li>
-                              <FaMapMarkerAlt />
-                            </li>
-                            <li>{item.address}</li>
-                          </ul>
-                        </span>
-                        <div className="ring-price">
-                          <span className='offer-price'> {item.since} </span>
-                        </div>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>*/}
 
               <div className="marquee-wrapper">
                 {/* <h1 className="marquee-heading container">Our Partners</h1> */}
@@ -1973,7 +1876,7 @@ class HomePage extends Component {
               </div>
             
           </section>
-        ) : null}
+        ) : <section className="feature-product best-retailer"><Loader /></section>}
 
       
         <section className="ratn-banner">
@@ -2244,6 +2147,6 @@ const mapDispatchToProps = (dispatch) => ({
   dispatch,
 });
 
-export default withRouter(
+export default withIsMobileView(withRouter(
   connect(mapStateToProps, mapDispatchToProps)(HomePage)
-);
+));
