@@ -40,7 +40,7 @@ const MyAddress = Loadable(lazy(()=>import('pages/Customer/MyAddress')));
 const ProductsPage = Loadable(lazy(()=>import('pages/Customer/Products')));
 const StockProductsPage = Loadable(lazy(()=>import('pages/Customer/StockProducts')));
 const RetailersCreatePage = Loadable(lazy(()=>import('pages/Customer/Retailers/create')));
-
+const RetailersViewPage = Loadable(lazy(()=>import('pages/Customer/Retailers/view')));
 const routePrefix = '/';
 const CustomerRoutes = (isLoggedIn) => [
     {
@@ -167,6 +167,10 @@ const CustomerRoutes = (isLoggedIn) => [
                 path: 'wishlist',
                 element: <Wishlist/>
             },
+            {
+                path: 'retailers/:id',
+                element: <RetailersViewPage />
+            }
         ]
     },
     {
