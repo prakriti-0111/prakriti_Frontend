@@ -717,8 +717,8 @@ class ProductsPage extends React.Component {
                         <div className="content-name-action">
                           <h2>{product.name}</h2>
                           <Button
-                            variant="primary"
-                            className="rounded mt-1"
+                            /* variant="primary" */
+                            className="rounded mt-1 cart-icon"
                             onClick={() => this.handleAddToCart(product)}
                           >
                             <i class="bi bi-cart-plus-fill h6"></i> 
