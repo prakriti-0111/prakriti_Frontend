@@ -54,3 +54,25 @@
     background: #E3DDDD !important;
     border: #E3DDDD !important;
 }
+
+.cart-icon{
+    background: #1E2746;
+    color: #fff;
+}
+
+
+@media screen and (max-width: 400px) {
+    .search-wrapper .offers-wrapper {
+        position: absolute;
+        left: 123px;
+        top: 10px;
+        margin: 0 0 0 -6px;
+        display: block;
+    }
+
+    .ring-price-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+}
