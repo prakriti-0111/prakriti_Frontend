@@ -34,7 +34,7 @@ import {
   getDistricts,
 } from "actions/Customer/address.actions";
 import { checkoutList } from "actions/Customer/checkout.actions";
-import { CartList } from "actions/Customer/addcart.actions";
+import { CartList, CartDelete } from "actions/Customer/addcart.actions";
 import { AddressCreate } from "actions/Customer/address.actions";
 import { OrderCreate } from "actions/Customer/placeOrder.actions";
 import { retailerList } from "actions/Customer/retailer.actions";
@@ -47,6 +47,9 @@ import { AiOutlineMail, AiOutlineUser, AiOutlineLock } from "react-icons/ai";
 import { login, existingUser, signup } from "actions/Customer/auth.actions";
 import { BsPhone } from "react-icons/bs";
 import Select from "react-select";
+import Modal from "react-bootstrap/Modal";
+import LoadingOverlay from "react-loading-overlay";
+LoadingOverlay.propTypes = undefined;
 
 class CheckoutPage extends React.Component {
   constructor(props) {
@@ -67,6 +70,8 @@ class CheckoutPage extends React.Component {
       total_discount: this.props.total_discount,
       addressList: [],
       newAddress: false,
+      removeDialog: false,
+      removingItem: null,
       addressForm: {
         name: "",
         contact: "",
@@ -674,6 +679,35 @@ class CheckoutPage extends React.Component {
     });
   };
 
+  removeConfirm = (item) => {
+    this.setState({
+      removeDialog: true,
+      removingItem: item,
+    });
+  };
+
+  handleRemoveDialogClose = () => {
+    this.setState({
+      removeDialog: false,
+    });
+  };
+
+  handleCartRemove = () => {
+    this.setState({
+      loading: true,
+    });
+    this.props.actions.CartDelete(this.state.removingItem.id);
+    setTimeout(() => {
+      this.setState({
+          loading: false,
+          removeDialog: false
+      }, () => {
+        this.props.actions.CartList();
+        this.props.navigate("/cart"); 
+      });
+    }, 1000);
+  };
+
   render() {
     const {
       newAddress,
@@ -689,9 +723,38 @@ class CheckoutPage extends React.Component {
     } = this.state;
     const cartList = this.state.items;
     return (
+      <LoadingOverlay active={this.state.loading} spinner text="">
       <div className="checkout-wrapper checkout-desktop pb-3 mb-0">
         <div className="wrapper-checkout">
           <div className="container">
+            <Modal
+              className="delete-popup"
+              show={this.state.removeDialog}
+              onHide={this.handleRemoveDialogClose}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>Remove From Cart</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Are you want to remove this product from cart ?
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  variant="secondary"
+                  className="close-btn"
+                  onClick={this.handleRemoveDialogClose}
+                >
+                  No
+                </Button>
+                <Button
+                  variant="danger"
+                  className="delete-btn"
+                  onClick={this.handleCartRemove}
+                >
+                  Yes
+                </Button>
+              </Modal.Footer>
+            </Modal>
             <div className="breadcrumb-wrapper">
               <Breadcrumb>
                 <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
@@ -1472,7 +1535,7 @@ class CheckoutPage extends React.Component {
                                   <Button
                                     variant=""
                                     className=""
-                                    onClick={() => this.removeConfirm(val)}
+                                    onClick={() => this.removeConfirm(item)}
                                   >
                                     {" "}
                                     <i class="bi bi-trash3 me-2 bg-danger text-white p-2 rounded"></i>
@@ -2054,7 +2117,7 @@ class CheckoutPage extends React.Component {
           </p>
         </div>
       </div>
-
+      </LoadingOverlay>
     );
   }
 }
@@ -2094,6 +2157,7 @@ const mapDispatchToProps = (dispatch) => ({
     {
       checkoutList,
       CartList,
+      CartDelete,
       OrderCreate,
       AddressCreate,
       retailerList,

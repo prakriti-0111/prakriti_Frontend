@@ -1,4 +1,5 @@
 import axios from 'actions/axios';
+import {objectToQuery, isObject} from 'src/helpers/helper';
 
 export const bannerList = () => {
     return axios.get(`/customer/banners`)
@@ -8,8 +9,10 @@ export const promocodeList = () => {
     return axios.get(`/customer/promocodes`)
 }
 
-export const bestRetailerList = () => {
-    return axios.get(`/customer/best-retailers`)
+export const bestRetailerList = async (params = {}) => {
+    params = objectToQuery(params, true)
+    console.log("bestRetailerList params : ", params);
+    return await axios.get(`/customer/best-retailers${params}`)
 }
 
 export const allCounts = () => {

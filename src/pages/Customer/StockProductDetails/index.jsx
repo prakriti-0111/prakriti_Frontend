@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
-import { Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Row, Col, OverlayTrigger, Tooltip, Nav, Tab, Tabs } from "react-bootstrap";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
@@ -27,6 +27,7 @@ import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Accordion from "react-bootstrap/Accordion";
+
 // import "./styles.css";
 import { FreeMode, Navigation, Thumbs } from "swiper";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -78,7 +79,7 @@ import { UPDATE_WISHLIST_COUNT } from "actionTypes/Customer/wishlist.type";
 import { Helmet } from "react-helmet";
 import ReactPaginate from "react-paginate";
 import { RWebShare } from "react-web-share";
-
+import "./style.css";
 class ProductDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -361,7 +362,7 @@ class ProductDetails extends React.Component {
 
       materials.push({
         material_id: thisM.material_id,
-        purity_id: m[0].id,
+        purity_id: m[0]?m[0].id:null,
         weight: thisM.weight,
         unit_id: thisM.unit_id,
         quantity: thisM.quantity,
@@ -458,7 +459,7 @@ class ProductDetails extends React.Component {
 
       materials.push({
         material_id: thisM.material_id,
-        purity_id: m[0].id,
+        purity_id: m[0]?m[0].id:null,
         weight: weight ? weight : thisM.weight,
         unit_id: thisM.unit_id,
         quantity: weight ? quantity : thisM.quantity,
@@ -496,9 +497,15 @@ class ProductDetails extends React.Component {
   };
 
   handleOrderNow = async () => {
+    if (isEmpty(this.state.auth)) {
+      setLastVisitPage();
+      this.props.navigate("/login");
+      return;
+    }
+
     let res = await this.handleAddToCart();
     if (res) {
-      this.props.navigate("/cart");
+      this.props.navigate("/checkout"); //"/cart"
     }
   };
 
@@ -638,7 +645,7 @@ class ProductDetails extends React.Component {
                               )}
                             </SwiperSlide>
                           </Swiper>
-                          <Swiper
+                          {((product.video != "" && product.images.length > 0) || (product.images.length > 1)) && <Swiper
                             spaceBetween={10}
                             // loop={true}
                             slidesPerView={4}
@@ -670,10 +677,10 @@ class ProductDetails extends React.Component {
                                 />
                               </SwiperSlide>
                             ))}
-                          </Swiper>
+                          </Swiper>}
                         </div>
 
-                        <div className="p-customize-design-product product-details-items rounded bg-light">
+                        {/* <div className="p-customize-design-product product-details-items rounded bg-light">
                           <Accordion defaultActiveKey="0" alwaysOpen>
                             <Accordion.Item eventKey="0">
                               <Accordion.Header>
@@ -727,7 +734,7 @@ class ProductDetails extends React.Component {
                               </Accordion.Body>
                             </Accordion.Item>
                           </Accordion>
-                        </div>
+                        </div> */}
                       </Col>
                       <Col xs={12} md={7} className="rounded bg-light p-4">
                         <div className="product-details-container">
@@ -816,6 +823,7 @@ class ProductDetails extends React.Component {
                                   <div className="breakup-item" key={key}>
                                     <span>
                                       {item.material_name} &nbsp;&nbsp;&nbsp;{" "}
+                                      ({item.weight+" "+item.unit_name})
                                       {/* {item.discount_percent > 0
                                         ? item.discount_percent + "% OFF"
                                         : ""} */}
@@ -868,7 +876,7 @@ class ProductDetails extends React.Component {
                                 </div>
                               </div>
                             </div>
-                            <div className="p-customize-design mb-4">
+                            {/* <div className="p-customize-design mb-4">
                               <Accordion defaultActiveKey="0" alwaysOpen>
                                 <Accordion.Item eventKey="0">
                                   <Accordion.Header>
@@ -935,7 +943,7 @@ class ProductDetails extends React.Component {
                                   </Accordion.Body>
                                 </Accordion.Item>
                               </Accordion>
-                            </div>
+                            </div> */}
                           </div>
                           {!product.certified && product.type == "material" ? (
                             <div>
@@ -987,6 +995,107 @@ class ProductDetails extends React.Component {
                               </Row>
                             </div>
                           ) : null}
+                          <div className="product-details-items tab-items mt-2 mb-4 rounded">
+                            <div className="tabs-side-by-side shadow">
+                              <Tabs defaultActiveKey="customize">
+                                <Tab eventKey="customize" title="Customize Your Product">
+                                  <div className="p-size">
+                                    {product.type != "material" ? (
+                                      <span>
+                                        Select Size
+                                        <Form.Select
+                                          onChange={(e) =>
+                                            this.handleSizeChange(
+                                              e.target.value
+                                            )
+                                          }
+                                        >
+                                          {product.size_materials.map(
+                                            (item, index) => (
+                                              <option value={index} key={index}>
+                                                {item.size_name}
+                                              </option>
+                                            )
+                                          )}
+                                        </Form.Select>
+                                      </span>
+                                    ) : null}
+                                    {sizeMaterial.materials.map((item, key) => (
+                                      <span className="gold-type" key={key}>
+                                        {sizeMaterial.materials.length > 1
+                                          ? item.material_name
+                                          : "Purity"}
+                                        <Form.Select
+                                          onChange={(e) =>
+                                            this.handlePurityChange(
+                                              item.material_id,
+                                              e.target.value
+                                            )
+                                          }
+                                          value={this.getSelectedVal(
+                                            item.purities
+                                          )}
+                                        >
+                                          {item.purities.map((val, i) => (
+                                            <option value={val.id} key={i}>
+                                              {val.name}
+                                            </option>
+                                          ))}
+                                        </Form.Select>
+                                      </span>
+                                    ))}
+                                  </div>
+                                </Tab>
+                                <Tab eventKey="details" title="Product Details">
+                                  <div className="product-details-items-content p-size">
+                                    <div className="product-details-items-item">
+                                      <span>Product Code</span>{" "}
+                                      <span>{product.product_code}</span>
+                                    </div>
+                                    <div className="product-details-items-item">
+                                      <span>Certificate No.</span>{" "}
+                                      <span>{product.certificate_no}</span>
+                                    </div>
+                                    <div className="product-details-items-item">
+                                      <span>Product Weight</span>{" "}
+                                      <span>
+                                        {sizeMaterial.product_weight_display}
+                                      </span>
+                                    </div>
+                                    {sizeMaterial.materials.map((item, key) => (
+                                      <React.Fragment key={key}>
+                                        <div className="product-details-items-item details-header">
+                                          <span>
+                                            {item.material_name.toUpperCase()}{" "}
+                                            DETAILS
+                                          </span>
+                                        </div>
+                                        <div className="product-details-items-item">
+                                          <span>Total Weight</span>{" "}
+                                          <span>
+                                            {item.weight} {item.unit_name}
+                                          </span>
+                                        </div>
+                                        {!isEmpty(item.quantity) &&
+                                        parseInt(item.quantity) > 0 ? (
+                                          <div className="product-details-items-item">
+                                            <span>
+                                              Total No of{" "}
+                                              {item.material_name.toUpperCase()}
+                                            </span>{" "}
+                                            <span>{item.quantity}</span>
+                                          </div>
+                                        ) : null}
+                                      </React.Fragment>
+                                    ))}
+                                  </div>
+                                </Tab>
+                                {/* <Tab eventKey="contact" title="Contact">
+                                  <div>Contact content</div>
+                                </Tab> */}
+                              </Tabs>
+                            </div>
+                          </div>
                           <div className="product-buttons">
                             <Button
                               variant="danger"
@@ -1328,8 +1437,15 @@ class ProductDetails extends React.Component {
                     <div className="breadcrumb-wrapper">
                       <Breadcrumb>
                         <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-                        <Breadcrumb.Item href="">
-                          {product.category}
+                        <Breadcrumb.Item
+                          href={
+                            "/products?category=" +
+                            product.category_slug +
+                            "&subcategory=" +
+                            product.sub_category_slug
+                          }
+                        >
+                          {product.sub_category}
                         </Breadcrumb.Item>
                         <Breadcrumb.Item active>{product.name}</Breadcrumb.Item>
                       </Breadcrumb>
@@ -1397,7 +1513,7 @@ class ProductDetails extends React.Component {
                               </SwiperSlide>
                             ))}
                           </Swiper>
-                          <Swiper
+                          {((product.video != "" && product.images.length > 0) || (product.images.length > 1)) && <Swiper
                             spaceBetween={10}
                             // loop={true}
                             slidesPerView={4}
@@ -1429,7 +1545,7 @@ class ProductDetails extends React.Component {
                                 />
                               </SwiperSlide>
                             ))}
-                          </Swiper>
+                          </Swiper>}
                           <span className="share-icon">
                             {product.has_wishlist ? (
                               <BsHeartFill
@@ -1453,7 +1569,7 @@ class ProductDetails extends React.Component {
                           </span>
                         </div>
 
-                        <div className="righ-side-wrapper">
+                        <div className="righ-side-wrapper mt-3">
                           <div className="p-container-header">
                             <span>
                               <div className="p-name-wrapper">
@@ -1475,6 +1591,11 @@ class ProductDetails extends React.Component {
                                     </h6>
                                   ) : null}
                                 </div>
+                                <div className="p-header-price">
+                                  <h2 className="fw-bold">
+                                    {displayAmount(sizeMaterial.sale_price)}
+                                  </h2>
+                                </div>
                               </div>
 
                               <div
@@ -1482,7 +1603,7 @@ class ProductDetails extends React.Component {
                                   __html: product.description,
                                 }}
                               ></div>
-                              <div className="rating-wrapper">
+                              {/* <div className="rating-wrapper">
                                 <ul>
                                   {[...Array(5).keys()].map((x, i) => (
                                     <li
@@ -1507,7 +1628,7 @@ class ProductDetails extends React.Component {
                                     {displayAmount(sizeMaterial.sale_price)}
                                   </h2>
                                 </div>
-                              </div>
+                              </div> */}
                             </span>
                             {/*<span className='share-icons'>
                                                                     <span>
@@ -1541,6 +1662,7 @@ class ProductDetails extends React.Component {
                                 <div className="breakup-item" key={key}>
                                   <span>
                                     {item.material_name} &nbsp;&nbsp;&nbsp;{" "}
+                                    ({item.weight+" "+item.unit_name})
                                     {/* {item.discount_percent > 0
                                       ? item.discount_percent + "% OFF"
                                       : ""} */}
@@ -1594,7 +1716,7 @@ class ProductDetails extends React.Component {
                             </div>
                           </div>
 
-                          <div className="p-customize-design mb-4">
+                          {/* <div className="p-customize-design mb-4">
                             <Accordion defaultActiveKey="0" alwaysOpen>
                               <Accordion.Item eventKey="0">
                                 <Accordion.Header>
@@ -1650,7 +1772,7 @@ class ProductDetails extends React.Component {
                                 </Accordion.Body>
                               </Accordion.Item>
                             </Accordion>
-                          </div>
+                          </div> */}
                           {!product.certified && product.type == "material" ? (
                             <div>
                               <Row>
@@ -1715,7 +1837,7 @@ class ProductDetails extends React.Component {
                                                         </div>*/}
                         </div>
 
-                        <div className="product-details-items mt-2 rounded">
+                        {/* <div className="product-details-items mt-2 rounded">
                           <Accordion alwaysOpen>
                             <Accordion.Item eventKey="0">
                               <Accordion.Header>
@@ -1767,6 +1889,108 @@ class ProductDetails extends React.Component {
                               </Accordion.Body>
                             </Accordion.Item>
                           </Accordion>
+                          
+                        </div> */}
+                        <div className="product-details-items tab-items mt-2 rounded">
+                          <div className="tabs-side-by-side shadow">
+                            <Tabs defaultActiveKey="customize">
+                              <Tab eventKey="customize" title="Customize Your Product">
+                                <div className="p-size">
+                                  {product.type != "material" ? (
+                                    <span>
+                                      Select Size
+                                      <Form.Select
+                                        onChange={(e) =>
+                                          this.handleSizeChange(
+                                            e.target.value
+                                          )
+                                        }
+                                      >
+                                        {product.size_materials.map(
+                                          (item, index) => (
+                                            <option value={index} key={index}>
+                                              {item.size_name}
+                                            </option>
+                                          )
+                                        )}
+                                      </Form.Select>
+                                    </span>
+                                  ) : null}
+                                  {sizeMaterial.materials.map((item, key) => (
+                                    <span className="gold-type" key={key}>
+                                      {sizeMaterial.materials.length > 1
+                                        ? item.material_name
+                                        : "Purity"}
+                                      <Form.Select
+                                        onChange={(e) =>
+                                          this.handlePurityChange(
+                                            item.material_id,
+                                            e.target.value
+                                          )
+                                        }
+                                        value={this.getSelectedVal(
+                                          item.purities
+                                        )}
+                                      >
+                                        {item.purities.map((val, i) => (
+                                          <option value={val.id} key={i}>
+                                            {val.name}
+                                          </option>
+                                        ))}
+                                      </Form.Select>
+                                    </span>
+                                  ))}
+                                </div>
+                              </Tab>
+                              <Tab eventKey="details" title="Product Details">
+                                <div className="product-details-items-content p-size">
+                                  <div className="product-details-items-item">
+                                    <span>Product Code</span>{" "}
+                                    <span>{product.product_code}</span>
+                                  </div>
+                                  <div className="product-details-items-item">
+                                    <span>Certificate No.</span>{" "}
+                                    <span>{product.certificate_no}</span>
+                                  </div>
+                                  <div className="product-details-items-item">
+                                    <span>Product Weight</span>{" "}
+                                    <span>
+                                      {sizeMaterial.product_weight_display}
+                                    </span>
+                                  </div>
+                                  {sizeMaterial.materials.map((item, key) => (
+                                    <React.Fragment key={key}>
+                                      <div className="product-details-items-item details-header">
+                                        <span>
+                                          {item.material_name.toUpperCase()}{" "}
+                                          DETAILS
+                                        </span>
+                                      </div>
+                                      <div className="product-details-items-item">
+                                        <span>Total Weight</span>{" "}
+                                        <span>
+                                          {item.weight} {item.unit_name}
+                                        </span>
+                                      </div>
+                                      {!isEmpty(item.quantity) &&
+                                      parseInt(item.quantity) > 0 ? (
+                                        <div className="product-details-items-item">
+                                          <span>
+                                            Total No of{" "}
+                                            {item.material_name.toUpperCase()}
+                                          </span>{" "}
+                                          <span>{item.quantity}</span>
+                                        </div>
+                                      ) : null}
+                                    </React.Fragment>
+                                  ))}
+                                </div>
+                              </Tab>
+                              {/* <Tab eventKey="contact" title="Contact">
+                                <div>Contact content</div>
+                              </Tab> */}
+                            </Tabs>
+                          </div>
                         </div>
                         <div className="product-buttons">
                           <Button
@@ -1776,14 +2000,14 @@ class ProductDetails extends React.Component {
                           >
                             <i class="bi bi-cart-plus me-3"></i> ADD TO CART
                           </Button>
-                          <Button variant="primary" className="rounded">
+                          <Button variant="primary" onClick={this.handleOrderNow} className="rounded">
                             ORDER NOW
                           </Button>
                         </div>
                       </Col>
-                      <Col xs={12} md={7} className="rounded bg-light p-4">
+                      <Col xs={12} md={7} className="rounded bg-light p-2">
                         <div className="product-details-container">
-                          <div className="p-authenticity p-4 mt-3 p-details-authenticity rounded">
+                          <div className="p-authenticity p-2 mt-3 p-details-authenticity rounded">
                             {product.certificates.length ? (
                               <>
                                 <h4 className="text-center">

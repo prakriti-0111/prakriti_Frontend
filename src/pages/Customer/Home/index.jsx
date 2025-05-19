@@ -15,6 +15,9 @@ import {
     productListRaw,
 } from "actions/Customer/product.actions";
 import { WishListAdd } from "actions/Customer/wishlist.actions";
+import {
+  retailerCityFetch,
+} from "actions/Customer/retailer.actions";
 import _ from "lodash";
 import React, { Component, createRef } from "react";
 import { Accordion, Button, Col, Placeholder, Row } from "react-bootstrap";
@@ -26,7 +29,7 @@ import Tab from "react-bootstrap/Tab";
 import CountUp from "react-countup";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { CgArrowLongRight } from "react-icons/cg";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt, FaMobileAlt } from "react-icons/fa";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
@@ -58,18 +61,24 @@ import "swiper/css/navigation";
 import 'swiper/css/autoplay';
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Autoplay } from 'swiper';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import Loader from "../Loader";
 // import { current_stock } from "../../../actions/Customer/product.actions";
 import './marquee.css';
 import './slider.css';
+import withIsMobileView from "src/helpers/responsiveViewCheck";
 
 SwiperCore.use([Autoplay]);
-
 class HomePage extends Component {
   constructor(props) {
     super(props);
+
     this.marqueeTrackRef = createRef();
     this.marqueeRef = createRef();
+    this.retailerMarqueeTrackRef = createRef();
+    this.retailerMarqueeRef = createRef();
     this.animationFrameId = null;
+    this.retailerAnimationFrameId = null;
     this.intervalId = null;
     this.state = {
       PromiseData: {
@@ -93,11 +102,16 @@ class HomePage extends Component {
       bestRetailers: [],
       counts: null,
       promise_box: "",
-      currentMarqueeIndex: 0
+      currentMarqueeIndex: 0,
+      retailerCitySelected: null,
+      retailerCityOptions : []
     };
 
     this.position = 0;
     this.speed = 1; // pixels per frame
+
+    this.retailerPosition = 0;
+    this.retailerSpeed = 1; // pixels per frame
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -115,13 +129,26 @@ class HomePage extends Component {
     this.loadData();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.retailerCitySelected !== prevState.retailerCitySelected) {
+      //this.retailerAnimationFrameId = null;
+      this.loadBestReatailers(this.state.retailerCitySelected[0]);
+    } 
+    if (this.state.bestRetailers.length !== prevState.bestRetailers.length) {
+      //this.pauseRetailerMarquee();
+      this.retailerAnimationFrameId = null;
+      this.setupRetailerMarquee();
+    } 
+  } 
+
   componentWillUnmount() {
     clearInterval(this.intervalId);
     this.removePauseListeners();
     cancelAnimationFrame(this.animationFrameId);
+    cancelAnimationFrame(this.retailerAnimationFrameId);
   }
 
-  startMarquee = () => {
+  /* startMarquee = () => {
     const track = this.marqueeTrackRef;
     if(track && track.children && track.children.length > 0){
       const itemWidth = track.children[0].offsetWidth;
@@ -139,9 +166,7 @@ class HomePage extends Component {
         //   currentMarqueeIndex = 0;
         // }
 
-        /* if (cIndex < 0) {
-          cIndex = track.children.length - 1;
-        } */
+        
 
         this.setState({
           currentMarqueeIndex: cIndex
@@ -155,7 +180,7 @@ class HomePage extends Component {
         //track.style.transform = `translateX(-${(itemWidth) * (cIndex*1)}px)`;
       }, 5000); // 1s scroll + 4s pause
     }
-  };
+  }; */
 
   
 
@@ -169,8 +194,8 @@ class HomePage extends Component {
 
     const itemWidth = track.children[0].offsetWidth;
 
-    console.log("this.position : ", this.position);
-    console.log("this.speed : ", this.speed);
+    /* console.log("this.position : ", this.position);
+    console.log("this.speed : ", this.speed); */
 
     const scroll = () => {
       this.position -= this.speed;
@@ -184,10 +209,10 @@ class HomePage extends Component {
       }
 
       if(-this.position % (itemWidth+20) == 0){
-        console.log("===============================================");
+        /* console.log("===============================================");
         console.log("itemWidth : ", itemWidth);
         console.log("this.position : ", this.position);
-        console.log("this.speed : ", this.speed);
+        console.log("this.speed : ", this.speed); */
         cancelAnimationFrame(this.animationFrameId);
         setTimeout(() => {
           scroll();
@@ -210,6 +235,64 @@ class HomePage extends Component {
     }, 4300);    */ 
   };
 
+  setupRetailerMarquee = () => {
+    if(document.querySelector(".marquee-track-retailer")){
+      const track = document.querySelector(".marquee-track-retailer"); //this.retailerMarqueeTrackRef;
+      /* console.log("track : ", track);
+      console.log("this.retailerAnimationFrameId : ", this.retailerAnimationFrameId); */
+      /* if(this.retailerAnimationFrameId == null){
+        // Duplicate the content for infinite loop
+        const originalContent = document.querySelector(".marquee-track-retailer").innerHTML;
+        console.log('document.querySelector(".marquee-track-retailer") : ', document.querySelector(".marquee-track-retailer"));
+        document.querySelector(".marquee-track-retailer").innerHTML += originalContent;
+      } */
+      /* console.log("track.innerHTML : ", document.querySelector(".marquee-track-retailer").innerHTML);
+      console.log("track.children : ", document.querySelector(".marquee-track-retailer").children); */
+      const itemWidth = track.children[0].offsetWidth;
+
+      /* console.log("this.retailerPosition : ", this.retailerPosition);
+      console.log("this.retailerSpeed : ", this.retailerSpeed); */
+
+      const scrollRetailer = () => { //alert("here");
+        if(document.querySelector(".marquee-track-retailer")){
+          this.retailerPosition -= this.retailerSpeed;
+          
+          
+          // Reset when half the content has scrolled (i.e. one full set)
+          if(this.props.isMobileView && Math.abs(this.retailerPosition) >= (document.querySelector(".marquee-track-retailer").scrollWidth / 2)){
+            this.retailerPosition = -5;
+          }else if (!this.props.isMobileView && Math.abs(this.retailerPosition) >= (document.querySelector(".marquee-track-retailer").scrollWidth / 2) - 600) {
+            this.retailerPosition = -5;
+          }
+
+          if(-this.retailerPosition % (itemWidth+20) == 0){
+            /* console.log("===============================================");
+            console.log("itemWidth : ", itemWidth);
+            console.log("this.retailerPosition : ", this.retailerPosition);
+            console.log("this.retailerSpeed : ", this.retailerSpeed); */
+            cancelAnimationFrame(this.retailerAnimationFrameId);
+            setTimeout(() => {
+              scrollRetailer();
+            }, 4000);
+          } else {
+            document.querySelector(".marquee-track-retailer").style.transform = `translateX(${this.retailerPosition}px)`;
+            this.retailerAnimationFrameId = requestAnimationFrame(scrollRetailer);
+            //console.log("this.retailerAnimationFrameId : ", this.retailerAnimationFrameId);
+          }
+        }
+      };
+      console.log("this.retailerAnimationFrameId : ", this.retailerAnimationFrameId);
+      setTimeout(() => {
+        if(track.children.length >= 4){
+          scrollRetailer();
+        } else {
+          cancelAnimationFrame(this.retailerAnimationFrameId);
+          this.retailerAnimationFrameId = null;
+        }
+      }, 2000);
+    }
+  };
+
   addPauseListeners = () => {
     const marquee = this.marqueeRef;
     if(marquee && marquee.addEventListener){
@@ -219,6 +302,17 @@ class HomePage extends Component {
       marquee.addEventListener('touchend', this.resumeMarquee);
       marquee.addEventListener('focusin', this.pauseMarquee);
       marquee.addEventListener('focusout', this.resumeMarquee);
+    }
+
+    const retailerMarquee = this.retailerMarqueeRef; // document.querySelector('.marquee-retailer');
+    console.log("retailerMarquee : ", retailerMarquee);
+    if(retailerMarquee && retailerMarquee.addEventListener){
+      retailerMarquee.addEventListener('mouseenter', this.pauseRetailerMarquee);
+      retailerMarquee.addEventListener('mouseleave', this.resumeRetailerMarquee);
+      retailerMarquee.addEventListener('touchstart', this.pauseRetailerMarquee);
+      retailerMarquee.addEventListener('touchend', this.resumeRetailerMarquee);
+      retailerMarquee.addEventListener('focusin', this.pauseRetailerMarquee);
+      retailerMarquee.addEventListener('focusout', this.resumeRetailerMarquee);
     }
   };
   
@@ -232,15 +326,34 @@ class HomePage extends Component {
       marquee.removeEventListener('focusin', this.pauseMarquee);
       marquee.removeEventListener('focusout', this.resumeMarquee);
     }
+
+    const retailerMarquee = this.retailerMarqueeRef; //document.querySelector(".marquee-retailer");
+    if(retailerMarquee && retailerMarquee.removeEventListener){
+      retailerMarquee.removeEventListener('mouseenter', this.pauseRetailerMarquee);
+      retailerMarquee.removeEventListener('mouseleave', this.resumeRetailerMarquee);
+      retailerMarquee.removeEventListener('touchstart', this.pauseRetailerMarquee);
+      retailerMarquee.removeEventListener('touchend', this.resumeRetailerMarquee);
+      retailerMarquee.removeEventListener('focusin', this.pauseRetailerMarquee);
+      retailerMarquee.removeEventListener('focusout', this.resumeRetailerMarquee);
+    }
   };
   
   pauseMarquee = () => {
-    clearInterval(this.scrollInterval);
+    //clearInterval(this.scrollInterval);
     cancelAnimationFrame(this.animationFrameId);
   };
   
   resumeMarquee = () => {
     this.setupMarquee();
+  };
+
+  pauseRetailerMarquee = () => {
+    //clearInterval(this.scrollRetailerInterval);
+    cancelAnimationFrame(this.retailerAnimationFrameId);
+  };
+
+  resumeRetailerMarquee = () => {
+    this.setupRetailerMarquee();
   };
 
   loadData = () => {
@@ -255,7 +368,23 @@ class HomePage extends Component {
       this.loadBestSellingProducts();
       this.loadBestReatailers();
       this.loadCounts();
+      this.loadRetailerCities();
+      this.addPauseListeners();
     });
+  };
+
+  loadRetailerCities = async () => {
+    let response = await retailerCityFetch();
+    if (response.data.success) {
+      this.setState({
+        retailerCityOptions: response.data.data,
+        processing: false
+      });
+    } else {
+      this.setState({
+        processing: false,
+      });
+    }
   };
 
   loadPageSettings = async (cb = () => {}) => {
@@ -293,7 +422,7 @@ class HomePage extends Component {
     });
 
     if (res.data.success) {
-      console.log(res.data.data.items);
+      //console.log(res.data.data.items);
       this.setState({
         current_stock_products: res.data.data.items,
       });
@@ -327,11 +456,30 @@ class HomePage extends Component {
     }
   };
 
-  loadBestReatailers = async () => {
-    let res = await bestRetailerList();
+  loadBestReatailers = async (city = null) => {
+    console.log("city : ", city);
+    this.setState({
+        bestRetailers: []
+    });
+    let res = await bestRetailerList(city != null?{city: city.name} : {});
     if (res.data.success) {
+      console.log("bestRetailers : ", res.data.data);
+      let result = [];
+      if(res.data.data.length >= 4){
+        result = [...res.data.data].concat([...res.data.data]);
+      } else {
+        result = [...res.data.data];
+      }
+      console.log("result : ", result);
       this.setState({
-        bestRetailers: res.data.data,
+        bestRetailers: result,
+      }, () => {
+        this.retailerAnimationFrameId = null;
+        /* setTimeout(() => {
+          if(this.state.bestRetailers.length >= 4){
+            this.resumeRetailerMarquee();
+          }
+        }, 5000); */
       });
     }
   };
@@ -371,8 +519,6 @@ class HomePage extends Component {
     if (res.data.success) {
       this.setState({
         stockProductsSlider: res.data.data.items
-      }, () => {
-        this.addPauseListeners();
       });
       
     }
@@ -394,6 +540,10 @@ class HomePage extends Component {
 
   getfestiveOfferLink = (item) => {
     return item.url.replace(process.env.BASE_URL + "/", "/");
+  };
+
+  retailerDetails = (item) => {
+    console.log("retailer : ", item);
   };
 
   wishlistHandler = async (product) => {
@@ -507,6 +657,8 @@ class HomePage extends Component {
       promocodes,
       bestRetailers,
       counts,
+      retailerCitySelected,
+      retailerCityOptions
     } = this.state;
 
     return (
@@ -558,8 +710,8 @@ class HomePage extends Component {
                   <Swiper
                     spaceBetween={10}
                     slidesPerView={4}
-                    onSwiper={(swiper) => console.log(swiper)}
-                    onSlideChange={() => console.log("slide change")}
+                    //onSwiper={(swiper) => console.log(swiper)}
+                    //onSlideChange={() => console.log("slide change")}
                   >
                     {this.state.categories.map((item, key) => (
                       <SwiperSlide key={key}>
@@ -754,13 +906,13 @@ class HomePage extends Component {
             </section>:''}</>);
           break;
           case item.section_name.toLowerCase().startsWith("stockproducts"):
-            console.log("item.section_name.toLowerCase() : ", item.section_name.toLowerCase());
+            /* console.log("item.section_name.toLowerCase() : ", item.section_name.toLowerCase()); */
             return ["platinum-jewelery", "diamond-jewellery", "gems-stone"].map((catSlug, k) => {
-              console.log("catSlug : ", catSlug);
+              /* console.log("catSlug : ", catSlug);
               console.log("item.section_name.toLowerCase() : ", item.section_name.toLowerCase());
-              console.log("item.section_name.toLowerCase().indexOf(catSlug) : ", item.section_name.toLowerCase().indexOf(catSlug));
+              console.log("item.section_name.toLowerCase().indexOf(catSlug) : ", item.section_name.toLowerCase().indexOf(catSlug)); */
               let sliders = stockProductsSlider.filter((item) => item.category_slug == catSlug);
-              console.log("sliders.length : ", sliders.length);
+              /* console.log("sliders.length : ", sliders.length); */
               if(item.section_name.toLowerCase().indexOf(catSlug) !== -1){
                 //console.log("=================================="+catSlug);
                 
@@ -772,8 +924,8 @@ class HomePage extends Component {
                     </div>}
                     <Swiper
                       spaceBetween={30}
-                      onSlideChange={() => console.log("slide change Current Stock banner")}
-                      onSwiper={(swiper) => console.log(swiper)}
+                      //onSlideChange={() => console.log("slide change Current Stock banner")}
+                      //onSwiper={(swiper) => console.log(swiper)}
                       loop={false}
                       autoplay={{
                         delay: 5000, // Wait 2s before sliding
@@ -884,8 +1036,8 @@ class HomePage extends Component {
                 </div>
                 <Swiper
                   spaceBetween={20}
-                  onSlideChange={() => console.log("slide change")}
-                  onSwiper={(swiper) => console.log(swiper)}
+                  //onSlideChange={() => console.log("slide change")}
+                  //onSwiper={(swiper) => console.log(swiper)}
                   breakpoints={{
                     // when window width is >= 320px
                     320: {
@@ -1030,8 +1182,8 @@ class HomePage extends Component {
                     </div>
                     <Swiper
                       spaceBetween={20}
-                      onSlideChange={() => console.log("slide change")}
-                      onSwiper={(swiper) => console.log(swiper)}
+                      //onSlideChange={() => console.log("slide change")}
+                      //onSwiper={(swiper) => console.log(swiper)}
                       breakpoints={{
                         // when window width is >= 320px
                         320: {
@@ -1110,52 +1262,6 @@ class HomePage extends Component {
           break;
         }
       })}
-
-        
-        {/*<section className='diamond-offer'>
-                    <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(http://localhost:9090/public/uploads/products/e4366a65-7b1c-47b2-af70-0d43cca90921.jpeg) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
-                        <div className='offer-header'>
-                            <h2>Diamond Rings at
-                                30% OFF</h2>
-                            <a href='/products' className='shop-now'>Shop Now</a>
-                        </div>
-
-                    </Container>
-                </section>
-                <section className='earring-offer'>
-                    <Container className='earring-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(http://localhost:9090/public/uploads/products/e4366a65-7b1c-47b2-af70-0d43cca90921.jpeg) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
-                        <div className='earring-header'>
-                            <h2>Earrings at 40% OFF at AXIS
-                                Bank Debit & Credit Cards</h2>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the</p>
-                            <a href='/products' className='shop-now'>Explore <CgArrowLongRight /></a>
-                        </div>
-
-                    </Container>
-                </section>
-                <section className='pendant-offer'>
-                    <Container className='pendant-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${pendant}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
-                        <div className='pendant-header'>
-                            <h2>Get Beautiful Pendants at only ₹8999</h2>
-                            <a href='/products' className='shop-now'>Shop Now</a>
-                        </div>
-
-                    </Container>
-                </section>
-                <section className='affordable-earring'>
-                    <Container className='affordable-earring-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${affordableearring}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
-                        <div className='affordable-earring-header'>
-                            <h2>Affordable Earrings at ₹9,999</h2>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever.</p>
-                            <a href='/products' className='shop-now'>Explore <CgArrowLongRight /></a>
-                        </div>
-
-                    </Container>
-                </section>*/}
-        
-
-        
-        
         
         {/*<div className='gap-100'></div>*/}
         
@@ -1689,70 +1795,88 @@ class HomePage extends Component {
           </div>
         </section>
 
-        {bestRetailers.length ? (
+        {bestRetailers.length > 0 ? (
           <section className="feature-product best-retailer">
-            <Container>
-              <div className="feature-product-header">
-                <h1>Best Retailers</h1>
+          
+              <div className="feature-product-header retailer-search-container">
+                <h1 className="retailer-label">Our Partners</h1>
+                <div className="retailer-search">
+                  <Typeahead
+                    id="autocomplete-field"
+                    labelKey="name"
+                    multiple={false}
+                    onChange={(cityV) => {
+                      console.log(cityV);
+                      this.setState({
+                        retailerCitySelected: cityV
+                      }, () => {
+                        //this.loadBestReatailers(cityV[0]);
+                      });
+                      
+                    }}
+                    options={retailerCityOptions}
+                    placeholder="Choose your city"
+                    selected={retailerCitySelected}
+                  />
+                </div>
               </div>
-              <Swiper
-                spaceBetween={20}
-                onSlideChange={() => console.log("slide change Best Retailers")}
-                onSwiper={(swiper) => console.log(swiper)}
-                breakpoints={{
-                  // when window width is >= 320px
-                  320: {
-                    width: 320,
-                    slidesPerView: 2,
-                  },
-                  // when window width is >= 768px
-                  768: {
-                    width: 768,
-                    slidesPerView: 2,
-                  },
-                  // when window width is >= 1024px
-                  1024: {
-                    width: 1024,
-                    slidesPerView: 4,
-                  },
-                  // when window width is >= 1024px
-                  1440: {
-                    width: 1440,
-                    slidesPerView: 4,
-                  },
-                }}
-              >
-                {bestRetailers.map((item, key) => (
-                  <SwiperSlide key={key}>
-                    <div className="slide-swipe-inner rounded overflow-hidden">
-                      <div className="b-slider-image">
-                        <img
-                          src={item.image}
-                          className=""
-                          alt="feature product"
-                        />
-                      </div>
-                      <div className="b-slider-content">
-                        <h2>{item.name}</h2>
-                        <span className="seller-description">
-                          <ul>
-                            <li>
-                              <FaMapMarkerAlt />
-                            </li>
-                            <li>{item.address}</li>
-                          </ul>
-                        </span>
-                        <div className="ring-price">
-                          {/* <span className='offer-price'> {item.since} </span> */}
-                        </div>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </Container>
+
+              <div className="marquee-wrapper">
+                {/* <h1 className="marquee-heading container">Our Partners</h1> */}
+                <div className="marquee-retailer" tabIndex="0"  ref={el => (this.retailerMarqueeRef = el)}>
+                    <span className="marquee-track-retailer" ref={el => (this.retailerMarqueeTrackRef = el)}>
+                      {bestRetailers.map((item, key) => (
+                        <a href={`/retailers/${item.id}`} key={`bestRetailers_a_${item.id}`} >
+                          <div className="marquee-item-retailer" key={`bestRetailers_${item.id}`} >
+                            {/* <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.image}) ` }}>
+                                
+                            </Container> */}
+                            <div className="slide-swipe-inner rounded overflow-hidden">
+                              <div className="b-slider-image">
+                                <img
+                                  src={item.image}
+                                  className=""
+                                  alt="feature product"
+                                />
+                              </div>
+                              <div className="b-slider-content">
+                                <h2>{item.company_name}</h2>
+                                <span className="seller-description">
+                                  <ul>
+                                    <li>
+                                      <FaMapMarkerAlt />
+                                    </li>
+                                    <li>{item.city}, {item.district_name}</li>
+                                  </ul>
+                                </span>
+                                <span className="seller-description">
+                                  <ul>
+                                    <li>
+                                      <FaMobileAlt />
+                                    </li>
+                                    <li>{item.mobile}</li>
+                                  </ul>
+                                </span>
+                                {/* <div className="ring-price">
+                                  <span > {item.mobile} </span>
+                                </div> */}
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                      ))}
+                      
+                      {/*<Link to={this.getNewArrivalLink(item)}>
+                            <div className="slider-banner">
+                              <img className="d-block w-100" src={item.image} alt="" />
+                            </div>
+                          </Link>*/}
+                    </span>
+                </div>
+              </div>
+            
           </section>
-        ) : null}
+        ) : <section className="feature-product best-retailer"><Loader /></section>}
 
       
         <section className="ratn-banner">
@@ -2019,10 +2143,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators({}, dispatch),
+  actions: bindActionCreators({retailerCityFetch}, dispatch),
   dispatch,
 });
 
-export default withRouter(
+export default withIsMobileView(withRouter(
   connect(mapStateToProps, mapDispatchToProps)(HomePage)
-);
+));
