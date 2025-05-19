@@ -188,3 +188,37 @@
   .new-arrival .marquee-wrapper{
     margin-bottom: 0px !important;
   }
+
+  .banner-sec .slider-banner img {
+    /* position: absolute; */
+    /* left: 0; */
+    /* top: 0; */
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: unset;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .carousel-control-prev, .carousel-control-next {
+    display: none;
+  }
+
+.carousel-indicators {
+  bottom: -30px; /* Adjusts the position of the indicators */
+}
+
+.carousel-indicators li {
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background-color: #ccc;
+  margin: 0 5px; /* Adds spacing between dots */
+  transition: background-color 0.2s ease-in-out; /* Smooth transition for active state change */
+}
+
+.carousel-indicators .active {
+  background-color: #333;
+  transform: scale(1.2); /* Optionally scale the active dot */
+}
