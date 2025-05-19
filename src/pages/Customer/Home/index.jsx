@@ -535,7 +535,8 @@ class HomePage extends Component {
   };
 
   getNewArrivalLink = (item) => {
-    return item.url.replace(process.env.BASE_URL + "/", "/");
+    console.log("link : ", item.url.replace(process.env.BASE_URL + "/", "/")); 
+    return "";
   };
 
   getfestiveOfferLink = (item) => {
@@ -666,7 +667,7 @@ class HomePage extends Component {
       {homepage_settings.map((item, k) => {
         switch(true){
           case item.section_name.toLowerCase() == "banners":
-            return (<><section className=" pt-5">
+            return (<><section className={`banner-sec pt-5`}>
               {/* <Container className='position-relative'>
                     <Row>
                         <Col xs={7} md={7}>
@@ -685,7 +686,7 @@ class HomePage extends Component {
                     </Row>
                     </Container> */}
               <div className="" style={{ padding: "0" }}>
-                <Carousel className="rounded-4">
+                {banners.length > 0 && <Carousel className="rounded-4">
                   {banners.map((item, key) => (
                     <Carousel.Item key={key}>
                       <Link to={this.getBannerLink(item)}>
@@ -695,7 +696,7 @@ class HomePage extends Component {
                       </Link>
                     </Carousel.Item>
                   ))}
-                </Carousel>
+                </Carousel>}
                 {!banners.length ? (
                   <Placeholder animation="glow">
                     <Placeholder xs={12} className="slider-banner" />
@@ -1265,7 +1266,7 @@ class HomePage extends Component {
         
         {/*<div className='gap-100'></div>*/}
         
-        <section className="blue-pearl mt-3 mb-3 mt-md-4 mb-md-4 position-relative">
+        {/* <section className="blue-pearl mt-3 mb-3 mt-md-4 mb-md-4 position-relative">
           <Container>
             <Row>
               <Col xs={4} md={4} className="blue-pearl-image-div">
@@ -1274,14 +1275,7 @@ class HomePage extends Component {
                 </div>
               </Col>
               <Col md={8} className="blue-pearl-div">
-                {/* <div className="blue-pearl-inner position-relative">
-                  <img src={pearlBlue2} alt="" />
-                  <div className="overlay"></div>
-                  <div className="blue-pearl-content">
-                    <h2>Pearl Blue Diamond Earring</h2>
-                    <p>₹9,726 only</p>
-                  </div>
-                </div> */}
+                
                 <div id="carouselExampleCaptions" class="carousel slide">
                   <div class="carousel-indicators">
                     <button
@@ -1365,7 +1359,7 @@ class HomePage extends Component {
               </Col>
             </Row>
           </Container>
-        </section>
+        </section> */}
         <section className="promise promise-desktop bg-light">
           <Container>
             <h2 className="text-center ">Our Promise</h2>
@@ -1771,7 +1765,7 @@ class HomePage extends Component {
           </Container>
         </section>
         {/*<div className='gap-100'></div>*/}
-        <section className="browse-rings position-relative">
+        {/* <section className="browse-rings position-relative">
           <Container fluid>
             <Row>
               <Col xs={6} md={4}>
@@ -1793,7 +1787,7 @@ class HomePage extends Component {
           <div className="browse-rings-banner rounded-start">
             <img src={rings} alt="" className="rounded-start" />
           </div>
-        </section>
+        </section> */}
 
         {bestRetailers.length > 0 ? (
           <section className="feature-product best-retailer">
@@ -1879,7 +1873,7 @@ class HomePage extends Component {
         ) : <section className="feature-product best-retailer"><Loader /></section>}
 
       
-        <section className="ratn-banner">
+        {/* <section className="ratn-banner">
           <Container>
             <div className="ratn-banner-image position-relative">
               <img src={ratnBanner} alt="" />
@@ -1888,11 +1882,11 @@ class HomePage extends Component {
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has been
                 </p>
-                {/* <a href='' className='learn-more'>Learn More</a> */}
+                
               </div>
             </div>
           </Container>
-        </section>
+        </section> */}
         <section className="address-map">
           <Container>
             <div className="review-header">
@@ -2095,7 +2089,7 @@ class HomePage extends Component {
             </div>
           </Container>
         </section>
-        {counts ? (
+        {/*counts ? (
           <section className="socialmedia-wrapper">
             <Container>
               <ul id="counter">
@@ -2131,7 +2125,7 @@ class HomePage extends Component {
               </ul>
             </Container>
           </section>
-        ) : null}
+        ) : null*/}
       </>
     );
   }
