@@ -1,0 +1,77 @@
+.video_button{
+    display: none;
+}
+
+.content-name-action{
+    display: none;
+}
+.content-name{
+    display: block;
+}
+
+.offers-wrapper {
+    position: absolute;
+    left: 280px;
+    top: 25px;
+    right: 10px;
+    margin: 0 0 0 -6px;
+    /* width: 100%; */
+    display: block;
+}
+
+@media only screen and (max-width: 600px) {
+    .search-wrapper .offers-wrapper {
+        position: absolute;
+        left: 142px;
+        top: 10px;
+        margin: 0 0 0 -6px;
+        display: block;
+    }
+
+    .search-wrapper .search-button{
+        display: none;
+    }
+
+    .content-name{
+        display: none;
+    }
+
+    .content-name-action{
+        display: flex block;
+        gap:10px;
+        justify-content: space-around;
+    }
+    .content-name-action button {
+        font-size: 14px;
+    }
+}
+
+.search-wrapper .making-chrg-offer h4{
+    color: #000000;
+}
+
+.search-wrapper .offer{
+    background: #E3DDDD !important;
+    border: #E3DDDD !important;
+}
+
+.cart-icon{
+    background: #1E2746;
+    color: #fff;
+}
+
+@media screen and (max-width: 400px) {
+    .search-wrapper .offers-wrapper {
+        position: absolute;
+        left: 123px;
+        top: 10px;
+        margin: 0 0 0 -6px;
+        display: block;
+    }
+
+    .ring-price-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+}

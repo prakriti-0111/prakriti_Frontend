@@ -74,12 +74,13 @@ class Login extends React.Component {
       let lastVisitPage = getLastVisitPage();
       toast.success("Login Successfully!");
       setLastVisitPage("");
+      console.log("lastVisitPage : ", lastVisitPage);
       let url = lastVisitPage
-        ? lastVisitPage.replace(process.env.BASE_URL, "/")
+        ? "/"+lastVisitPage.split("/").pop()/* .replace(process.env.BASE_URL, "/") */
         : "/";
-      let startFirstTwo = url.substring(0, 2);
+      /* let startFirstTwo = url.substring(0, 2);
       url =
-        startFirstTwo == "//" || startFirstTwo == "///" ? url.substr(1) : url;
+        startFirstTwo == "//" || startFirstTwo == "///" ? url.substr(1) : url; */
       console.log("url", url);
       this.props.navigate(url);
       //window.location.href = process.env.BASE_URL;

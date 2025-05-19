@@ -4,7 +4,7 @@ import {
     CUSTOMER_ADD_RETAILER,
     CUSTOMER_UPDATE_RETAILER
 } from 'actionTypes/Customer/retailer.types';
-import {objectToQuery} from 'src/helpers/helper';
+import {objectToQuery, isObject} from 'src/helpers/helper';
 
 export const retailerList = (params) => {
     params = objectToQuery(params, true)
@@ -35,6 +35,24 @@ export const retailerCreate = (data) => {
         .catch(error => {
         })
     }
+}
+
+export const retailerFetch = async (data) => {
+    if(!isObject(data)){
+        data = {id: data}
+    }
+    data = objectToQuery(data, true);
+    console.log("---------cokkie id in DAta  ",data);
+    return await axios.get(`/customer/best-retailers/view${data}`);
+}
+
+export const retailerCityFetch = async (data) => {
+    /* if(!isObject(data)){
+        data = {id: data}
+    }
+    data = objectToQuery(data, true);
+    console.log("---------cokkie id in DAta  ",data); */
+    return await axios.get(`/customer/best-retailers/cities`);
 }
 
 export const retailerUpdate = (id, data) => {
