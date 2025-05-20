@@ -141,7 +141,7 @@
     }
 
     .festive-offer .slide {
-      margin: -20px 0px 0px 0px;
+      /* margin: -20px 0px 0px 0px; */
     }
 
     .festive-offer .festive-offer-header h1{
@@ -221,4 +221,8 @@
 .carousel-indicators .active {
   background-color: #333;
   transform: scale(1.2); /* Optionally scale the active dot */
+}
+
+.diamond-offer .diamond-inner {
+    background-color: transparent; /* #fffdd0; */
 }
