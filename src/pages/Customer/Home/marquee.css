@@ -253,6 +253,14 @@
       margin: 5px 0px 5px 0px !important;
     }
 
+    .festive-offer .diamond-inner{
+      height: 100%;
+      padding: 10px;
+      font-size: 12px;
+      width: 100%;
+      margin: 5px 0px 5px 0px !important;
+    }
+
     .new-arrival .diamond-inner .offer-header {
       padding: 0;
     }
@@ -368,6 +376,20 @@
     .banner-sec .slider-banner{
       min-height: 32vh !important;
     }
+
+    .festive-offer .diamond-inner {
+        height: 100%;
+        padding: 10px;
+        font-size: 12px;
+        width: 100%;
+        margin: 5px 5px 5px 0px !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    /* .festive-offer .diamond-inner{
+        background-position: right -100% center !important;
+    } */
   }
 
   @media (min-width: 768px) and (max-width: 1000px) {
