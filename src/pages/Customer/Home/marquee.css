@@ -151,12 +151,28 @@
     max-width: none;
   }
 
+  .new-arrival .diamond-inner {
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    padding: 0px;
+    margin-left:0%;
+    color: #fff;
+    border-radius: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 98%;
+    max-width: none;
+  }
+
   .festive-offer .diamond-inner {
     background-size: contain !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
-    padding: 20px;
-    margin-left:1%;
+    padding: 5px;
+    margin-left:0%;
     color: #fff;
     border-radius: 10px;
     height: 100%;
@@ -185,6 +201,13 @@
       font-size: 14px;
     }
 
+    .new-arrival .diamond-inner{
+      height: 100%;
+      width: 95%;
+      padding: 0px;
+      font-size: 14px;
+    }
+
     .festive-offer .diamond-inner{
       height: 100%;
       width: 100%;
@@ -206,16 +229,28 @@
   }
   
   @media (max-width: 480px) {
+    .banner-sec .slider-banner{
+      min-height: 20vh !important;
+    }
+
     .wrapper section.ornament-slider .swiper {
       margin-bottom: -147px !important;
     }
 
     .new-arrival .diamond-inner {
-      height: 150px;
+      height: 100%;
+      padding: 0px;
+      font-size: 12px;
+      width: 95%;
+      margin: 5px 0px 5px 0px !important
+    }
+
+    .festive-offer .diamond-inner{
+      height: 100%;
       padding: 10px;
       font-size: 12px;
-      width:400px;
-      margin: 5px 0px 5px 0px !important
+      width: 100%;
+      margin: 5px 0px 5px 0px !important;
     }
 
     .festive-offer .diamond-inner{
@@ -250,7 +285,7 @@
     }
 
     .marquee-retailer span {
-      gap: 20px;
+      gap: 12.50px;
     }
 
     .retailer-search-container {
@@ -277,6 +312,14 @@
   }
 
   @media (max-width: 400px) {
+    .marquee-retailer span {
+      gap: 12.5px;
+    }
+
+    .banner-sec .slider-banner{
+      min-height: 21vh !important;
+    }
+
     .retailer-search-container {
       display: flex;
       gap: 4%;
@@ -300,11 +343,38 @@
     }
 
     .new-arrival .diamond-inner {
-        height: 150px;
-        padding: 10px;
+        height: 100%;
+        padding: 0px;
         font-size: 12px;
-        width: 345px;
-        margin: 5px 0px 5px 0px !important;
+        width: 95%;
+        margin: 0px 5px 0px 0px !important;
+    }
+
+    .festive-offer .diamond-inner {
+        height: 100%;
+        padding: 2px;
+        font-size: 12px;
+        width: 100%;
+        margin: 0px 5px 0px 0px !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    /* .festive-offer .diamond-inner{
+        background-position: right -100% center !important;
+    } */
+  }
+
+  @media only screen and (width: 768px) {
+    /* .festive-offer .diamond-inner{
+        background-position: right -100% center !important;
+    } */
+    .banner-sec{
+      padding-top: 115px !important;
+    }
+
+    .banner-sec .slider-banner{
+      min-height: 32vh !important;
     }
 
     .festive-offer .diamond-inner {
@@ -323,6 +393,9 @@
   }
 
   @media (min-width: 768px) and (max-width: 1000px) {
+    .banner-sec .slider-banner{
+      min-height: 29vh !important;
+    }
     .diamond-inner {
       height: 250px;
       padding: 15px;
@@ -332,9 +405,16 @@
       background-position: right bottom !important; */
     }
 
+    .new-arrival .diamond-inner{
+      height: 100%;
+      padding: 0px;
+      font-size: 16px;
+      width: 98%; 
+    }
+
     .festive-offer .diamond-inner{
       height: 100%;
-      padding: 15px;
+      padding: 5px;
       font-size: 16px;
       width: 100%; 
     }
@@ -344,7 +424,7 @@
     }
   
     .marquee {
-      padding: 15px 0;
+      padding: 0px 0;
     }
   
     .diamond-inner .offer-header h2 {
@@ -370,6 +450,9 @@
     }
   }
   @media (min-width: 1024px) and (max-width: 1100px){
+    .banner-sec .slider-banner{
+      min-height: 31vh !important;
+    }
     .retailer-search-container {
       display: flex;
       gap: 47%;
@@ -412,4 +495,12 @@
   100% {
     transform: translateX(-50%);
   }
+}
+
+.best-retailer .b-slider-image img {
+    margin: 20px auto;
+    width: 160px;
+    height: 160px;
+    border-radius: 0%;
+    border: 8px solid #cdcdcd;
 }
