@@ -67,44 +67,44 @@
   }
 
   /* Default styles for the ring-price section */
-  .selling-product .ring-price {
+  .feature-product .ring-price, .selling-product .ring-price {
     flex-direction: row; /* Switch to row layout */
     flex-wrap: wrap; /* Allow wrapping if needed */
     align-items: center; /* Align items vertically */
     gap: 5px;
   }
   
-  .selling-product .ring-price .offer-price {
+  .feature-product .ring-price .offer-price, .selling-product .ring-price .offer-price {
     font-size: 18px; /* Default font size for offer price */
     font-weight: bold;
     color: #2c2a2b; /* Highlighted color for offer price */
   }
   
-  .selling-product .ring-price .item-price {
+  .feature-product .ring-price .item-price, .selling-product .ring-price .item-price {
     font-size: 16px; /* Default font size for item price */
     text-decoration: line-through;
     color: #757575; /* Muted color for original price */
   }
   
-  .selling-product .ring-price .me-2 {
+  .feature-product .ring-price .me-2, .selling-product .ring-price .me-2 {
     font-size: 14px; /* Default font size for discount text */
     color: #d32f2f; /* Highlighted color for discount */
   }
   
   /* For tablets and smaller screens (max-width: 768px) */
   @media (max-width: 768px) {
-    .selling-product .ring-price {
+    .feature-product .ring-price, .selling-product .ring-price {
       flex-direction: row; /* Switch to row layout */
       flex-wrap: wrap; /* Allow wrapping if needed */
       align-items: center; /* Align items vertically */
       gap: 10px; /* Add spacing between elements */
     }
 
-    .selling-product .ring-price .offer-price{
+    .feature-product .ring-price .offer-price, .selling-product .ring-price .offer-price{
       font-size: 16px;
     }
   
-    .selling-product .ring-price .item-price,
+    .feature-product .ring-price .item-price, .feature-product .ring-price .me-2, .selling-product .ring-price .item-price,
     .selling-product .ring-price .me-2 {
       font-size: 14px; /* Adjust font size for smaller screens */
     }
@@ -116,18 +116,18 @@
       margin-top: 0px !important;
     }
 
-    .selling-product .ring-price {
+    .feature-product .ring-price, .selling-product .ring-price {
       flex-direction: row; /* Keep row layout */
       flex-wrap: wrap; /* Allow wrapping for very small screens */
       align-items: center; /* Align items vertically */
       gap: 5px; /* Reduce spacing */
     }
 
-    .selling-product .ring-price .offer-price{
+    .feature-product .ring-price .offer-price, .selling-product .ring-price .offer-price{
       font-size: 14px;
     }
   
-    .selling-product .ring-price .item-price,
+    .feature-product .ring-price .item-price, .feature-product .ring-price .me-2, .selling-product .ring-price .item-price,
     .selling-product .ring-price .me-2 {
       font-size: 12px; /* Further reduce font size */
     }
@@ -141,11 +141,12 @@
     }
 
     .festive-offer .slide {
-      margin: -20px 0px 0px 0px;
+      /* margin: -20px 0px 0px 0px; */
     }
 
     .festive-offer .festive-offer-header h1{
       font-size: 18px;
+      margin:0;
     }
 
     .promocode {
@@ -171,6 +172,7 @@
 
   .festive-offer .festive-offer-header h1 {
     color: #ffffff !important;
+    margin: 0;
   }
 
   .new-arrival {
@@ -182,11 +184,19 @@
   }
 
   .new-arrival .marquee-heading {
-    color: #ffffff !important;
+    color: #ffffff !important;  
+    margin-top:0px;
+    margin-bottom: 5px;
   }
 
   .new-arrival .marquee-wrapper{
     margin-bottom: 0px !important;
+  }
+
+  .banner-sec .slider-banner {
+    position: relative;
+    min-height: 83vh;
+    width: 100%;
   }
 
   .banner-sec .slider-banner img {
@@ -195,8 +205,8 @@
     /* top: 0; */
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    object-position: unset;
+    /* object-fit: contain;
+    object-position: unset; */
     padding: 0px;
     margin: 0px;
   }
@@ -221,4 +231,8 @@
 .carousel-indicators .active {
   background-color: #333;
   transform: scale(1.2); /* Optionally scale the active dot */
+}
+
+.diamond-offer .diamond-inner {
+    background-color: transparent; /* #fffdd0; */
 }
