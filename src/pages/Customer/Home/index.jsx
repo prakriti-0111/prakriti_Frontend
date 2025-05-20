@@ -208,7 +208,7 @@ class HomePage extends Component {
         this.position = 0;
       }
 
-      if(-this.position % (itemWidth+20) == 0){
+      if(-this.position % (itemWidth+15) == 0){
         /* console.log("===============================================");
         console.log("itemWidth : ", itemWidth);
         console.log("this.position : ", this.position);
@@ -667,7 +667,7 @@ class HomePage extends Component {
       {homepage_settings.map((item, k) => {
         switch(true){
           case item.section_name.toLowerCase() == "banners":
-            return (<><section className={`banner-sec pt-5`}>
+            return (<><section className={`banner-sec mt-2 ${k==0?'pt-5':''}`}>
               {/* <Container className='position-relative'>
                     <Row>
                         <Col xs={7} md={7}>
@@ -706,7 +706,7 @@ class HomePage extends Component {
             </section></>);
           break;
           case item.section_name.toLowerCase() == "mobilecategories":
-            return (<section className="ornament-slider">
+            return (<section className={`ornament-slider mt-2 ${k==0?'pt-5':''}`}>
                 <Container>
                   <Swiper
                     spaceBetween={10}
@@ -753,7 +753,7 @@ class HomePage extends Component {
                 //console.log("==================================");
                 return (<>{promocodes.map((item, key) => item.category_slug == catSlug?(
                   <section
-                    className={`promocode ${key % 2 == 0 ? "diamond-offer" : "pendant-offer"}`}
+                    className={`promocode mt-2 ${k==0?'pt-5':''} ${key % 2 == 0 ? "diamond-offer" : "pendant-offer"}`}
                     key={key}
                   >
                     <Link
@@ -816,7 +816,7 @@ class HomePage extends Component {
             });
           break;
           case item.section_name.toLowerCase() == "newarrivals":
-            return (<>{newArrivals.length > 0 ? <section className="new-arrival pt-5">
+            return (<>{newArrivals.length > 0 ? <section className={`new-arrival ${k==0?'pt-5':''} mt-2`}>
               <div className="marquee-wrapper">
                 <h1 className="marquee-heading container">New Arrivals</h1>
                 <div className="marquee" tabIndex="0"  ref={el => (this.marqueeRef = el)}>
@@ -845,7 +845,7 @@ class HomePage extends Component {
             </section>:''}</>);
           break;
           case item.section_name.toLowerCase() == "festiveoffers":
-            return (<>{festiveOffers.length > 0 ?<section className="festive-offer pt-5">
+            return (<>{festiveOffers.length > 0 ?<section className={`festive-offer ${k==0?'pt-7':''} ${this.props.isMobileView?'mt-5':'mt-2'}`}>
               {/* <Container className='position-relative'>
                         <Row>
                             <Col xs={7} md={7}>
@@ -885,12 +885,12 @@ class HomePage extends Component {
                           }
                         >
                         <section className='diamond-offer'>
-                          <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.banner}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
-                              <div className='offer-header'>
+                          <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{/*  backgroundImage:`url(${item.banner}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%' */  }}>
+                              {/* <div className='offer-header'>
                                   <h2>{item.title}</h2>
                                   <a  className='shop-now'>Shop Now</a>
-                              </div>
-    
+                              </div> */}
+                              <img src={item.banner} alt="" className="d-block w-100" />
                           </Container>
                         </section>
                         </Link>
@@ -917,7 +917,7 @@ class HomePage extends Component {
               if(item.section_name.toLowerCase().indexOf(catSlug) !== -1){
                 //console.log("=================================="+catSlug);
                 
-                return (<><section className={`${sliders.length > 0?"selling-product":""}`} > 
+                return (<>{sliders.length > 0 && <section className={` mt-2 ${k==0?'pt-5':''} ${sliders.length > 0?"selling-product":""}`} > 
                   <Container>
                     {sliders.length > 0 && <div className="selling-product-header d-flex justify-content-between mb-4">
                       <h1>Current Stock Products</h1>
@@ -1023,14 +1023,14 @@ class HomePage extends Component {
                       
                     </Swiper>
                   </Container>
-                </section></>);
+                </section>}</>);
               }
             });
           break;
           case item.section_name.toLowerCase() == "bestsellingproducts":
             return (<>
             {best_selling_products.length ? (
-            <section className="selling-product">
+            <section className={`selling-product ${k==0?'pt-5':''} mt-2`}>
               <Container>
                 <div className="selling-product-header">
                   <h1>Best Selling Products</h1>
@@ -1176,7 +1176,7 @@ class HomePage extends Component {
           case item.section_name.toLowerCase() == "featuredproducts":
             return (<>
               {featured_products.length ? (
-                <section className="feature-product bg-white ">
+                <section className={`feature-product bg-white ${k==0?'pt-5':''} mt-2`}>
                   <Container className="bg-light py-3">
                     <div className="feature-product-header">
                       <h1 style={{ color: "#001e38" }}>Featured Products</h1>
