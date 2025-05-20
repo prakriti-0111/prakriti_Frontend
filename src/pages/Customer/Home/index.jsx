@@ -208,7 +208,7 @@ class HomePage extends Component {
         this.position = 0;
       }
 
-      if(-this.position % (itemWidth+20) == 0){
+      if(-this.position % (itemWidth+15) == 0){
         /* console.log("===============================================");
         console.log("itemWidth : ", itemWidth);
         console.log("this.position : ", this.position);
@@ -535,7 +535,8 @@ class HomePage extends Component {
   };
 
   getNewArrivalLink = (item) => {
-    return item.url.replace(process.env.BASE_URL + "/", "/");
+    console.log("link : ", item.url.replace(process.env.BASE_URL + "/", "/")); 
+    return "";
   };
 
   getfestiveOfferLink = (item) => {
@@ -666,7 +667,7 @@ class HomePage extends Component {
       {homepage_settings.map((item, k) => {
         switch(true){
           case item.section_name.toLowerCase() == "banners":
-            return (<><section className=" pt-5">
+            return (<><section className={`banner-sec mt-2 ${k==0?'pt-5':''}`}>
               {/* <Container className='position-relative'>
                     <Row>
                         <Col xs={7} md={7}>
@@ -685,7 +686,7 @@ class HomePage extends Component {
                     </Row>
                     </Container> */}
               <div className="" style={{ padding: "0" }}>
-                <Carousel className="rounded-4">
+                {banners.length > 0 && <Carousel className="rounded-4">
                   {banners.map((item, key) => (
                     <Carousel.Item key={key}>
                       <Link to={this.getBannerLink(item)}>
@@ -695,7 +696,7 @@ class HomePage extends Component {
                       </Link>
                     </Carousel.Item>
                   ))}
-                </Carousel>
+                </Carousel>}
                 {!banners.length ? (
                   <Placeholder animation="glow">
                     <Placeholder xs={12} className="slider-banner" />
@@ -705,7 +706,7 @@ class HomePage extends Component {
             </section></>);
           break;
           case item.section_name.toLowerCase() == "mobilecategories":
-            return (<section className="ornament-slider">
+            return (<section className={`ornament-slider mt-2 ${k==0?'pt-5':''}`}>
                 <Container>
                   <Swiper
                     spaceBetween={10}
@@ -752,7 +753,7 @@ class HomePage extends Component {
                 //console.log("==================================");
                 return (<>{promocodes.map((item, key) => item.category_slug == catSlug?(
                   <section
-                    className={`promocode ${key % 2 == 0 ? "diamond-offer" : "pendant-offer"}`}
+                    className={`promocode mt-2 ${k==0?'pt-5':''} ${key % 2 == 0 ? "diamond-offer" : "pendant-offer"}`}
                     key={key}
                   >
                     <Link
@@ -815,7 +816,7 @@ class HomePage extends Component {
             });
           break;
           case item.section_name.toLowerCase() == "newarrivals":
-            return (<>{newArrivals.length > 0 ? <section className="new-arrival pt-5">
+            return (<>{newArrivals.length > 0 ? <section className={`new-arrival ${k==0?'pt-5':''} mt-2`}>
               <div className="marquee-wrapper">
                 <h1 className="marquee-heading container">New Arrivals</h1>
                 <div className="marquee" tabIndex="0"  ref={el => (this.marqueeRef = el)}>
@@ -844,7 +845,7 @@ class HomePage extends Component {
             </section>:''}</>);
           break;
           case item.section_name.toLowerCase() == "festiveoffers":
-            return (<>{festiveOffers.length > 0 ?<section className="festive-offer pt-5">
+            return (<>{festiveOffers.length > 0 ?<section className={`festive-offer ${k==0?'pt-7':''} ${this.props.isMobileView?'mt-5':'mt-2'}`}>
               {/* <Container className='position-relative'>
                         <Row>
                             <Col xs={7} md={7}>
@@ -884,12 +885,12 @@ class HomePage extends Component {
                           }
                         >
                         <section className='diamond-offer'>
-                          <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.banner}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%'  }}>
-                              <div className='offer-header'>
+                          <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{/*  backgroundImage:`url(${item.banner}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%' */  }}>
+                              {/* <div className='offer-header'>
                                   <h2>{item.title}</h2>
                                   <a  className='shop-now'>Shop Now</a>
-                              </div>
-    
+                              </div> */}
+                              <img src={item.banner} alt="" className="d-block w-100" />
                           </Container>
                         </section>
                         </Link>
@@ -916,7 +917,7 @@ class HomePage extends Component {
               if(item.section_name.toLowerCase().indexOf(catSlug) !== -1){
                 //console.log("=================================="+catSlug);
                 
-                return (<><section className={`${sliders.length > 0?"selling-product":""}`} > 
+                return (<>{sliders.length > 0 && <section className={` mt-2 ${k==0?'pt-5':''} ${sliders.length > 0?"selling-product":""}`} > 
                   <Container>
                     {sliders.length > 0 && <div className="selling-product-header d-flex justify-content-between mb-4">
                       <h1>Current Stock Products</h1>
@@ -1022,14 +1023,14 @@ class HomePage extends Component {
                       
                     </Swiper>
                   </Container>
-                </section></>);
+                </section>}</>);
               }
             });
           break;
           case item.section_name.toLowerCase() == "bestsellingproducts":
             return (<>
             {best_selling_products.length ? (
-            <section className="selling-product">
+            <section className={`selling-product ${k==0?'pt-5':''} mt-2`}>
               <Container>
                 <div className="selling-product-header">
                   <h1>Best Selling Products</h1>
@@ -1175,7 +1176,7 @@ class HomePage extends Component {
           case item.section_name.toLowerCase() == "featuredproducts":
             return (<>
               {featured_products.length ? (
-                <section className="feature-product bg-white ">
+                <section className={`feature-product bg-white ${k==0?'pt-5':''} mt-2`}>
                   <Container className="bg-light py-3">
                     <div className="feature-product-header">
                       <h1 style={{ color: "#001e38" }}>Featured Products</h1>
@@ -1265,7 +1266,7 @@ class HomePage extends Component {
         
         {/*<div className='gap-100'></div>*/}
         
-        <section className="blue-pearl mt-3 mb-3 mt-md-4 mb-md-4 position-relative">
+        {/* <section className="blue-pearl mt-3 mb-3 mt-md-4 mb-md-4 position-relative">
           <Container>
             <Row>
               <Col xs={4} md={4} className="blue-pearl-image-div">
@@ -1274,14 +1275,7 @@ class HomePage extends Component {
                 </div>
               </Col>
               <Col md={8} className="blue-pearl-div">
-                {/* <div className="blue-pearl-inner position-relative">
-                  <img src={pearlBlue2} alt="" />
-                  <div className="overlay"></div>
-                  <div className="blue-pearl-content">
-                    <h2>Pearl Blue Diamond Earring</h2>
-                    <p>₹9,726 only</p>
-                  </div>
-                </div> */}
+                
                 <div id="carouselExampleCaptions" class="carousel slide">
                   <div class="carousel-indicators">
                     <button
@@ -1365,7 +1359,7 @@ class HomePage extends Component {
               </Col>
             </Row>
           </Container>
-        </section>
+        </section> */}
         <section className="promise promise-desktop bg-light">
           <Container>
             <h2 className="text-center ">Our Promise</h2>
@@ -1771,7 +1765,7 @@ class HomePage extends Component {
           </Container>
         </section>
         {/*<div className='gap-100'></div>*/}
-        <section className="browse-rings position-relative">
+        {/* <section className="browse-rings position-relative">
           <Container fluid>
             <Row>
               <Col xs={6} md={4}>
@@ -1793,7 +1787,7 @@ class HomePage extends Component {
           <div className="browse-rings-banner rounded-start">
             <img src={rings} alt="" className="rounded-start" />
           </div>
-        </section>
+        </section> */}
 
         {bestRetailers.length > 0 ? (
           <section className="feature-product best-retailer">
@@ -1879,7 +1873,7 @@ class HomePage extends Component {
         ) : <section className="feature-product best-retailer"><Loader /></section>}
 
       
-        <section className="ratn-banner">
+        {/* <section className="ratn-banner">
           <Container>
             <div className="ratn-banner-image position-relative">
               <img src={ratnBanner} alt="" />
@@ -1888,11 +1882,11 @@ class HomePage extends Component {
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has been
                 </p>
-                {/* <a href='' className='learn-more'>Learn More</a> */}
+                
               </div>
             </div>
           </Container>
-        </section>
+        </section> */}
         <section className="address-map">
           <Container>
             <div className="review-header">
@@ -2095,7 +2089,7 @@ class HomePage extends Component {
             </div>
           </Container>
         </section>
-        {counts ? (
+        {/*counts ? (
           <section className="socialmedia-wrapper">
             <Container>
               <ul id="counter">
@@ -2131,7 +2125,7 @@ class HomePage extends Component {
               </ul>
             </Container>
           </section>
-        ) : null}
+        ) : null*/}
       </>
     );
   }
