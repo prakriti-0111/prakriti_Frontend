@@ -133,7 +133,7 @@
     }
 
     .selling-product .selling-product-header h1 {
-      margin-bottom: 10px !important;
+      margin-bottom: 5px !important;
     }
 
     .festive-offer {
@@ -195,18 +195,19 @@
 
   .banner-sec .slider-banner {
     position: relative;
-    min-height: 83vh;
-    width: 100%;
+    min-height: 62vh;
+    width: 90%;
+    margin-left: 5%;
   }
 
   .banner-sec .slider-banner img {
-    /* position: absolute; */
+    position: unset;
     /* left: 0; */
     /* top: 0; */
     width: 100%;
     height: 100%;
-    /* object-fit: contain;
-    object-position: unset; */
+    object-fit: unset;
+    object-position: unset;
     padding: 0px;
     margin: 0px;
   }
