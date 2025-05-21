@@ -16,7 +16,8 @@
   display: flex;
   /* transition: transform 1s ease-in-out; */
   will-change: transform;
-  width: max-content;
+  /* width: max-content; */
+  width: 100%;
 }
 
 .marquee-track-retailer {
@@ -95,7 +96,7 @@
   
   .marquee span {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     white-space: nowrap;
     align-items: center;
     will-change: transform;
@@ -106,6 +107,7 @@
     min-width: 300px; /* Base minimum width */
     /* max-width: 90vw; */  /* Don't let it overflow on small screens */
     box-sizing: border-box;
+    width:100%;
   }
 
   .marquee-retailer {
@@ -134,17 +136,51 @@
   }
   
   .diamond-inner {
-    background-size: auto 100% !important;
-    background-position: right bottom !important;
+    background-size: contain !important;
+    background-position: center !important;
     background-repeat: no-repeat !important;
     padding: 20px;
+    margin-left:1%;
     color: #fff;
     border-radius: 10px;
     height: 325px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    width: 1300px;
+    width: 98%;
+    max-width: none;
+  }
+
+  .new-arrival .diamond-inner {
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    padding: 0px;
+    margin-left:0%;
+    color: #fff;
+    border-radius: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 98%;
+    max-width: none;
+  }
+
+  .festive-offer .diamond-inner {
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    padding: 5px;
+    margin-left:0%;
+    color: #fff;
+    border-radius: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    max-width: none;
   }
 
   .diamond-inner .offer-header {
@@ -165,6 +201,20 @@
       font-size: 14px;
     }
 
+    .new-arrival .diamond-inner{
+      height: 100%;
+      width: 95%;
+      padding: 0px;
+      font-size: 14px;
+    }
+
+    .festive-offer .diamond-inner{
+      height: 100%;
+      width: 100%;
+      padding: 5px;
+      font-size: 14px;
+    }
+
     .diamond-inner .offer-header {
       padding: 0;
     }
@@ -179,16 +229,54 @@
   }
   
   @media (max-width: 480px) {
+    .banner-sec .slider-banner {
+        min-height: 150px !important;
+        width: 352px !important;
+        margin-left: 1% !important;
+    }
+
+    .banner-sec .slider-title {
+      margin-left: 2% !important;
+      font-size: 15px !important;
+    }
+
+    .promocode .promocode-banner {
+        min-height: 150px !important;
+        width: 352px !important;
+        margin-left: 1% !important;
+    }
+
+    .promocode .promocode-title {
+      margin-left: 2% !important;
+      font-size: 15px !important;
+    }
+
     .wrapper section.ornament-slider .swiper {
       margin-bottom: -147px !important;
     }
 
     .new-arrival .diamond-inner {
-      height: 150px;
+      height: 100%;
+      padding: 0px;
+      font-size: 12px;
+      width: 95%;
+      margin: 5px 0px 5px 0px !important
+    }
+
+    .festive-offer .diamond-inner{
+      height: 100%;
       padding: 10px;
       font-size: 12px;
-      width:400px;
-      margin: 5px 0px 5px 0px !important
+      width: 100%;
+      margin: 5px 0px 5px 0px !important;
+    }
+
+    .festive-offer .diamond-inner{
+      height: 100%;
+      padding: 10px;
+      font-size: 12px;
+      width: 100%;
+      margin: 5px 0px 5px 0px !important;
     }
 
     .new-arrival .diamond-inner .offer-header {
@@ -211,11 +299,11 @@
     }
 
     .new-arrival .marquee span {
-      gap: 20px;
+      gap: 0px;
     }
 
     .marquee-retailer span {
-      gap: 20px;
+      gap: 12.50px;
     }
 
     .retailer-search-container {
@@ -239,9 +327,60 @@
         margin-top: 12%;
         padding-top: 28%;
     }
+
+    .selling-product .selling-product-header h1 {
+        margin-bottom: 5px !important;
+        font-size: 16px !important;
+    }
+
+    .selling-product {
+        margin-top: 0px !important;
+        padding: 5px 0 !important;
+        background-color: #1C4848 !important;
+    }
+
+    .promocode{
+      margin-top:0px !important;
+    }
+
+    .selling-product .container{
+        background: #1C4848 !important;
+        margin-left: 1% !important;
+        max-width: 98% !important;
+    }
   }
 
   @media (max-width: 400px) {
+    .wrapper section.ornament-slider .swiper {
+      margin-bottom: -180px !important;
+    }
+
+    .marquee-retailer span {
+      gap: 12.5px;
+    }
+
+    .banner-sec .slider-banner {
+        min-height: 125px !important;
+        width: 352px !important;
+        margin-left: 1% !important;
+    }
+
+    .banner-sec .slider-title {
+      margin-left: 2% !important;
+      font-size: 15px !important;
+    }
+
+    .promocode .promocode-banner {
+        min-height: 125px !important;
+        width: 352px !important;
+        margin-left: 1% !important;
+    }
+
+    .promocode .promocode-title {
+      margin-left: 2% !important;
+      font-size: 15px !important;
+    }
+
     .retailer-search-container {
       display: flex;
       gap: 4%;
@@ -265,22 +404,123 @@
     }
 
     .new-arrival .diamond-inner {
-        height: 150px;
+        height: 100%;
+        padding: 0px;
+        font-size: 12px;
+        width: 95%;
+        margin: 0px 5px 0px 0px !important;
+    }
+
+    .festive-offer .diamond-inner {
+        height: 100%;
+        padding: 2px;
+        font-size: 12px;
+        width: 100%;
+        margin: 0px 5px 0px 0px !important;
+    }
+
+    .selling-product .selling-product-header h1 {
+        margin-bottom: 5px !important;
+        font-size: 16px !important;
+    }
+
+  }
+
+  @media (max-width: 767px) {
+    /* .festive-offer .diamond-inner{
+        background-position: right -100% center !important;
+    } */
+  }
+
+  @media only screen and (width: 768px) {
+    /* .festive-offer .diamond-inner{
+        background-position: right -100% center !important;
+    } */
+    .banner-sec{
+      padding-top: 115px !important;
+    }
+
+    .banner-sec .slider-banner {
+        min-height: 330px !important;
+        width: 930px !important;
+        margin-left: 4% !important;
+    }
+
+    .banner-sec .slider-title {
+      margin-left: 6% !important;
+      font-size: 23px !important; 
+    }
+
+    .promocode .promocode-banner {
+        min-height: 330px !important;
+        width: 930px !important;
+        margin-left: 4% !important;
+    }
+
+    .promocode .promocode-title {
+      margin-left: 6% !important;
+      font-size: 23px !important; 
+    }
+
+    .festive-offer .diamond-inner {
+        height: 100%;
         padding: 10px;
         font-size: 12px;
-        width: 345px;
-        margin: 5px 0px 5px 0px !important;
+        width: 100%;
+        margin: 5px 5px 5px 0px !important;
     }
   }
 
+  @media (max-width: 767px) {
+    /* .festive-offer .diamond-inner{
+        background-position: right -100% center !important;
+    } */
+  }
+
   @media (min-width: 768px) and (max-width: 1000px) {
+    .banner-sec .slider-banner {
+        min-height: 330px !important;
+        width: 930px !important;
+        margin-left: 4% !important;
+    }
+
+    .banner-sec .slider-title {
+      margin-left: 6% !important;
+      font-size: 23px !important; 
+    }
+
+    .promocode .promocode-banner {
+        min-height: 330px !important;
+        width: 930px !important;
+        margin-left: 4% !important;
+    }
+
+    .promocode .promocode-title {
+      margin-left: 6% !important;
+      font-size: 23px !important; 
+    }
+
     .diamond-inner {
       height: 250px;
       padding: 15px;
       font-size: 16px;
-      width: 600px; /* adjust to fit screen */
-      background-size: contain !important;
-      background-position: right bottom !important;
+      width: 98%; /* adjust to fit screen */
+      /* background-size: contain !important;
+      background-position: right bottom !important; */
+    }
+
+    .new-arrival .diamond-inner{
+      height: 100%;
+      padding: 0px;
+      font-size: 16px;
+      width: 98%; 
+    }
+
+    .festive-offer .diamond-inner{
+      height: 100%;
+      padding: 5px;
+      font-size: 16px;
+      width: 100%; 
     }
   
     .marquee span {
@@ -288,7 +528,7 @@
     }
   
     .marquee {
-      padding: 15px 0;
+      padding: 0px 0;
     }
   
     .diamond-inner .offer-header h2 {
@@ -313,7 +553,30 @@
       padding-top: 15px;
     }
   }
+
   @media (min-width: 1024px) and (max-width: 1100px){
+    .banner-sec .slider-banner {
+        min-height: 330px !important;
+        width: 930px !important;
+        margin-left: 4% !important;
+    }
+
+    .banner-sec .slider-title {
+      margin-left: 6% !important;
+      font-size: 23px !important; 
+    }
+
+    .promocode .promocode-banner {
+        min-height: 330px !important;
+        width: 930px !important;
+        margin-left: 4% !important;
+    }
+
+    .promocode .promocode-title {
+      margin-left: 6% !important;
+      font-size: 23px !important; 
+    }
+
     .retailer-search-container {
       display: flex;
       gap: 47%;
@@ -325,6 +588,12 @@
     }
     .retailer-search{
       padding-top: 18px;
+    }
+
+    .selling-product .container{
+        background: #1C4848 !important;
+        margin-left: 4% !important;
+        max-width: 92% !important;
     }
   }
 
@@ -357,3 +626,54 @@
     transform: translateX(-50%);
   }
 }
+
+.best-retailer .b-slider-image img {
+    margin: 20px auto;
+    width: 160px;
+    height: 160px;
+    border-radius: 0%;
+    border: 8px solid #cdcdcd;
+}
+
+.wrapper .banner-sec .slider-banner {
+    position: relative;
+    min-height: 570px;
+    width: 1600px;
+    margin-left: 6%;
+}
+
+.banner-sec .slider-title {
+  margin-left: 7%;
+  font-size: 25px;
+}
+
+.wrapper .promocode .promocode-banner {
+    position: relative;
+    min-height: 570px;
+    width: 1600px;
+    margin-left: 6%;
+}
+
+.promocode .promocode-title {
+  margin-left: 7%;
+  font-size: 25px;
+}
+
+.selling-product .selling-product-header h1 {
+    font-family: "Muli";
+    font-size: 44px;
+    margin-bottom: 0px;
+}
+
+.wrapper .selling-product {
+    margin-top: 0px !important;
+    padding: 10px 0;
+    background-color: transparent !important;
+}
+
+.selling-product .container{
+  background: #1C4848 !important;
+  margin-left: 6%;
+  max-width: 87%;
+}
+
