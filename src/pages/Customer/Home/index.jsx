@@ -208,7 +208,7 @@ class HomePage extends Component {
         this.position = 0;
       }
 
-      if(-this.position % (itemWidth+15) == 0){
+      if(!this.props.isMobileView && -this.position % (itemWidth+15) == 0 || this.props.isMobileView && -this.position % (itemWidth+10) == 0){
         /* console.log("===============================================");
         console.log("itemWidth : ", itemWidth);
         console.log("this.position : ", this.position);
@@ -667,7 +667,7 @@ class HomePage extends Component {
       {homepage_settings.map((item, k) => {
         switch(true){
           case item.section_name.toLowerCase() == "banners":
-            return (<><section className={`banner-sec mt-2 ${k==0?'pt-5':''}`}>
+            return (<><section className={`banner-sec mt-2 ${k==0 || k==1?'pt-7':''}`}>
               {/* <Container className='position-relative'>
                     <Row>
                         <Col xs={7} md={7}>
@@ -691,8 +691,9 @@ class HomePage extends Component {
                     <Carousel.Item key={key}>
                       <Link to={this.getBannerLink(item)}>
                         <div className="slider-banner">
-                          <img className="d-block w-100" src={item.image} alt="" />
+                          <img src={item.image} alt="" />
                         </div>
+                        <span className="slider-title">{item.title}</span>
                       </Link>
                     </Carousel.Item>
                   ))}
@@ -706,7 +707,7 @@ class HomePage extends Component {
             </section></>);
           break;
           case item.section_name.toLowerCase() == "mobilecategories":
-            return (<section className={`ornament-slider mt-2 ${k==0?'pt-5':''}`}>
+            return (<section className={`ornament-slider mt-2 ${this.props.isMobileView && k==0?'pt-5':''}`}>
                 <Container>
                   <Swiper
                     spaceBetween={10}
@@ -770,9 +771,14 @@ class HomePage extends Component {
                           : "/products?offer=" + item.products
                       }
                     >
-                      <Container
+                      <div className="promocode-banner">
+                        <img src={item.banner} alt="" />
+                      </div>
+                      <span className="promocode-title">{item.title}</span>
+                    
+                      {/* <Container
                         className={
-                          (key % 2 == 0 ? "diamond-inner" : "pendant-inner") +
+                          (key % 2 == 0 ? "promocode-banner" : "promocode-banner") +
                           " mt-2 mb-3 mt-md-4 mb-md-2 position-relative rounded"
                         }
                         style={{
@@ -782,10 +788,8 @@ class HomePage extends Component {
                           backgroundSize: "cover",
                         }}
                       >
-                        {/*<div className={(key%2==0) ? 'offer-header' : 'pendant-header'}>
-                                            <h2>{item.title}</h2>
-                                            <span className='shop-now'>Shop Now</span>
-                                        </div>*/}
+                        
+                        
                       </Container>
                       <Container style={{ padding: 0 }} className="mt-3">
                         <div className="banner-heading-content text-primary-emphasis ">
@@ -808,7 +812,7 @@ class HomePage extends Component {
                             Shop Now
                           </Link>
                         </div>
-                      </Container>
+                      </Container> */}
                     </Link>
                   </section>
                 ):<></>)}</>);
@@ -824,11 +828,12 @@ class HomePage extends Component {
                       {newArrivals.map((item, key) => (
                         
                           <div className="marquee-item" key={`NewArrivals_${key}`} style={{cursor:"pointer"}} onClick={() => window.location = this.getNewArrivalLink(item)} >
-                            <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.image}) ` }}>
+                            <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ /* backgroundImage:`url(${item.image}) ` */ }}>
                                 {/*<div className='offer-header'>
                                     <h2>{item.title}</h2>
                                     <a href={this.getNewArrivalLink(item)} className='shop-now'>Shop Now</a>
                                 </div>*/}
+                                <img src={item.image} alt="" className="d-block w-100" />
                             </Container>
                           </div>
                       
@@ -885,7 +890,7 @@ class HomePage extends Component {
                           }
                         >
                         <section className='diamond-offer'>
-                          <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{/*  backgroundImage:`url(${item.banner}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%' */  }}>
+                          <Container className='diamond-inner  position-relative' style={{/*  backgroundImage:`url(${item.banner}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%' */  }}>
                               {/* <div className='offer-header'>
                                   <h2>{item.title}</h2>
                                   <a  className='shop-now'>Shop Now</a>
@@ -919,7 +924,7 @@ class HomePage extends Component {
                 
                 return (<>{sliders.length > 0 && <section className={` mt-2 ${k==0?'pt-5':''} ${sliders.length > 0?"selling-product":""}`} > 
                   <Container>
-                    {sliders.length > 0 && <div className="selling-product-header d-flex justify-content-between mb-4">
+                    {sliders.length > 0 && <div className="selling-product-header d-flex justify-content-between mb-1">
                       <h1>Current Stock Products</h1>
                       
                     </div>}
@@ -1241,15 +1246,12 @@ class HomePage extends Component {
                                   {" "}
                                   {product.sale_price_display}{" "}
                                 </span>
-                                {product.have_offer ? (
-                                  <span>
-                                    <span className="me-2 text-danger">Save</span>
-                                    <span className="item-price text-primary-emphasis">
+                                {product.have_offer ? (<><span className="item-price text-primary-emphasis">
                                       {" "}
                                       {product.mrp_display}{" "}
                                     </span>
-                                  </span>
-                                ) : null}
+                                    <span className="me-2 text-danger">Save</span></>): null}
+                                
                               </div>
                             </div>
                           </div>
