@@ -816,7 +816,7 @@ class ProductDetails extends React.Component {
                               </h2>
                             </div>
                             <div className="price-breakup mt-3 rounded bg-white shadow">
-                              <h2>Price Breakup</h2>
+                              <div className="price-breakup-title"><h2>Price Breakup</h2><span>{product.certificate_no}</span></div>
                               <div className="underline"></div>
                               <div className="breakup-content">
                                 {sizeMaterial.materials.map((item, key) => (
@@ -865,6 +865,14 @@ class ProductDetails extends React.Component {
                                     {displayAmount(sizeMaterial.total_gst)}
                                   </span>
                                 </div>
+                                {product.type != "material" ? (
+                                  <div className="breakup-item">
+                                    <span>Size</span>
+                                    <span>
+                                      {product.size_materials[0].size_name}
+                                    </span>
+                                  </div>
+                                ) : null}
                                 <hr style={{ margin: "8px 0" }} />
                                 <div className="breakup-item">
                                   <span className="total">Total</span>{" "}
@@ -995,7 +1003,7 @@ class ProductDetails extends React.Component {
                               </Row>
                             </div>
                           ) : null}
-                          <div className="product-details-items tab-items mt-2 mb-4 rounded">
+                          {/* <div className="product-details-items tab-items mt-2 mb-4 rounded">
                             <div className="tabs-side-by-side shadow">
                               <Tabs defaultActiveKey="customize">
                                 <Tab eventKey="customize" title="Customize Your Product">
@@ -1090,12 +1098,10 @@ class ProductDetails extends React.Component {
                                     ))}
                                   </div>
                                 </Tab>
-                                {/* <Tab eventKey="contact" title="Contact">
-                                  <div>Contact content</div>
-                                </Tab> */}
+                                
                               </Tabs>
                             </div>
-                          </div>
+                          </div> */}
                           <div className="product-buttons">
                             <Button
                               variant="danger"
@@ -1134,7 +1140,7 @@ class ProductDetails extends React.Component {
 
                                                         </div>*/}
 
-                          <div className="p-authenticity p-4 mt-3 p-details-authenticity rounded bg-white">
+                          <div className="p-authenticity mt-3 p-details-authenticity rounded bg-white">
                             {product.certificates.length ? (
                               <>
                                 <h4 className="text-center">
@@ -1655,7 +1661,7 @@ class ProductDetails extends React.Component {
                           </div>
 
                           <div className="price-breakup mt-3 rounded bg-light shadow">
-                            <h2>Price Breakup</h2>
+                            <div className="price-breakup-title"><h2>Price Breakup</h2><span>{product.certificate_no}</span></div>
                             <div className="underline"></div>
                             <div className="breakup-content">
                               {sizeMaterial.materials.map((item, key) => (
@@ -1704,6 +1710,14 @@ class ProductDetails extends React.Component {
                                   {displayAmount(sizeMaterial.total_gst)}
                                 </span>
                               </div>
+                              {product.type != "material" ? (
+                                <div className="breakup-item">
+                                  <span>Size</span>
+                                  <span>
+                                    {product.size_materials[0].size_name}
+                                  </span>
+                                </div>
+                              ) : null}
                               <hr style={{ margin: "8px 0" }} />
                               <div className="breakup-item">
                                 <span className="total">Total </span>{" "}
@@ -1891,7 +1905,7 @@ class ProductDetails extends React.Component {
                           </Accordion>
                           
                         </div> */}
-                        <div className="product-details-items tab-items mt-2 rounded">
+                        {/* <div className="product-details-items tab-items mt-2 rounded">
                           <div className="tabs-side-by-side shadow">
                             <Tabs defaultActiveKey="customize">
                               <Tab eventKey="customize" title="Customize Your Product">
@@ -1986,12 +2000,10 @@ class ProductDetails extends React.Component {
                                   ))}
                                 </div>
                               </Tab>
-                              {/* <Tab eventKey="contact" title="Contact">
-                                <div>Contact content</div>
-                              </Tab> */}
+                              
                             </Tabs>
                           </div>
-                        </div>
+                        </div> */}
                         <div className="product-buttons">
                           <Button
                             variant="danger"

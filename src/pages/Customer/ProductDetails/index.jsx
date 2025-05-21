@@ -1125,7 +1125,7 @@ class ProductDetails extends React.Component {
 
                                                         </div>*/}
 
-                          <div className="p-authenticity p-4 mt-3 p-details-authenticity rounded bg-white">
+                          <div className="p-authenticity mt-3 p-details-authenticity rounded bg-white">
                             {product.certificates.length ? (
                               <>
                                 <h4 className="text-center">
