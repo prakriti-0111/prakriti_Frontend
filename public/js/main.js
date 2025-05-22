@@ -30826,7 +30826,11 @@
                             children: [
                               "Copyright ",
                               t.getFullYear(),
+<<<<<<< HEAD
                               " Prakriti.one, All rights reserved.",
+=======
+                              " prakriti.one, All rights reserved.",
+>>>>>>> 5e491e0e1a5c6b206a2ee5eac67543b0e8dee9ee
                             ],
                           }),
                         }),
@@ -31551,7 +31555,11 @@
                   children: [
                     "Copyright ",
                     e.getFullYear(),
+<<<<<<< HEAD
                     " Prakriti.one, All rights reserved.",
+=======
+                    " prakriti.one, All rights reserved.",
+>>>>>>> 5e491e0e1a5c6b206a2ee5eac67543b0e8dee9ee
                   ],
                 }),
               }),
@@ -32322,7 +32330,11 @@
                   children: [
                     "Copyright ",
                     e.getFullYear(),
+<<<<<<< HEAD
                     " Prakriti.one, All rights reserved.",
+=======
+                    " prakriti.one, All rights reserved.",
+>>>>>>> 5e491e0e1a5c6b206a2ee5eac67543b0e8dee9ee
                   ],
                 }),
               }),
@@ -32563,7 +32575,7 @@
             (0, o.jsxs)(Un.m, {
               children: [
                 (0, o.jsx)("title", {
-                  children: "Prakriti(test) - Jewellers since 1990",
+                  children: "Prakriti - Jewellers since 1990",
                 }),
                 (0, o.jsx)("meta", { name: "description", content: "" }),
                 (0, o.jsx)("meta", { name: "keywords", content: "" }),
