@@ -352,7 +352,7 @@
 
   @media (max-width: 400px) {
     .wrapper section.ornament-slider .swiper {
-      margin-bottom: -180px !important;
+      margin-bottom: -145px !important;
     }
 
     .marquee-retailer span {

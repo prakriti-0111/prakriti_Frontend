@@ -918,7 +918,7 @@ class HomePage extends Component {
               console.log("item.section_name.toLowerCase() : ", item.section_name.toLowerCase());
               console.log("item.section_name.toLowerCase().indexOf(catSlug) : ", item.section_name.toLowerCase().indexOf(catSlug)); */
               let sliders = stockProductsSlider.filter((item) => item.category_slug == catSlug);
-              /* console.log("sliders.length : ", sliders.length); */
+              console.log("sliders.length : ", sliders.length);
               if(item.section_name.toLowerCase().indexOf(catSlug) !== -1){
                 //console.log("=================================="+catSlug);
                 
@@ -946,28 +946,28 @@ class HomePage extends Component {
                           //width: 320,
                           slidesPerView: 2,
                           spaceBetween: 10, // Space between slides
-                          loop: sliders.length > 1 ? true : false, // Fixed
+                          //loop: sliders.length > 1 ? true : false, // Fixed
                         },
                         // when window width is >= 768px
                         768: {
                           //width: 768,
                           slidesPerView: 2,
                           spaceBetween: 20,
-                          loop: sliders.length > 2 ? true : false, // Fixed
+                          //loop: sliders.length > 2 ? true : false, // Fixed
                         },
                         // when window width is >= 1024px
                         1024: {
                           //width: 1024,
                           slidesPerView: 3,
                           spaceBetween: 30,
-                          loop: sliders.length > 3 ? true : false, // Fixed
+                          //loop: sliders.length > 3 ? true : false, // Fixed
                         },
                         // when window width is >= 1024px
                         1440: {
                           //width: 1440,
                           slidesPerView: 4,
                           spaceBetween: 40,
-                          loop: sliders.length > 4 ? true : false, // Fixed
+                          //loop: sliders.length > 4 ? true : false, // Fixed
                         },
                       }}
                     >
