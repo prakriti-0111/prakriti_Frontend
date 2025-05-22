@@ -95,7 +95,11 @@
     }
 
     .mobile-view .price-breakup .breakup-item span {
-        font-size: 13px;
+        font-size: 12px;
+    }
+
+    .mobile-view .tab-items{
+        font-size:15px;
     }
 }
 
