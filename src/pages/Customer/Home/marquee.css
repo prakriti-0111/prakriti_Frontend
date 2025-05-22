@@ -152,35 +152,40 @@
   }
 
   .new-arrival .diamond-inner {
-    background-size: contain !important;
+    background-size: unset !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
-    padding: 0px;
-    margin-left:0%;
+    padding: 5px;
     color: #fff;
-    border-radius: 10px;
-    height: 100%;
+    border-radius: 0px;
+    /* height: 100%; */
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    width: 98%;
+    /* width: 98%; */
     max-width: none;
+    margin-left: 1%;
+    width: 1600px;
+    height: 570px;
   }
 
   .festive-offer .diamond-inner {
-    background-size: contain !important;
+    background-size: unset !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
     padding: 5px;
     margin-left:0%;
     color: #fff;
-    border-radius: 10px;
-    height: 100%;
+    border-radius: 0px;
+    /* height: 100%; */
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    width: 100%;
+    /* width: 100%; */
     max-width: none;
+    margin-left: 1%;
+    width: 1600px;
+    height: 570px;
   }
 
   .diamond-inner .offer-header {
@@ -233,6 +238,7 @@
         min-height: 150px !important;
         width: 352px !important;
         margin-left: 1% !important;
+        margin-right: 1% !important;
     }
 
     .banner-sec .slider-title {
@@ -244,6 +250,7 @@
         min-height: 150px !important;
         width: 352px !important;
         margin-left: 1% !important;
+        margin-right: 1% !important;
     }
 
     .promocode .promocode-title {
@@ -271,7 +278,7 @@
       margin: 5px 0px 5px 0px !important;
     }
 
-    .festive-offer .diamond-inner{
+    .new-arrival .diamond-inner{
       height: 100%;
       padding: 10px;
       font-size: 12px;
@@ -348,6 +355,33 @@
         margin-left: 1% !important;
         max-width: 98% !important;
     }
+
+    .best-retailer .container{
+      background: #001e38 !important;
+      margin-left: 1% !important;
+      max-width: 98% !important; 
+    }
+
+    .new-arrival .marquee-wrapper {
+      width: 98% !important; 
+      margin-left: 1% !important;
+    }
+
+    .festive-offer .container{
+      background: #9f9999 !important;
+      margin-left: 1% !important;
+      max-width: 98% !important;
+    }
+    
+    .festive-offer .festive-offer-header{
+      padding-left: 2% !important;
+    }
+
+    .new-arrival .marquee-wrapper {
+      background: #9f9999 !important;
+      margin-left: 1% !important;
+      max-width: 98% !important;
+    }
   }
 
   @media (max-width: 400px) {
@@ -363,6 +397,7 @@
         min-height: 125px !important;
         width: 352px !important;
         margin-left: 1% !important;
+        margin-right: 1% !important;
     }
 
     .banner-sec .slider-title {
@@ -374,6 +409,7 @@
         min-height: 125px !important;
         width: 352px !important;
         margin-left: 1% !important;
+        margin-right: 1% !important;
     }
 
     .promocode .promocode-title {
@@ -444,6 +480,7 @@
         min-height: 330px !important;
         width: 930px !important;
         margin-left: 4% !important;
+        margin-right: 4% !important;
     }
 
     .banner-sec .slider-title {
@@ -455,6 +492,7 @@
         min-height: 330px !important;
         width: 930px !important;
         margin-left: 4% !important;
+        margin-right: 4% !important;
     }
 
     .promocode .promocode-title {
@@ -482,6 +520,7 @@
         min-height: 330px !important;
         width: 930px !important;
         margin-left: 4% !important;
+        margin-right: 4% !important;
     }
 
     .banner-sec .slider-title {
@@ -493,6 +532,7 @@
         min-height: 330px !important;
         width: 930px !important;
         margin-left: 4% !important;
+        margin-right: 4% !important;
     }
 
     .promocode .promocode-title {
@@ -559,6 +599,7 @@
         min-height: 330px !important;
         width: 930px !important;
         margin-left: 4% !important;
+        margin-right: 4% !important;
     }
 
     .banner-sec .slider-title {
@@ -570,6 +611,7 @@
         min-height: 330px !important;
         width: 930px !important;
         margin-left: 4% !important;
+        margin-right: 4% !important;
     }
 
     .promocode .promocode-title {
@@ -594,6 +636,39 @@
         background: #1C4848 !important;
         margin-left: 4% !important;
         max-width: 92% !important;
+    }
+
+    .best-retailer .container{
+      background: #001e38 !important;
+      margin-left: 4% !important;
+      max-width: 92% !important;
+    }
+
+    .new-arrival .marquee-wrapper {
+      width: 92% !important;
+      margin-left: 4% !important;
+    }
+
+    .festive-offer .container{
+      background: #9f9999 !important;
+      margin-left: 4% !important;
+      max-width: 92% !important;
+    }
+
+    .festive-offer .diamond-inner{
+      margin-left: 1px !important;
+      max-width: 930px !important;
+    }
+
+    .new-arrival .diamond-inner{
+      margin-left: 1px !important;
+      max-width: 930px !important;
+    }
+
+    .new-arrival .marquee-wrapper {
+      background: #9f9999 !important;
+      margin-left: 4% !important;
+      max-width: 92% !important;
     }
   }
 
@@ -640,6 +715,7 @@
     min-height: 570px;
     width: 1600px;
     margin-left: 6%;
+    margin-right: 6%;
 }
 
 .banner-sec .slider-title {
@@ -652,6 +728,7 @@
     min-height: 570px;
     width: 1600px;
     margin-left: 6%;
+    margin-right: 6%;
 }
 
 .promocode .promocode-title {
@@ -674,6 +751,38 @@
 .selling-product .container{
   background: #1C4848 !important;
   margin-left: 6%;
-  max-width: 87%;
+  max-width: 87.2%;
 }
 
+.festive-offer .container{
+  background: #9f9999 !important;
+  margin-left: 6%;
+  max-width: 87.2%;
+}
+
+.festive-offer .festive-offer-header{
+  padding-left: 1%;
+}
+
+.new-arrival .marquee-wrapper {
+  background: #9f9999 !important;
+  margin-left: 6%;
+  max-width: 87.2%;
+}
+
+.best-retailer .container{
+  background: #001e38 !important;
+  margin-left: 6%;
+  max-width: 87.2%;
+}
+
+.best-retailer{
+  background: none;
+}
+
+.feature-product .feature-product-header h1 {
+    font-family: "Muli";
+    font-size: 38px;
+    margin-bottom: 20px;
+    padding-left: 1%;
+}

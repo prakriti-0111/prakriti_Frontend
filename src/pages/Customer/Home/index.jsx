@@ -667,7 +667,7 @@ class HomePage extends Component {
       {homepage_settings.map((item, k) => {
         switch(true){
           case item.section_name.toLowerCase() == "banners":
-            return (<><section className={`banner-sec mt-2 ${k==0 || k==1?'pt-7':''}`}>
+            return (<><section className={`banner-sec mt-3 ${k==0 || k==1?'pt-7':''}`}>
               {/* <Container className='position-relative'>
                     <Row>
                         <Col xs={7} md={7}>
@@ -868,8 +868,8 @@ class HomePage extends Component {
                             </Col>
                         </Row>
                         </Container> */}
-              <div className="" style={{ padding: "0" }}>
-                <div className="festive-offer-header container">
+              <div className="container" style={{ padding: "0" }}>
+                <div className="festive-offer-header">
                   <h1 style={{ color: "#001e38" }}>Festive Offers</h1>
                 </div>
                 <Carousel className="rounded-4">
@@ -1793,7 +1793,7 @@ class HomePage extends Component {
 
         {bestRetailers.length > 0 ? (
           <section className="feature-product best-retailer">
-          
+            <div className="container" style={{ padding: "0" }}>
               <div className="feature-product-header retailer-search-container">
                 <h1 className="retailer-label">Our Partners</h1>
                 <div className="retailer-search">
@@ -1870,7 +1870,7 @@ class HomePage extends Component {
                     </span>
                 </div>
               </div>
-            
+            </div>
           </section>
         ) : <section className="feature-product best-retailer"><Loader /></section>}
 
