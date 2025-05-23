@@ -1,3 +1,184 @@
+img{
+  max-width: 100%;
+}
+
+section {
+  padding-top: 10px;
+}
+
+.nav-height {
+  height: 122px;
+}
+
+.container-fluid {
+    padding-left: 85px;
+    padding-right: 85px;
+}
+
+.slider-banner{
+  min-height: auto !important;
+}
+
+.carousel-inner {
+    border-radius: unset;
+}
+
+.marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--marquee-bg-color, #fff);
+  /* padding: 20px 0; */
+  /*border: 1px solid #000;*/
+}
+
+.diamond-inner {
+  background-size: unset !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  padding: 5px;
+  /* margin-left:1%; */
+  color: #fff;
+  border-radius: 0px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 100%;
+  margin: 0px 0px 5px 0px !important;
+}
+
+/* banner section */
+.wrapper .banner-sec .slider-banner {
+    position: relative;
+    /* min-height: 570px;
+    width: 1600px;
+    margin-left: 6%;
+    margin-right: 6%; */
+}
+
+.banner-sec .slider-title {
+  /* margin-left: 7%; */
+  font-size: 25px;
+}
+
+/* new arrival */
+.new-arrival .marquee-wrapper {
+  background: #9f9999 !important;
+  /* margin-left: 6%;
+  max-width: 87.2%; */
+}
+
+.new-arrival .marquee-heading{
+  margin: 5px;
+  font-size: 32px;
+  font-family: 'muli', sans-serif;
+  font-weight: 400;
+}
+
+.new-arrival .diamond-inner {
+  background-size: unset !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  padding: 5px;
+  color: #fff;
+  border-radius: 0px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  max-width: 100%;
+  margin: 0px 0px 5px 0px !important;
+  /* margin-left: 1%;
+  width: 1600px;
+  height: 570px; */
+}
+
+/* promocode banner */
+.wrapper .promocode .promocode-banner {
+    position: relative;
+    min-height: 100%;
+    width: 100%;
+    background-color: currentcolor;
+    text-align: center;
+}
+
+.promocode .promocode-title {
+    /* margin-left: 7%; */
+    font-size: 25px;
+}
+
+/* sale products */
+.wrapper .selling-product {
+    margin: 0px;
+    padding: 0px;
+    background-color: transparent !important;
+}
+.selling-product .selling-product-header h1 {
+    font-family: "Muli";
+    font-size: 44px;
+    margin-bottom: 0px;
+}
+.selling-product .container-fluid{
+  margin: 0px;
+  max-width: 100%;
+}
+.selling-product .selling-product-cont{
+  padding-left:5px;
+  background: #1C4848 !important;
+}
+
+/* feature products */
+.feature-product .container-fluid{
+  margin: 0px;
+  max-width: 100%;
+}
+
+.feature-product .feature-product-cont{
+  padding-left:5px;
+  background: #F8F9FA !important;
+}
+
+/* festive offers */
+.festive-offer .container{
+  margin-left: 6%;
+  max-width: 87.2%;
+}
+
+.festive-offer .festive-offer-cont{
+  background: #9f9999 !important;
+}
+
+.festive-offer .festive-offer-header{
+  padding-left: 1%;
+}
+
+.festive-offer .diamond-inner {
+    background-size: unset !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    padding: 0px;
+    color: #fff;
+    border-radius: 0px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    max-width: 100%;
+    margin: 0px 0px 5px 0px !important;
+    /* margin-left: 1%;
+    width: 1600px;
+    height: 570px; */
+  }
+
+  /* our retailers */
+  .best-retailer .best-retailer-cont{
+    background: #001e38 !important;
+  }
+
 .marquee-wrapper {
   width: 100%;
   text-align: left;
@@ -37,11 +218,12 @@
 }
 
 .best-retailer .loader_content {
-    min-height: 200px;
+    height: 200px;
     width: 100%;
     text-align: center;
     vertical-align: middle;
-    margin-top: 10%;
+    padding-top: 6%;
+    margin: 0px;
 }
 
 .spinner-border{
@@ -62,7 +244,7 @@
 
 .retailer-search-container {
   display: flex;
-  gap:58%;
+  gap:71%;
 }
 
 .retailer-label{
@@ -73,26 +255,74 @@
   padding-top: 10px;
 }
 
-@media (max-width: 1024px) {
-  .marquee-heading {
-    font-size: 28px;
+/* Gradient fading effect */
+.marquee::before, .marquee::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    z-index: 2;
+}
+
+.marquee::before {
+    left: 0;
+    background: linear-gradient(to right, rgba(var(--marquee-bg-color-rgba), 1), rgba(var(--marquee-bg-color-rgba), 0));
+}
+
+.marquee::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(var(--marquee-bg-color-rgba), 1), rgba(var(--marquee-bg-color-rgba), 0));
+}
+
+/* Animation: left to right (scrolling to the left) */
+@keyframes scroll-marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }
 
-@media (max-width: 768px) {
-  .marquee-heading {
-    font-size: 24px;
-  }
+.best-retailer .b-slider-image img {
+    margin: 20px auto;
+    width: 160px;
+    height: 160px;
+    border-radius: 0%;
+    border: 8px solid #cdcdcd;
 }
 
-.marquee {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    background-color: var(--marquee-bg-color, #fff);
-    padding: 20px 0;
-    /*border: 1px solid #000;*/
-  }
+
+.best-retailer .container{
+  background: #001e38 !important;
+  margin-left: 6%;
+  max-width: 87.2%;
+}
+
+.best-retailer{
+  background: none;
+}
+
+.feature-product .feature-product-header h1 {
+    font-family: "Muli";
+    font-size: 38px;
+    margin-bottom: 20px;
+    padding-left: 5px;
+}
+
+.retailer-search-container {
+  display: flex;
+  /* gap: 4%; */
+  justify-content: space-between;
+}
+
+.retailer-search {
+  padding-top: 18px;
+  padding-right: 15px;
+}
+
+  
   
   .marquee span {
     display: flex;
@@ -135,58 +365,11 @@
       box-sizing: border-box;
   }
   
-  .diamond-inner {
-    background-size: contain !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    padding: 20px;
-    margin-left:1%;
-    color: #fff;
-    border-radius: 10px;
-    height: 325px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    width: 98%;
-    max-width: none;
-  }
+  
 
-  .new-arrival .diamond-inner {
-    background-size: unset !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    padding: 5px;
-    color: #fff;
-    border-radius: 0px;
-    /* height: 100%; */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    /* width: 98%; */
-    max-width: none;
-    margin-left: 1%;
-    width: 1600px;
-    height: 570px;
-  }
+  
 
-  .festive-offer .diamond-inner {
-    background-size: unset !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    padding: 5px;
-    margin-left:0%;
-    color: #fff;
-    border-radius: 0px;
-    /* height: 100%; */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    /* width: 100%; */
-    max-width: none;
-    margin-left: 1%;
-    width: 1600px;
-    height: 570px;
-  }
+  
 
   .diamond-inner .offer-header {
     /*padding: 0*/
@@ -199,6 +382,227 @@
   }
   
   /* Responsive tweaks */
+  @media (max-width:1200px) {
+    .container-fluid {
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+  }
+
+  @media (min-width: 1024px) and (max-width: 1100px){
+    /* banner section */
+    .banner-sec .slider-banner {
+        /* min-height: 330px !important;
+        width: 930px !important;
+        margin-left: 4% !important;
+        margin-right: 4% !important; */
+    }
+
+    .banner-sec .slider-title {
+      /* margin-left: 6% !important; */
+      font-size: 23px !important; 
+    }
+
+    /* new arrival */
+    .new-arrival .marquee-wrapper {
+      background: #9f9999 !important;
+      /* width: 92% !important;
+      margin-left: 4% !important; */
+    }
+
+    /* promocode */
+    .promocode .promocode-banner {
+        /* min-height: 330px !important;
+        width: 930px !important;
+        margin-left: 4% !important;
+        margin-right: 4% !important; */
+    }
+
+    .promocode .promocode-title {
+      /* margin-left: 6% !important; */
+      font-size: 23px !important; 
+    }
+
+    .retailer-search-container {
+      display: flex;
+      gap: 47%;
+    }
+
+    .retailer-label{
+      padding-top: 10px;
+      padding-left: 5%;
+    }
+
+    .retailer-search{
+      padding-top: 18px;
+    }
+
+    .selling-product .container{
+        background: #1C4848 !important;
+        margin-left: 4% !important;
+        max-width: 92% !important;
+    }
+
+    .best-retailer .container{
+      background: #001e38 !important;
+      margin-left: 4% !important;
+      max-width: 92% !important;
+    }
+
+    /* .festive-offer .container{
+      background: #9f9999 !important;
+      margin-left: 4% !important;
+      max-width: 92% !important;
+    } */
+
+    .festive-offer .diamond-inner{
+      height: 100%;
+      padding: 5px;
+      width: 100%; 
+    }
+
+    .new-arrival .diamond-inner{
+      /* margin-left: 1px !important;
+      max-width: 930px !important; */
+    }
+
+    .retailer-search {
+      padding-top: 18px;
+      padding-right: 15px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .marquee-heading {
+      font-size: 28px;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1000px) {
+    /* banner section */
+    .banner-sec .slider-banner {
+        /* min-height: 330px !important;
+        width: 930px !important;
+        margin-left: 4% !important;
+        margin-right: 4% !important; */
+    }
+
+    .banner-sec .slider-title {
+      /* margin-left: 6% !important; */
+      font-size: 23px !important; 
+    }
+
+    /* promocode */
+    .promocode .promocode-banner {
+        /* min-height: 330px !important;
+        width: 930px !important;
+        margin-left: 4% !important;
+        margin-right: 4% !important; */
+    }
+
+    .promocode .promocode-title {
+      /* margin-left: 6% !important; */
+      font-size: 23px !important; 
+    }
+
+    .diamond-inner {
+      height: 250px;
+      padding: 15px;
+      font-size: 16px;
+      width: 98%; /* adjust to fit screen */
+      /* background-size: contain !important;
+      background-position: right bottom !important; */
+    }
+
+    .new-arrival .diamond-inner{
+      /* height: 100%;
+      padding: 0px;
+      font-size: 16px;
+      width: 98%; */ 
+    }
+
+    .festive-offer .diamond-inner{
+      height: 100%;
+      padding: 5px;
+      font-size: 16px;
+      width: 100%; 
+    }
+  
+    .marquee span {
+      gap: 15px;
+    }
+  
+    .marquee {
+      padding: 0px 0;
+    }
+  
+    .diamond-inner .offer-header h2 {
+      font-size: 20px;
+      max-width: 300px;
+    }
+  
+    .shop-now {
+      font-size: 14px;
+    }
+
+    .retailer-search-container {
+      display: flex;
+      gap: 34%;
+    }
+
+    .retailer-label{
+      padding-top: 10px;
+      padding-left: 5%;
+    }
+    .retailer-search{
+      padding-top: 15px;
+    }
+  }
+
+  @media only screen and (width: 768px) {
+    /* banner section */
+    .banner-sec{
+      /* padding-top: 115px !important; */
+    }
+
+    .banner-sec .slider-banner {
+        /* min-height: 330px !important;
+        width: 930px !important;
+        margin-left: 4% !important;
+        margin-right: 4% !important; */
+    }
+
+    .banner-sec .slider-title {
+      /* margin-left: 6% !important; */
+      font-size: 23px !important; 
+    }
+
+    /* promocode */
+    .promocode .promocode-banner {
+        /* min-height: 330px !important;
+        width: 930px !important;
+        margin-left: 4% !important;
+        margin-right: 4% !important; */
+    }
+
+    .promocode .promocode-title {
+      /* margin-left: 6% !important; */
+      font-size: 23px !important; 
+    }
+
+    /* .festive-offer .diamond-inner{
+        background-position: right -100% center !important;
+    } */
+
+    .festive-offer .diamond-inner {
+        height: 100%;
+        padding: 10px;
+        font-size: 12px;
+        width: 100%;
+        margin: 5px 5px 5px 0px !important;
+    }
+  }
+
   @media (max-width: 768px) {
     .diamond-inner {
       height: 150px;
@@ -207,10 +611,10 @@
     }
 
     .new-arrival .diamond-inner{
-      height: 100%;
+      /* height: 100%;
       width: 95%;
       padding: 0px;
-      font-size: 14px;
+      font-size: 14px; */
     }
 
     .festive-offer .diamond-inner{
@@ -232,29 +636,78 @@
       gap: 20px;
     }
   }
-  
-  @media (max-width: 480px) {
-    .banner-sec .slider-banner {
-        min-height: 150px !important;
-        width: 352px !important;
-        margin-left: 1% !important;
-        margin-right: 1% !important;
-    }
 
-    .banner-sec .slider-title {
-      margin-left: 2% !important;
-      font-size: 15px !important;
+  @media (max-width: 768px) {
+    .marquee-heading {
+      font-size: 24px;
     }
+  }
 
+  /* for all mobile devices */
+  @media (max-width: 767px) {
+    /* .festive-offer .diamond-inner{
+        background-position: right -100% center !important;
+    } */
+     .nav-height {
+        height: 46px;
+      }
+      .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+
+      /* banner section */
+      .banner-sec .slider-banner {
+          /* min-height: 150px !important;
+          width: 352px !important;
+          margin-left: 1% !important;
+          margin-right: 1% !important; */
+      }
+
+      .banner-sec .slider-title {
+        /* margin-left: 2% !important; */
+        font-size: 15px !important;
+      }
+
+      /* new arrival */
+      .new-arrival .marquee-wrapper {
+        background: #9f9999 !important;
+        /* width: 98% !important; 
+        margin-left: 1% !important; */
+      }
+
+      .selling-product .s-slider-content {
+        padding: 3px !important;
+        background-color: #fff;
+        /* border-top: 1px solid #ddd; */
+      }
+
+      .feature-product .feature-product-header h1{
+        font-size: 16px !important;
+        margin-bottom: 5px !important;
+      }
+
+      .retailer-search {
+        /* padding-top: 10px; */
+        padding-right: 15px;
+        width: 159px;
+      }
+    
+  }
+
+
+/* -------------------------------------------------------------------------------------------------------------------------------------- */
+   @media (max-width: 480px) {
+    /* promocode */
     .promocode .promocode-banner {
-        min-height: 150px !important;
+        /* min-height: 150px !important;
         width: 352px !important;
         margin-left: 1% !important;
-        margin-right: 1% !important;
+        margin-right: 1% !important; */
     }
 
     .promocode .promocode-title {
-      margin-left: 2% !important;
+      /* margin-left: 2% !important; */
       font-size: 15px !important;
     }
 
@@ -262,13 +715,13 @@
       margin-bottom: -147px !important;
     }
 
-    .new-arrival .diamond-inner {
+    /* .new-arrival .diamond-inner {
       height: 100%;
       padding: 0px;
       font-size: 12px;
       width: 95%;
       margin: 5px 0px 5px 0px !important
-    }
+    } */
 
     .festive-offer .diamond-inner{
       height: 100%;
@@ -278,13 +731,13 @@
       margin: 5px 0px 5px 0px !important;
     }
 
-    .new-arrival .diamond-inner{
+    /* .new-arrival .diamond-inner{
       height: 100%;
       padding: 10px;
       font-size: 12px;
       width: 100%;
       margin: 5px 0px 5px 0px !important;
-    }
+    } */
 
     .new-arrival .diamond-inner .offer-header {
       padding: 0;
@@ -327,12 +780,12 @@
     }
 
     .best-retailer .loader_content {
-        min-height: 200px;
+        /* min-height: 200px;
         width: 100%;
         text-align: center;
         vertical-align: middle;
         margin-top: 12%;
-        padding-top: 28%;
+        padding-top: 28%; */
     }
 
     .selling-product .selling-product-header h1 {
@@ -362,25 +815,16 @@
       max-width: 98% !important; 
     }
 
-    .new-arrival .marquee-wrapper {
-      width: 98% !important; 
-      margin-left: 1% !important;
-    }
+    
 
-    .festive-offer .container{
+    /* .festive-offer .container{
       background: #9f9999 !important;
       margin-left: 1% !important;
       max-width: 98% !important;
-    }
+    } */
     
     .festive-offer .festive-offer-header{
       padding-left: 2% !important;
-    }
-
-    .new-arrival .marquee-wrapper {
-      background: #9f9999 !important;
-      margin-left: 1% !important;
-      max-width: 98% !important;
     }
   }
 
@@ -393,27 +837,16 @@
       gap: 12.5px;
     }
 
-    .banner-sec .slider-banner {
-        min-height: 125px !important;
-        width: 352px !important;
-        margin-left: 1% !important;
-        margin-right: 1% !important;
-    }
-
-    .banner-sec .slider-title {
-      margin-left: 2% !important;
-      font-size: 15px !important;
-    }
-
+    /* promocode */
     .promocode .promocode-banner {
-        min-height: 125px !important;
+        /* min-height: 125px !important;
         width: 352px !important;
         margin-left: 1% !important;
-        margin-right: 1% !important;
+        margin-right: 1% !important; */
     }
 
     .promocode .promocode-title {
-      margin-left: 2% !important;
+      /* margin-left: 2% !important; */
       font-size: 15px !important;
     }
 
@@ -431,21 +864,21 @@
     }
 
     .best-retailer .loader_content {
-        min-height: 200px;
+        /* min-height: 200px;
         width: 100%;
         text-align: center;
         vertical-align: middle;
-        margin-top: 12%;
-        padding-top: 28%;
+        margin-top: 12%;*/
+        padding-top: 25%;
     }
 
-    .new-arrival .diamond-inner {
+    /* .new-arrival .diamond-inner {
         height: 100%;
         padding: 0px;
         font-size: 12px;
         width: 95%;
         margin: 0px 5px 0px 0px !important;
-    }
+    } */
 
     .festive-offer .diamond-inner {
         height: 100%;
@@ -462,327 +895,3 @@
 
   }
 
-  @media (max-width: 767px) {
-    /* .festive-offer .diamond-inner{
-        background-position: right -100% center !important;
-    } */
-  }
-
-  @media only screen and (width: 768px) {
-    /* .festive-offer .diamond-inner{
-        background-position: right -100% center !important;
-    } */
-    .banner-sec{
-      padding-top: 115px !important;
-    }
-
-    .banner-sec .slider-banner {
-        min-height: 330px !important;
-        width: 930px !important;
-        margin-left: 4% !important;
-        margin-right: 4% !important;
-    }
-
-    .banner-sec .slider-title {
-      margin-left: 6% !important;
-      font-size: 23px !important; 
-    }
-
-    .promocode .promocode-banner {
-        min-height: 330px !important;
-        width: 930px !important;
-        margin-left: 4% !important;
-        margin-right: 4% !important;
-    }
-
-    .promocode .promocode-title {
-      margin-left: 6% !important;
-      font-size: 23px !important; 
-    }
-
-    .festive-offer .diamond-inner {
-        height: 100%;
-        padding: 10px;
-        font-size: 12px;
-        width: 100%;
-        margin: 5px 5px 5px 0px !important;
-    }
-  }
-
-  @media (max-width: 767px) {
-    /* .festive-offer .diamond-inner{
-        background-position: right -100% center !important;
-    } */
-  }
-
-  @media (min-width: 768px) and (max-width: 1000px) {
-    .banner-sec .slider-banner {
-        min-height: 330px !important;
-        width: 930px !important;
-        margin-left: 4% !important;
-        margin-right: 4% !important;
-    }
-
-    .banner-sec .slider-title {
-      margin-left: 6% !important;
-      font-size: 23px !important; 
-    }
-
-    .promocode .promocode-banner {
-        min-height: 330px !important;
-        width: 930px !important;
-        margin-left: 4% !important;
-        margin-right: 4% !important;
-    }
-
-    .promocode .promocode-title {
-      margin-left: 6% !important;
-      font-size: 23px !important; 
-    }
-
-    .diamond-inner {
-      height: 250px;
-      padding: 15px;
-      font-size: 16px;
-      width: 98%; /* adjust to fit screen */
-      /* background-size: contain !important;
-      background-position: right bottom !important; */
-    }
-
-    .new-arrival .diamond-inner{
-      height: 100%;
-      padding: 0px;
-      font-size: 16px;
-      width: 98%; 
-    }
-
-    .festive-offer .diamond-inner{
-      height: 100%;
-      padding: 5px;
-      font-size: 16px;
-      width: 100%; 
-    }
-  
-    .marquee span {
-      gap: 15px;
-    }
-  
-    .marquee {
-      padding: 0px 0;
-    }
-  
-    .diamond-inner .offer-header h2 {
-      font-size: 20px;
-      max-width: 300px;
-    }
-  
-    .shop-now {
-      font-size: 14px;
-    }
-
-    .retailer-search-container {
-      display: flex;
-      gap: 34%;
-    }
-
-    .retailer-label{
-      padding-top: 10px;
-      padding-left: 5%;
-    }
-    .retailer-search{
-      padding-top: 15px;
-    }
-  }
-
-  @media (min-width: 1024px) and (max-width: 1100px){
-    .banner-sec .slider-banner {
-        min-height: 330px !important;
-        width: 930px !important;
-        margin-left: 4% !important;
-        margin-right: 4% !important;
-    }
-
-    .banner-sec .slider-title {
-      margin-left: 6% !important;
-      font-size: 23px !important; 
-    }
-
-    .promocode .promocode-banner {
-        min-height: 330px !important;
-        width: 930px !important;
-        margin-left: 4% !important;
-        margin-right: 4% !important;
-    }
-
-    .promocode .promocode-title {
-      margin-left: 6% !important;
-      font-size: 23px !important; 
-    }
-
-    .retailer-search-container {
-      display: flex;
-      gap: 47%;
-    }
-
-    .retailer-label{
-      padding-top: 10px;
-      padding-left: 5%;
-    }
-    .retailer-search{
-      padding-top: 18px;
-    }
-
-    .selling-product .container{
-        background: #1C4848 !important;
-        margin-left: 4% !important;
-        max-width: 92% !important;
-    }
-
-    .best-retailer .container{
-      background: #001e38 !important;
-      margin-left: 4% !important;
-      max-width: 92% !important;
-    }
-
-    .new-arrival .marquee-wrapper {
-      width: 92% !important;
-      margin-left: 4% !important;
-    }
-
-    .festive-offer .container{
-      background: #9f9999 !important;
-      margin-left: 4% !important;
-      max-width: 92% !important;
-    }
-
-    .festive-offer .diamond-inner{
-      margin-left: 1px !important;
-      max-width: 930px !important;
-    }
-
-    .new-arrival .diamond-inner{
-      margin-left: 1px !important;
-      max-width: 930px !important;
-    }
-
-    .new-arrival .marquee-wrapper {
-      background: #9f9999 !important;
-      margin-left: 4% !important;
-      max-width: 92% !important;
-    }
-  }
-
-/* Gradient fading effect */
-.marquee::before, .marquee::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 30px;
-    z-index: 2;
-}
-
-.marquee::before {
-    left: 0;
-    background: linear-gradient(to right, rgba(var(--marquee-bg-color-rgba), 1), rgba(var(--marquee-bg-color-rgba), 0));
-}
-
-.marquee::after {
-    right: 0;
-    background: linear-gradient(to left, rgba(var(--marquee-bg-color-rgba), 1), rgba(var(--marquee-bg-color-rgba), 0));
-}
-
-/* Animation: left to right (scrolling to the left) */
-@keyframes scroll-marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.best-retailer .b-slider-image img {
-    margin: 20px auto;
-    width: 160px;
-    height: 160px;
-    border-radius: 0%;
-    border: 8px solid #cdcdcd;
-}
-
-.wrapper .banner-sec .slider-banner {
-    position: relative;
-    min-height: 570px;
-    width: 1600px;
-    margin-left: 6%;
-    margin-right: 6%;
-}
-
-.banner-sec .slider-title {
-  margin-left: 7%;
-  font-size: 25px;
-}
-
-.wrapper .promocode .promocode-banner {
-    position: relative;
-    min-height: 570px;
-    width: 1600px;
-    margin-left: 6%;
-    margin-right: 6%;
-}
-
-.promocode .promocode-title {
-  margin-left: 7%;
-  font-size: 25px;
-}
-
-.selling-product .selling-product-header h1 {
-    font-family: "Muli";
-    font-size: 44px;
-    margin-bottom: 0px;
-}
-
-.wrapper .selling-product {
-    margin-top: 0px !important;
-    padding: 10px 0;
-    background-color: transparent !important;
-}
-
-.selling-product .container{
-  background: #1C4848 !important;
-  margin-left: 6%;
-  max-width: 87.2%;
-}
-
-.festive-offer .container{
-  background: #9f9999 !important;
-  margin-left: 6%;
-  max-width: 87.2%;
-}
-
-.festive-offer .festive-offer-header{
-  padding-left: 1%;
-}
-
-.new-arrival .marquee-wrapper {
-  background: #9f9999 !important;
-  margin-left: 6%;
-  max-width: 87.2%;
-}
-
-.best-retailer .container{
-  background: #001e38 !important;
-  margin-left: 6%;
-  max-width: 87.2%;
-}
-
-.best-retailer{
-  background: none;
-}
-
-.feature-product .feature-product-header h1 {
-    font-family: "Muli";
-    font-size: 38px;
-    margin-bottom: 20px;
-    padding-left: 1%;
-}
