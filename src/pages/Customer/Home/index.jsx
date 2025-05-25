@@ -215,7 +215,7 @@ class HomePage extends Component {
         console.log("this.speed : ", this.speed); */
         cancelAnimationFrame(this.animationFrameId);
         setTimeout(() => {
-          scroll();
+          if(this.animationFrameId) scroll();
         }, 4000);
       } else {
         track.style.transform = `translateX(${this.position}px)`;
@@ -272,7 +272,7 @@ class HomePage extends Component {
             console.log("this.retailerSpeed : ", this.retailerSpeed); */
             cancelAnimationFrame(this.retailerAnimationFrameId);
             setTimeout(() => {
-              scrollRetailer();
+              if(this.retailerAnimationFrameId) scrollRetailer();
             }, 4000);
           } else {
             document.querySelector(".marquee-track-retailer").style.transform = `translateX(${this.retailerPosition}px)`;
@@ -282,14 +282,15 @@ class HomePage extends Component {
         }
       };
       console.log("this.retailerAnimationFrameId : ", this.retailerAnimationFrameId);
-      setTimeout(() => {
-        if(track.children.length >= 4){
+      console.log("track.children.length : ", track.children.length);
+      //setTimeout(() => {
+        if(track.children.length >= 4){ 
           scrollRetailer();
-        } else {
+        } else { 
           cancelAnimationFrame(this.retailerAnimationFrameId);
           this.retailerAnimationFrameId = null;
         }
-      }, 2000);
+      //}, 2000);
     }
   };
 
