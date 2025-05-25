@@ -244,7 +244,7 @@ section {
 
 .retailer-search-container {
   display: flex;
-  gap:71%;
+  /* gap:71%; */
 }
 
 .retailer-label{
@@ -287,8 +287,8 @@ section {
 
 .best-retailer .b-slider-image img {
     margin: 20px auto;
-    width: 160px;
-    height: 160px;
+    /* width: 160px;
+    height: 160px; */
     border-radius: 0%;
     border: 8px solid #cdcdcd;
 }
@@ -425,7 +425,7 @@ section {
 
     .retailer-search-container {
       display: flex;
-      gap: 47%;
+      /* gap: 47%; */
     }
 
     .retailer-label{
@@ -547,7 +547,7 @@ section {
 
     .retailer-search-container {
       display: flex;
-      gap: 34%;
+      /* gap: 34%; */
     }
 
     .retailer-label{
@@ -692,7 +692,14 @@ section {
         padding-right: 15px;
         width: 159px;
       }
-    
+      
+      .best-retailer .b-slider-content h2{
+        font-size: 12px;
+      }
+
+      .best-retailer .b-slider-content{
+        font-size: 12px;
+      }
   }
 
 
@@ -768,7 +775,7 @@ section {
 
     .retailer-search-container {
       display: flex;
-      gap: 12%;
+      /* gap: 12%; */
     }
 
     .retailer-label{
@@ -852,7 +859,7 @@ section {
 
     .retailer-search-container {
       display: flex;
-      gap: 4%;
+      /* gap: 4%; */
     }
 
     .retailer-label{
