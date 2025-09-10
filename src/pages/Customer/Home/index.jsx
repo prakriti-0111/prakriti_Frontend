@@ -66,6 +66,7 @@ import Loader from "../Loader";
 // import { current_stock } from "../../../actions/Customer/product.actions";
 import './marquee.css';
 import './slider.css';
+import './modern.css';
 import withIsMobileView from "src/helpers/responsiveViewCheck";
 
 SwiperCore.use([Autoplay]);
