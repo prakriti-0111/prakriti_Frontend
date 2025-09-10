@@ -66,6 +66,7 @@ import Loader from "../Loader";
 // import { current_stock } from "../../../actions/Customer/product.actions";
 import './marquee.css';
 import './slider.css';
+import './modern.css';
 import withIsMobileView from "src/helpers/responsiveViewCheck";
 
 SwiperCore.use([Autoplay]);
@@ -215,7 +216,7 @@ class HomePage extends Component {
         console.log("this.speed : ", this.speed); */
         cancelAnimationFrame(this.animationFrameId);
         setTimeout(() => {
-          scroll();
+          if(this.animationFrameId) scroll();
         }, 4000);
       } else {
         track.style.transform = `translateX(${this.position}px)`;
@@ -272,7 +273,7 @@ class HomePage extends Component {
             console.log("this.retailerSpeed : ", this.retailerSpeed); */
             cancelAnimationFrame(this.retailerAnimationFrameId);
             setTimeout(() => {
-              scrollRetailer();
+              if(this.retailerAnimationFrameId) scrollRetailer();
             }, 4000);
           } else {
             document.querySelector(".marquee-track-retailer").style.transform = `translateX(${this.retailerPosition}px)`;
@@ -282,14 +283,15 @@ class HomePage extends Component {
         }
       };
       console.log("this.retailerAnimationFrameId : ", this.retailerAnimationFrameId);
-      setTimeout(() => {
-        if(track.children.length >= 4){
+      console.log("track.children.length : ", track.children.length);
+      //setTimeout(() => {
+        if(track.children.length >= 4){ 
           scrollRetailer();
-        } else {
+        } else { 
           cancelAnimationFrame(this.retailerAnimationFrameId);
           this.retailerAnimationFrameId = null;
         }
-      }, 2000);
+      //}, 2000);
     }
   };
 
@@ -667,7 +669,7 @@ class HomePage extends Component {
       {homepage_settings.map((item, k) => {
         switch(true){
           case item.section_name.toLowerCase() == "banners":
-            return (<><section className={`banner-sec mt-2 ${k==0 || k==1?'pt-7':''}`}>
+            return (<><section className={`banner-sec`}>
               {/* <Container className='position-relative'>
                     <Row>
                         <Col xs={7} md={7}>
@@ -685,7 +687,7 @@ class HomePage extends Component {
                         </Col>
                     </Row>
                     </Container> */}
-              <div className="" style={{ padding: "0" }}>
+              <div className="container-fluid" >
                 {banners.length > 0 && <Carousel className="rounded-4">
                   {banners.map((item, key) => (
                     <Carousel.Item key={key}>
@@ -707,8 +709,8 @@ class HomePage extends Component {
             </section></>);
           break;
           case item.section_name.toLowerCase() == "mobilecategories":
-            return (<section className={`ornament-slider mt-2 ${this.props.isMobileView && k==0?'pt-5':''}`}>
-                <Container>
+            return (<section className={`ornament-slider`}>
+                <div className="container-fluid">
                   <Swiper
                     spaceBetween={10}
                     slidesPerView={4}
@@ -742,7 +744,7 @@ class HomePage extends Component {
                       </SwiperSlide>
                     ))}
                   </Swiper>
-                </Container>
+                </div>
               </section>);
           break;
           case item.section_name.toLowerCase().startsWith("promocodes"):
@@ -754,103 +756,107 @@ class HomePage extends Component {
                 //console.log("==================================");
                 return (<>{promocodes.map((item, key) => item.category_slug == catSlug?(
                   <section
-                    className={`promocode mt-2 ${k==0?'pt-5':''} ${key % 2 == 0 ? "diamond-offer" : "pendant-offer"}`}
+                    className={`promocode`}
                     key={key}
                   >
-                    <Link
-                      to={
-                        isEmpty(item.products)
-                          ? "/products" +
-                            objectToQuery(
-                              {
-                                category: item.category_slug,
-                                subcategory: item.sub_category_slug,
-                              },
-                              true
-                            )
-                          : "/products?offer=" + item.products
-                      }
-                    >
-                      <div className="promocode-banner">
-                        <img src={item.banner} alt="" />
-                      </div>
-                      <span className="promocode-title">{item.title}</span>
-                    
-                      {/* <Container
-                        className={
-                          (key % 2 == 0 ? "promocode-banner" : "promocode-banner") +
-                          " mt-2 mb-3 mt-md-4 mb-md-2 position-relative rounded"
+                    <div className="container-fluid">
+                      <Link
+                        to={
+                          isEmpty(item.products)
+                            ? "/products" +
+                              objectToQuery(
+                                {
+                                  category: item.category_slug,
+                                  subcategory: item.sub_category_slug,
+                                },
+                                true
+                              )
+                            : "/products?offer=" + item.products
                         }
-                        style={{
-                          backgroundImage: `url(${item.banner}) `,
-                          backgroundRepeat: "no-repeat",
-                          backgroundPosition: "right bottom",
-                          backgroundSize: "cover",
-                        }}
                       >
-                        
-                        
-                      </Container>
-                      <Container style={{ padding: 0 }} className="mt-3">
-                        <div className="banner-heading-content text-primary-emphasis ">
-                          <h2 className="bg-light rounded px-xl-5">{item.title}</h2>
-                          <Link
-                            className="ratn-shop-now bg-primary-emphasis rounded"
-                            to={
-                              isEmpty(item.products)
-                                ? "/products" +
-                                  objectToQuery(
-                                    {
-                                      category: item.category_slug,
-                                      subcategory: item.sub_category_slug,
-                                    },
-                                    true
-                                  )
-                                : "/products?offer=" + item.products
-                            }
-                          >
-                            Shop Now
-                          </Link>
+                        <div className="promocode-banner">
+                          <img src={item.banner} alt="" />
                         </div>
-                      </Container> */}
-                    </Link>
+                        <span className="promocode-title">{item.title}</span>
+                      
+                        {/* <Container
+                          className={
+                            (key % 2 == 0 ? "promocode-banner" : "promocode-banner") +
+                            " mt-2 mb-3 mt-md-4 mb-md-2 position-relative rounded"
+                          }
+                          style={{
+                            backgroundImage: `url(${item.banner}) `,
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "right bottom",
+                            backgroundSize: "cover",
+                          }}
+                        >
+                          
+                          
+                        </Container>
+                        <Container style={{ padding: 0 }} className="mt-3">
+                          <div className="banner-heading-content text-primary-emphasis ">
+                            <h2 className="bg-light rounded px-xl-5">{item.title}</h2>
+                            <Link
+                              className="ratn-shop-now bg-primary-emphasis rounded"
+                              to={
+                                isEmpty(item.products)
+                                  ? "/products" +
+                                    objectToQuery(
+                                      {
+                                        category: item.category_slug,
+                                        subcategory: item.sub_category_slug,
+                                      },
+                                      true
+                                    )
+                                  : "/products?offer=" + item.products
+                              }
+                            >
+                              Shop Now
+                            </Link>
+                          </div>
+                        </Container> */}
+                      </Link>
+                    </div>
                   </section>
                 ):<></>)}</>);
               } 
             });
           break;
           case item.section_name.toLowerCase() == "newarrivals":
-            return (<>{newArrivals.length > 0 ? <section className={`new-arrival ${k==0?'pt-5':''} mt-2`}>
-              <div className="marquee-wrapper">
-                <h1 className="marquee-heading container">New Arrivals</h1>
-                <div className="marquee" tabIndex="0"  ref={el => (this.marqueeRef = el)}>
-                    <span className="marquee-track" ref={el => (this.marqueeTrackRef = el)}>
-                      {newArrivals.map((item, key) => (
-                        
-                          <div className="marquee-item" key={`NewArrivals_${key}`} style={{cursor:"pointer"}} onClick={() => window.location = this.getNewArrivalLink(item)} >
-                            <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ /* backgroundImage:`url(${item.image}) ` */ }}>
-                                {/*<div className='offer-header'>
-                                    <h2>{item.title}</h2>
-                                    <a href={this.getNewArrivalLink(item)} className='shop-now'>Shop Now</a>
-                                </div>*/}
-                                <img src={item.image} alt="" className="d-block w-100" />
-                            </Container>
-                          </div>
-                      
-                      ))}
-                      
-                      {/*<Link to={this.getNewArrivalLink(item)}>
-                            <div className="slider-banner">
-                              <img className="d-block w-100" src={item.image} alt="" />
+            return (<>{newArrivals.length > 0 ? <section className={`new-arrival`}>
+              <div className="container-fluid">
+                <div className="marquee-wrapper">
+                  <h1 className="marquee-heading">New Arrivals</h1>
+                  <div className="marquee" tabIndex="0"  ref={el => (this.marqueeRef = el)}>
+                      <span className="marquee-track" ref={el => (this.marqueeTrackRef = el)}>
+                        {newArrivals.map((item, key) => (
+                          
+                            <div className="marquee-item" key={`NewArrivals_${key}`} style={{cursor:"pointer"}} onClick={() => window.location = this.getNewArrivalLink(item)} >
+                              <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ /* backgroundImage:`url(${item.image}) ` */ }}>
+                                  {/*<div className='offer-header'>
+                                      <h2>{item.title}</h2>
+                                      <a href={this.getNewArrivalLink(item)} className='shop-now'>Shop Now</a>
+                                  </div>*/}
+                                  <img src={item.image} alt="" className="d-block w-100" />
+                              </Container>
                             </div>
-                          </Link>*/}
-                    </span>
+                        
+                        ))}
+                        
+                        {/*<Link to={this.getNewArrivalLink(item)}>
+                              <div className="slider-banner">
+                                <img className="d-block w-100" src={item.image} alt="" />
+                              </div>
+                            </Link>*/}
+                      </span>
+                  </div>
                 </div>
               </div>
             </section>:''}</>);
           break;
           case item.section_name.toLowerCase() == "festiveoffers":
-            return (<>{festiveOffers.length > 0 ?<section className={`festive-offer ${k==0?'pt-7':''} ${this.props.isMobileView?'mt-5':'mt-2'}`}>
+            return (<>{festiveOffers.length > 0 ?<section className={`festive-offer`}>
               {/* <Container className='position-relative'>
                         <Row>
                             <Col xs={7} md={7}>
@@ -868,46 +874,48 @@ class HomePage extends Component {
                             </Col>
                         </Row>
                         </Container> */}
-              <div className="" style={{ padding: "0" }}>
-                <div className="festive-offer-header container">
-                  <h1 style={{ color: "#001e38" }}>Festive Offers</h1>
+              <div className="container-fluid">
+                <div className="festive-offer-cont">
+                  <div className="festive-offer-header">
+                    <h1 style={{ color: "#001e38" }}>Festive Offers</h1>
+                  </div>
+                  <Carousel className="rounded-4">
+                      {festiveOffers.map((item, key) => (
+                        <Carousel.Item key={key}>
+                          <Link
+                            to={
+                              isEmpty(item.products)
+                                ? "/products" +
+                                  objectToQuery(
+                                    {
+                                      category: item.category_slug,
+                                      subcategory: item.sub_category_slug,
+                                    },
+                                    true
+                                  )
+                                : "/products?offer=" + item.products
+                            }
+                          >
+                          <section className='diamond-offer'>
+                            <Container className='diamond-inner  position-relative' style={{/*  backgroundImage:`url(${item.banner}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%' */  }}>
+                                {/* <div className='offer-header'>
+                                    <h2>{item.title}</h2>
+                                    <a  className='shop-now'>Shop Now</a>
+                                </div> */}
+                                <img src={item.banner} alt="" className="d-block w-100" />
+                            </Container>
+                          </section>
+                          </Link>
+                        </Carousel.Item>
+                      ))}
+                  </Carousel>
+                  
+                  {!festiveOffers.length ? (
+                    <Placeholder animation="glow">
+                      <Placeholder xs={12} className="slider-banner" />
+                    </Placeholder>
+                  ) : null}
                 </div>
-                <Carousel className="rounded-4">
-                    {festiveOffers.map((item, key) => (
-                      <Carousel.Item key={key}>
-                        <Link
-                          to={
-                            isEmpty(item.products)
-                              ? "/products" +
-                                objectToQuery(
-                                  {
-                                    category: item.category_slug,
-                                    subcategory: item.sub_category_slug,
-                                  },
-                                  true
-                                )
-                              : "/products?offer=" + item.products
-                          }
-                        >
-                        <section className='diamond-offer'>
-                          <Container className='diamond-inner  position-relative' style={{/*  backgroundImage:`url(${item.banner}) `, backgroundRepeat: 'no-repeat', backgroundPosition: 'right bottom', backgroundSize: 'auto 100%' */  }}>
-                              {/* <div className='offer-header'>
-                                  <h2>{item.title}</h2>
-                                  <a  className='shop-now'>Shop Now</a>
-                              </div> */}
-                              <img src={item.banner} alt="" className="d-block w-100" />
-                          </Container>
-                        </section>
-                        </Link>
-                      </Carousel.Item>
-                    ))}
-                </Carousel>
-                
-                {!festiveOffers.length ? (
-                  <Placeholder animation="glow">
-                    <Placeholder xs={12} className="slider-banner" />
-                  </Placeholder>
-                ) : null}
               </div>
             </section>:''}</>);
           break;
@@ -922,112 +930,114 @@ class HomePage extends Component {
               if(item.section_name.toLowerCase().indexOf(catSlug) !== -1){
                 //console.log("=================================="+catSlug);
                 
-                return (<>{sliders.length > 0 && <section className={` mt-2 ${k==0?'pt-5':''} ${sliders.length > 0?"selling-product":""}`} > 
-                  <Container>
-                    {sliders.length > 0 && <div className="selling-product-header d-flex justify-content-between mb-1">
-                      <h1>Current Stock Products</h1>
-                      
-                    </div>}
-                    <Swiper
-                      spaceBetween={30}
-                      //onSlideChange={() => console.log("slide change Current Stock banner")}
-                      //onSwiper={(swiper) => console.log(swiper)}
-                      loop={false}
-                      autoplay={{
-                        delay: 5000, // Wait 2s before sliding
-                        disableOnInteraction: false, // Keeps autoplay on after touch/swipe
-                        reverseDirection: false, // false = left-to-right (default)
-                      }}
-                      speed={800} // Slide speed
-                      dir="ltr" // Explicit left-to-right
-                      breakpoints={{
-                        // when window width is >= 320px
-                        320: {
-                          //width: 320,
-                          slidesPerView: 2,
-                          spaceBetween: 10, // Space between slides
-                          //loop: sliders.length > 1 ? true : false, // Fixed
-                        },
-                        // when window width is >= 768px
-                        768: {
-                          //width: 768,
-                          slidesPerView: 2,
-                          spaceBetween: 20,
-                          //loop: sliders.length > 2 ? true : false, // Fixed
-                        },
-                        // when window width is >= 1024px
-                        1024: {
-                          //width: 1024,
-                          slidesPerView: 3,
-                          spaceBetween: 30,
-                          //loop: sliders.length > 3 ? true : false, // Fixed
-                        },
-                        // when window width is >= 1024px
-                        1440: {
-                          //width: 1440,
-                          slidesPerView: 4,
-                          spaceBetween: 40,
-                          //loop: sliders.length > 4 ? true : false, // Fixed
-                        },
-                      }}
-                    >
-                      {sliders.map((item, key) => (
-                        <SwiperSlide key={key}>
-                          <div className="slide-swipe-inner rounded overflow-hidden">
-                            <Link 
-                                to={
-                                  isEmpty(item.products)
-                                    ? "/stock-products" +
-                                      objectToQuery(
-                                        {
-                                          category: item.category_slug,
-                                          subcategory: item.sub_category_slug,
-                                        },
-                                        true
-                                      )
-                                    : "/stock-products?offer=" + item.products
-                                }
-                            >
-                              <div className="s-slider-image rounded-top">
-                              
-                                  <img
-                                    src={item.banner != ""?item.banner:''}
-                                    className="rounded-top Scale_on_hover"
-                                    alt="selling product"
-                                  />
+                return (<>{sliders.length > 0 && <section className={`selling-product`} > 
+                  <div className="container-fluid">
+                    <div className="selling-product-cont">
+                      {sliders.length > 0 && <div className="selling-product-header d-flex justify-content-between mb-1">
+                        <h1>Current Stock Products</h1>
+                        
+                      </div>}
+                      <Swiper
+                        spaceBetween={30}
+                        //onSlideChange={() => console.log("slide change Current Stock banner")}
+                        //onSwiper={(swiper) => console.log(swiper)}
+                        loop={false}
+                        autoplay={{
+                          delay: 5000, // Wait 2s before sliding
+                          disableOnInteraction: false, // Keeps autoplay on after touch/swipe
+                          reverseDirection: false, // false = left-to-right (default)
+                        }}
+                        speed={800} // Slide speed
+                        dir="ltr" // Explicit left-to-right
+                        breakpoints={{
+                          // when window width is >= 320px
+                          320: {
+                            //width: 320,
+                            slidesPerView: 2,
+                            spaceBetween: 10, // Space between slides
+                            //loop: sliders.length > 1 ? true : false, // Fixed
+                          },
+                          // when window width is >= 768px
+                          768: {
+                            //width: 768,
+                            slidesPerView: 2,
+                            spaceBetween: 20,
+                            //loop: sliders.length > 2 ? true : false, // Fixed
+                          },
+                          // when window width is >= 1024px
+                          1024: {
+                            //width: 1024,
+                            slidesPerView: 3,
+                            spaceBetween: 30,
+                            //loop: sliders.length > 3 ? true : false, // Fixed
+                          },
+                          // when window width is >= 1024px
+                          1440: {
+                            //width: 1440,
+                            slidesPerView: 4,
+                            spaceBetween: 40,
+                            //loop: sliders.length > 4 ? true : false, // Fixed
+                          },
+                        }}
+                      >
+                        {sliders.map((item, key) => (
+                          <SwiperSlide key={key}>
+                            <div className="slide-swipe-inner rounded overflow-hidden">
+                              <Link 
+                                  to={
+                                    isEmpty(item.products)
+                                      ? "/stock-products" +
+                                        objectToQuery(
+                                          {
+                                            category: item.category_slug,
+                                            subcategory: item.sub_category_slug,
+                                          },
+                                          true
+                                        )
+                                      : "/stock-products?offer=" + item.products
+                                  }
+                              >
+                                <div className="s-slider-image rounded-top">
                                 
-                                
-                              </div>
-                              <div className="s-slider-content rounded-bottom">
-                                <div className="d-flex justify-content-between">
-                                  <h2>{item.title}</h2>
-                                  <Button className="slider-button" variant="primary">{item.button_txt}</Button>
+                                    <img
+                                      src={item.banner != ""?item.banner:''}
+                                      className="rounded-top Scale_on_hover"
+                                      alt="selling product"
+                                    />
+                                  
+                                  
                                 </div>
-                                
-                                <div className="ring-price">
-                                  <span className="offer-price">
-                                    {" "}
-                                    {item.final_price_display}{" "}
-                                  </span>
-                                  {item.discount > 0 ? (
-                                    <>
-                                      <span className="item-price text-primary-emphasis">
-                                        {" "}
-                                        {item.price_display}{" "}
-                                      </span>
+                                <div className="s-slider-content rounded-bottom">
+                                  <div className="d-flex justify-content-between">
+                                    <h2>{item.title}</h2>
+                                    <Button className="slider-button" variant="primary">{item.button_txt}</Button>
+                                  </div>
+                                  
+                                  <div className="ring-price">
+                                    <span className="offer-price">
                                       {" "}
-                                      <span className="me-2 text-danger">Save&nbsp;{item.discount_display}</span>{" "}
-                                    </>
-                                  ) : null}
+                                      {item.final_price_display}{" "}
+                                    </span>
+                                    {item.discount > 0 ? (
+                                      <>
+                                        <span className="item-price text-primary-emphasis">
+                                          {" "}
+                                          {item.price_display}{" "}
+                                        </span>
+                                        {" "}
+                                        <span className="me-2 text-danger d-none d-sm-block">Save&nbsp;{item.discount_display}</span>{" "}
+                                      </>
+                                    ) : null}
+                                  </div>
                                 </div>
-                              </div>
-                            </Link>
-                          </div>
-                        </SwiperSlide>
-                      ))}
-                      
-                    </Swiper>
-                  </Container>
+                              </Link>
+                            </div>
+                          </SwiperSlide>
+                        ))}
+                        
+                      </Swiper>
+                    </div>
+                  </div>
                 </section>}</>);
               }
             });
@@ -1035,230 +1045,234 @@ class HomePage extends Component {
           case item.section_name.toLowerCase() == "bestsellingproducts":
             return (<>
             {best_selling_products.length ? (
-            <section className={`selling-product ${k==0?'pt-5':''} mt-2`}>
-              <Container>
-                <div className="selling-product-header">
-                  <h1>Best Selling Products</h1>
-                </div>
-                <Swiper
-                  spaceBetween={20}
-                  //onSlideChange={() => console.log("slide change")}
-                  //onSwiper={(swiper) => console.log(swiper)}
-                  breakpoints={{
-                    // when window width is >= 320px
-                    320: {
-                      width: 320,
-                      slidesPerView: 2,
-                    },
-                    // when window width is >= 768px
-                    768: {
-                      width: 768,
-                      slidesPerView: 2,
-                    },
-                    // when window width is >= 1024px
-                    1024: {
-                      width: 1024,
-                      slidesPerView: 3,
-                    },
-                    // when window width is >= 1024px
-                    1440: {
-                      width: 1440,
-                      slidesPerView: 4,
-                    },
-                  }}
-                >
-                  {best_selling_products.map((product, key) => (
-                    <SwiperSlide key={key}>
-                      <div className="slide-swipe-inner rounded overflow-hidden">
-                        <div className="s-slider-image rounded-top">
-                          <Link to={"products/" + product.slug}>
-                            <img
-                              src={product.default_image}
-                              className="rounded-top Scale_on_hover"
-                              alt="selling product"
-                            />
-                          </Link>
-                          <div className="wishlist rounded-circle ">
-                            {product.has_wishlist ? (
-                              <BsHeartFill
-                                onClick={() => this.wishlistHandler(product)}
-                                className="wishlist_active"
-                                role="button"
+            <section className={`selling-product`}>
+              <div className="container-fluid">
+                <div className="selling-product-cont">
+                  <div className="selling-product-header">
+                    <h1>Best Selling Products</h1>
+                  </div>
+                  <Swiper
+                    spaceBetween={20}
+                    //onSlideChange={() => console.log("slide change")}
+                    //onSwiper={(swiper) => console.log(swiper)}
+                    breakpoints={{
+                      // when window width is >= 320px
+                      320: {
+                        width: 320,
+                        slidesPerView: 2,
+                      },
+                      // when window width is >= 768px
+                      768: {
+                        width: 768,
+                        slidesPerView: 2,
+                      },
+                      // when window width is >= 1024px
+                      1024: {
+                        width: 1024,
+                        slidesPerView: 3,
+                      },
+                      // when window width is >= 1024px
+                      1440: {
+                        width: 1440,
+                        slidesPerView: 4,
+                      },
+                    }}
+                  >
+                    {best_selling_products.map((product, key) => (
+                      <SwiperSlide key={key}>
+                        <div className="slide-swipe-inner rounded overflow-hidden">
+                          <div className="s-slider-image rounded-top">
+                            <Link to={"products/" + product.slug}>
+                              <img
+                                src={product.default_image}
+                                className="rounded-top Scale_on_hover"
+                                alt="selling product"
                               />
-                            ) : (
-                              <BsHeart
-                                onClick={() => this.wishlistHandler(product)}
-                                role="button"
-                              />
-                            )}
+                            </Link>
+                            <div className="wishlist rounded-circle ">
+                              {product.has_wishlist ? (
+                                <BsHeartFill
+                                  onClick={() => this.wishlistHandler(product)}
+                                  className="wishlist_active"
+                                  role="button"
+                                />
+                              ) : (
+                                <BsHeart
+                                  onClick={() => this.wishlistHandler(product)}
+                                  role="button"
+                                />
+                              )}
+                            </div>
                           </div>
-                        </div>
-                        <div className="s-slider-content rounded-bottom">
-                          <h2>{product.name}</h2>
-                          <div className="ring-price">
-                            <span className="offer-price">
-                              {" "}
-                              {product.sale_price_display}{" "}
-                            </span>
-                            {product.have_offer ? (
-                              <>
+                          <div className="s-slider-content rounded-bottom">
+                            <h2>{product.name}</h2>
+                            <div className="ring-price">
+                              <span className="offer-price">
                                 {" "}
-                                <span className="me-2 text-danger">
-                                  Save
-                                </span>{" "}
-                                <span className="item-price text-primary-emphasis">
+                                {product.sale_price_display}{" "}
+                              </span>
+                              {product.have_offer ? (
+                                <>
                                   {" "}
-                                  {product.mrp_display}{" "}
-                                </span>
-                              </>
-                            ) : null}
+                                  <span className="me-2 text-danger d-none d-sm-block">
+                                    Save&nbsp;{product.total_save}
+                                  </span>{" "}
+                                  <span className="item-price text-primary-emphasis">
+                                    {" "}
+                                    {product.mrp_display}{" "}
+                                  </span>
+                                </>
+                              ) : null}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </SwiperSlide>
-                  ))}
+                      </SwiperSlide>
+                    ))}
 
-                  {/*---- <SwiperSlide>
-                                  <div className='s-slider-image'>
-                                      <img src={sImage} alt='selling product' />
-                                      <div className='wishlist'>
-                                          <BiHeart />
-                                      </div>
-                                  </div>
-                                  <div className='s-slider-content'>
-                                      <h2>Gold Plated Ring</h2>
-                                      <div className='ring-price'>
-                                          <span className='offer-price'> ₹2999 </span>
-                                          <span className='item-price'> ₹2999 </span>
-                                      </div>
-                                  </div>
-                              </SwiperSlide>
-                              <SwiperSlide>
-                                  <div className='s-slider-image'>
-                                      <img src={sImage} alt='selling product' />
-                                      <div className='wishlist'>
-                                          <BiHeart />
-                                      </div>
-                                  </div>
-                                  <div className='s-slider-content'>
-                                      <h2>Gold Plated Ring</h2>
-                                      <div className='ring-price'>
-                                          <span className='offer-price'> ₹2999 </span>
-                                          <span className='item-price'> ₹2999 </span>
-                                      </div>
-                                  </div>
-                              </SwiperSlide>
-                              <SwiperSlide>
-                                  <div className='s-slider-image'>
-                                      <img src={sImage} alt='selling product' />
-                                  </div>
-                                  <div className='s-slider-content'>
-                                      <h2>Gold Plated Ring</h2>
-                                      <div className='ring-price'>
-                                          <span className='offer-price'> ₹2999 </span>
-                                          <span className='item-price'> ₹2999 </span>
-                                      </div>
-                                  </div>
-                              </SwiperSlide>
-                              <SwiperSlide>
-                                  <div className='s-slider-image'>
-                                      <img src={sImage} alt='selling product' />
-                                  </div>
-                                  <div className='s-slider-content'>
-                                      <h2>Gold Plated Ring</h2>
-                                      <div className='ring-price'>
-                                          <span className='offer-price'> ₹2999 </span>
-                                          <span className='item-price'> ₹2999 </span>
-                                      </div>
-                                  </div>
-                          </SwiperSlide> ---*/}
-                      </Swiper>
-                </Container>
-              </section>
+                    {/*---- <SwiperSlide>
+                                    <div className='s-slider-image'>
+                                        <img src={sImage} alt='selling product' />
+                                        <div className='wishlist'>
+                                            <BiHeart />
+                                        </div>
+                                    </div>
+                                    <div className='s-slider-content'>
+                                        <h2>Gold Plated Ring</h2>
+                                        <div className='ring-price'>
+                                            <span className='offer-price'> ₹2999 </span>
+                                            <span className='item-price'> ₹2999 </span>
+                                        </div>
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className='s-slider-image'>
+                                        <img src={sImage} alt='selling product' />
+                                        <div className='wishlist'>
+                                            <BiHeart />
+                                        </div>
+                                    </div>
+                                    <div className='s-slider-content'>
+                                        <h2>Gold Plated Ring</h2>
+                                        <div className='ring-price'>
+                                            <span className='offer-price'> ₹2999 </span>
+                                            <span className='item-price'> ₹2999 </span>
+                                        </div>
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className='s-slider-image'>
+                                        <img src={sImage} alt='selling product' />
+                                    </div>
+                                    <div className='s-slider-content'>
+                                        <h2>Gold Plated Ring</h2>
+                                        <div className='ring-price'>
+                                            <span className='offer-price'> ₹2999 </span>
+                                            <span className='item-price'> ₹2999 </span>
+                                        </div>
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className='s-slider-image'>
+                                        <img src={sImage} alt='selling product' />
+                                    </div>
+                                    <div className='s-slider-content'>
+                                        <h2>Gold Plated Ring</h2>
+                                        <div className='ring-price'>
+                                            <span className='offer-price'> ₹2999 </span>
+                                            <span className='item-price'> ₹2999 </span>
+                                        </div>
+                                    </div>
+                            </SwiperSlide> ---*/}
+                  </Swiper>
+                </div>
+              </div>
+            </section>
             ) : null}
           </>);
           break;
           case item.section_name.toLowerCase() == "featuredproducts":
             return (<>
               {featured_products.length ? (
-                <section className={`feature-product bg-white ${k==0?'pt-5':''} mt-2`}>
-                  <Container className="bg-light py-3">
-                    <div className="feature-product-header">
-                      <h1 style={{ color: "#001e38" }}>Featured Products</h1>
+                <section className={`feature-product bg-white`}>
+                  <div className="container-fluid">
+                    <div className="feature-product-cont">
+                      <div className="feature-product-header">
+                        <h1 style={{ color: "#001e38" }}>Featured Products</h1>
+                      </div>
+                      <Swiper
+                        spaceBetween={20}
+                        //onSlideChange={() => console.log("slide change")}
+                        //onSwiper={(swiper) => console.log(swiper)}
+                        breakpoints={{
+                          // when window width is >= 320px
+                          320: {
+                            width: 320,
+                            slidesPerView: 2,
+                          },
+                          // when window width is >= 768px
+                          768: {
+                            width: 768,
+                            slidesPerView: 2,
+                          },
+                          // when window width is >= 1024px
+                          1024: {
+                            width: 1024,
+                            slidesPerView: 3,
+                          },
+                          // when window width is >= 1024px
+                          1440: {
+                            width: 1440,
+                            slidesPerView: 4,
+                          },
+                        }}
+                      >
+                        {featured_products.map((product, key) => (
+                          <SwiperSlide className=" rounded" key={key}>
+                            <div className="slide-swipe-inner rounded overflow-hidden">
+                              <div className="s-slider-image rounded-top">
+                                <Link to={"products/" + product.slug}>
+                                  <img
+                                    src={product.default_image}
+                                    className="rounded-top Scale_on_hover"
+                                    alt="feature product"
+                                  />
+                                </Link>
+                                <div className="wishlist rounded-circle ">
+                                  {product.has_wishlist ? (
+                                    <BsHeartFill
+                                      onClick={() => this.wishlistHandler(product)}
+                                      className="wishlist_active"
+                                      role="button"
+                                    />
+                                  ) : (
+                                    <BsHeart
+                                      onClick={() => this.wishlistHandler(product)}
+                                      role="button"
+                                    />
+                                  )}
+                                </div>
+                              </div>
+                              <div className="s-slider-content rounded-bottom">
+                                <h2>{product.name}</h2>
+                                <div className="ring-price">
+                                  <span className="offer-price">
+                                    {" "}
+                                    {product.sale_price_display}{" "}
+                                  </span>
+                                  {product.have_offer ? (<><span className="item-price text-primary-emphasis">
+                                        {" "}
+                                        {product.mrp_display}{" "}
+                                      </span>
+                                      <span className="me-2 text-danger d-none d-sm-block">Save&nbsp;{product.total_save}</span></>): null}
+                                  
+                                </div>
+                              </div>
+                            </div>
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
                     </div>
-                    <Swiper
-                      spaceBetween={20}
-                      //onSlideChange={() => console.log("slide change")}
-                      //onSwiper={(swiper) => console.log(swiper)}
-                      breakpoints={{
-                        // when window width is >= 320px
-                        320: {
-                          width: 320,
-                          slidesPerView: 2,
-                        },
-                        // when window width is >= 768px
-                        768: {
-                          width: 768,
-                          slidesPerView: 2,
-                        },
-                        // when window width is >= 1024px
-                        1024: {
-                          width: 1024,
-                          slidesPerView: 3,
-                        },
-                        // when window width is >= 1024px
-                        1440: {
-                          width: 1440,
-                          slidesPerView: 4,
-                        },
-                      }}
-                    >
-                      {featured_products.map((product, key) => (
-                        <SwiperSlide className=" rounded" key={key}>
-                          <div className="slide-swipe-inner rounded overflow-hidden">
-                            <div className="s-slider-image rounded-top">
-                              <Link to={"products/" + product.slug}>
-                                <img
-                                  src={product.default_image}
-                                  className="rounded-top Scale_on_hover"
-                                  alt="feature product"
-                                />
-                              </Link>
-                              <div className="wishlist rounded-circle ">
-                                {product.has_wishlist ? (
-                                  <BsHeartFill
-                                    onClick={() => this.wishlistHandler(product)}
-                                    className="wishlist_active"
-                                    role="button"
-                                  />
-                                ) : (
-                                  <BsHeart
-                                    onClick={() => this.wishlistHandler(product)}
-                                    role="button"
-                                  />
-                                )}
-                              </div>
-                            </div>
-                            <div className="s-slider-content rounded-bottom">
-                              <h2>{product.name}</h2>
-                              <div className="ring-price">
-                                <span className="offer-price">
-                                  {" "}
-                                  {product.sale_price_display}{" "}
-                                </span>
-                                {product.have_offer ? (<><span className="item-price text-primary-emphasis">
-                                      {" "}
-                                      {product.mrp_display}{" "}
-                                    </span>
-                                    <span className="me-2 text-danger">Save</span></>): null}
-                                
-                              </div>
-                            </div>
-                          </div>
-                        </SwiperSlide>
-                      ))}
-                    </Swiper>
-                  </Container>
+                  </div>
                 </section>
               ) : null}
             </>);
@@ -1363,7 +1377,7 @@ class HomePage extends Component {
           </Container>
         </section> */}
         <section className="promise promise-desktop bg-light">
-          <Container>
+          <div className="container-fluid">
             <h2 className="text-center ">Our Promise</h2>
 
             <Row>
@@ -1520,7 +1534,7 @@ class HomePage extends Component {
                 </div>
               </Col>
             </Row>
-          </Container>
+          </div>
         </section>
 
         {/* <!-- Modal --> */}
@@ -1553,7 +1567,7 @@ class HomePage extends Component {
           </div>
         </div>
         <section className="promise promise-mobile">
-          <Container>
+          <div className="container-fluid">
             <h2 className="text-center">Our Promise</h2>
 
             <Row>
@@ -1764,7 +1778,7 @@ class HomePage extends Component {
                 </div>
               </Col>
             </Row>
-          </Container>
+          </div>
         </section>
         {/*<div className='gap-100'></div>*/}
         {/* <section className="browse-rings position-relative">
@@ -1793,86 +1807,88 @@ class HomePage extends Component {
 
         {bestRetailers.length > 0 ? (
           <section className="feature-product best-retailer">
-          
-              <div className="feature-product-header retailer-search-container">
-                <h1 className="retailer-label">Our Partners</h1>
-                <div className="retailer-search">
-                  <Typeahead
-                    id="autocomplete-field"
-                    labelKey="name"
-                    multiple={false}
-                    onChange={(cityV) => {
-                      console.log(cityV);
-                      this.setState({
-                        retailerCitySelected: cityV
-                      }, () => {
-                        //this.loadBestReatailers(cityV[0]);
-                      });
-                      
-                    }}
-                    options={retailerCityOptions}
-                    placeholder="Choose your city"
-                    selected={retailerCitySelected}
-                  />
+            <div className="container-fluid">
+              <div className="best-retailer-cont">
+                <div className="feature-product-header retailer-search-container">
+                  <h1 className="retailer-label">Our Partners</h1>
+                  <div className="retailer-search">
+                    <Typeahead
+                      id="autocomplete-field"
+                      labelKey="name"
+                      multiple={false}
+                      onChange={(cityV) => {
+                        console.log(cityV);
+                        this.setState({
+                          retailerCitySelected: cityV
+                        }, () => {
+                          //this.loadBestReatailers(cityV[0]);
+                        });
+                        
+                      }}
+                      options={retailerCityOptions}
+                      placeholder="In your city"
+                      selected={retailerCitySelected}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="marquee-wrapper">
-                {/* <h1 className="marquee-heading container">Our Partners</h1> */}
-                <div className="marquee-retailer" tabIndex="0"  ref={el => (this.retailerMarqueeRef = el)}>
-                    <span className="marquee-track-retailer" ref={el => (this.retailerMarqueeTrackRef = el)}>
-                      {bestRetailers.map((item, key) => (
-                        <a href={`/retailers/${item.id}`} key={`bestRetailers_a_${item.id}`} >
-                          <div className="marquee-item-retailer" key={`bestRetailers_${item.id}`} >
-                            {/* <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.image}) ` }}>
-                                
-                            </Container> */}
-                            <div className="slide-swipe-inner rounded overflow-hidden">
-                              <div className="b-slider-image">
-                                <img
-                                  src={item.image}
-                                  className=""
-                                  alt="feature product"
-                                />
-                              </div>
-                              <div className="b-slider-content">
-                                <h2>{item.company_name}</h2>
-                                <span className="seller-description">
-                                  <ul>
-                                    <li>
-                                      <FaMapMarkerAlt />
-                                    </li>
-                                    <li>{item.city}, {item.district_name}</li>
-                                  </ul>
-                                </span>
-                                <span className="seller-description">
-                                  <ul>
-                                    <li>
-                                      <FaMobileAlt />
-                                    </li>
-                                    <li>{item.mobile}</li>
-                                  </ul>
-                                </span>
-                                {/* <div className="ring-price">
-                                  <span > {item.mobile} </span>
-                                </div> */}
+                <div className="marquee-wrapper">
+                  {/* <h1 className="marquee-heading container">Our Partners</h1> */}
+                  <div className="marquee-retailer" tabIndex="0"  ref={el => (this.retailerMarqueeRef = el)}>
+                      <span className="marquee-track-retailer" ref={el => (this.retailerMarqueeTrackRef = el)}>
+                        {bestRetailers.map((item, key) => (
+                          <a href={`/retailers/${item.id}`} key={`bestRetailers_a_${item.id}`} >
+                            <div className="marquee-item-retailer" key={`bestRetailers_${item.id}`} >
+                              {/* <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ backgroundImage:`url(${item.image}) ` }}>
+                                  
+                              </Container> */}
+                              <div className="slide-swipe-inner rounded overflow-hidden">
+                                <div className="b-slider-image">
+                                  <img
+                                    src={item.image}
+                                    className=""
+                                    alt="feature product"
+                                  />
+                                </div>
+                                <div className="b-slider-content">
+                                  <h2>{item.company_name}</h2>
+                                  <span className="seller-description">
+                                    <ul>
+                                      <li>
+                                        <FaMapMarkerAlt />
+                                      </li>
+                                      <li>{item.city}, {item.district_name}</li>
+                                    </ul>
+                                  </span>
+                                  <span className="seller-description">
+                                    <ul>
+                                      <li>
+                                        <FaMobileAlt />
+                                      </li>
+                                      <li>{item.mobile}</li>
+                                    </ul>
+                                  </span>
+                                  {/* <div className="ring-price">
+                                    <span > {item.mobile} </span>
+                                  </div> */}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </a>
-                      ))}
-                      
-                      {/*<Link to={this.getNewArrivalLink(item)}>
-                            <div className="slider-banner">
-                              <img className="d-block w-100" src={item.image} alt="" />
-                            </div>
-                          </Link>*/}
-                    </span>
+                          </a>
+                        ))}
+                        
+                        {/*<Link to={this.getNewArrivalLink(item)}>
+                              <div className="slider-banner">
+                                <img className="d-block w-100" src={item.image} alt="" />
+                              </div>
+                            </Link>*/}
+                      </span>
+                  </div>
                 </div>
               </div>
-            
+            </div>
           </section>
-        ) : <section className="feature-product best-retailer"><Loader /></section>}
+        ) : <section className="feature-product best-retailer"><div className="container-fluid"><div className="best-retailer-cont"><Loader /></div></div></section>}
 
       
         {/* <section className="ratn-banner">
@@ -1890,7 +1906,7 @@ class HomePage extends Component {
           </Container>
         </section> */}
         <section className="address-map">
-          <Container>
+          <div className="container-fluid">
             <div className="review-header">
               <h3 className="text-center">The Prakriti Store</h3>
               <p>
@@ -2051,7 +2067,7 @@ class HomePage extends Component {
                 </Col>
               </Row>
             </Tab.Container>
-          </Container>
+          </div>
         </section>
 
         <section className="socialmedia-wrapper">

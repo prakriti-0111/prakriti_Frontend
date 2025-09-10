@@ -1,0 +1,155 @@
+
+/* Remove blue background from promocode section */
+.promocode {
+  background-color: #f8f9fa; /* Light gray background instead of blue */
+  color: #000;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+/* Ensure all sections have equal width */
+.container-fluid {
+  /* max-width: 1200px; */
+  margin: auto;
+}
+
+/* Banner text repositioning */
+.banner-sec .slider-title {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  transform: none;
+  font-size: 2rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+/* Ensure consistent padding and margin across sections */
+section {
+  padding: 10px 15px;
+  margin-bottom: 10px; /* Equal top & bottom margins */
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Promocode heading alignment */
+.promocode-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+/* Remove extra gaps in promocode items */
+.promocode p {
+  margin: 0;
+}
+
+/* Modern Card Style for Products */
+.selling-product .card,
+.feature-product .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.selling-product .card:hover,
+.feature-product .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.selling-product .card-body,
+.feature-product .card-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.selling-product .card-body h5,
+.feature-product .card-body h5 {
+  font-weight: bold;
+}
+
+.selling-product .card-body p,
+.feature-product .card-body p {
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+/* Retailers Grid */
+.best-retailer .marquee-track-retailer {
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.best-retailer .b-slider-image {
+  margin: 20px;
+}
+
+.best-retailer .b-slider-image img {
+  border-radius: 50%;
+  border: 4px solid #fff;
+  transition: transform 0.3s ease;
+}
+
+.best-retailer .b-slider-image img:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .banner-sec .slider-title {
+    font-size: 1.5rem;
+    padding: 10px 15px;
+  }
+
+  .promocode-title {
+    font-size: 1.5rem;
+  }
+
+  .selling-product .card-body h5,
+  .feature-product .card-body h5 {
+    font-size: 1rem;
+  }
+
+  .selling-product .card-body p,
+  .feature-product .card-body p {
+    font-size: 1rem;
+  }
+
+  .best-retailer .b-slider-image img {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-sec .slider-title {
+    font-size: 1.2rem;
+    padding: 8px 12px;
+  }
+
+  .promocode-title {
+    font-size: 1.2rem;
+  }
+
+  .selling-product .card-body h5,
+  .feature-product .card-body h5 {
+    font-size: 0.9rem;
+  }
+
+  .selling-product .card-body p,
+  .feature-product .card-body p {
+    font-size: 0.9rem;
+  }
+
+  .best-retailer .b-slider-image img {
+    width: 80px;
+    height: 80px;
+  }
+}
