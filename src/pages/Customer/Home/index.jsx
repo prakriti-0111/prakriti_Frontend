@@ -16,7 +16,8 @@ import {
 } from "actions/Customer/product.actions";
 import { WishListAdd } from "actions/Customer/wishlist.actions";
 import {
-  retailerCityFetch,
+  retailerStateFetch,
+  retailerCityFetch
 } from "actions/Customer/retailer.actions";
 import _ from "lodash";
 import React, { Component, createRef } from "react";
@@ -104,7 +105,9 @@ class HomePage extends Component {
       counts: null,
       promise_box: "",
       currentMarqueeIndex: 0,
+      retailerStateSelected: null,
       retailerCitySelected: null,
+      retailerStateOptions : [],
       retailerCityOptions : []
     };
 
@@ -131,9 +134,28 @@ class HomePage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.retailerCitySelected !== prevState.retailerCitySelected) {
+    if (this.state.retailerCitySelected !== prevState.retailerCitySelected || this.state.retailerStateSelected !== prevState.retailerStateSelected) {
+      let state = null, city = null;
+      if(this.state.retailerStateSelected && this.state.retailerStateSelected.length > 0){
+        state = this.state.retailerStateSelected[0];
+      }
+
+      if(this.state.retailerCitySelected && this.state.retailerCitySelected.length > 0){
+        city = this.state.retailerCitySelected[0];
+      }
+
+      if(state == null){
+        this.setState({
+          retailerCityOptions: [],
+        });
+      }
+
+      if(state != null && city == null){
+        this.loadRetailerCities(state);
+      }
+
+      this.loadBestReatailers(state, city);
       //this.retailerAnimationFrameId = null;
-      this.loadBestReatailers(this.state.retailerCitySelected[0]);
     } 
     if (this.state.bestRetailers.length !== prevState.bestRetailers.length) {
       //this.pauseRetailerMarquee();
@@ -370,13 +392,35 @@ class HomePage extends Component {
       this.loadBestSellingProducts();
       this.loadBestReatailers();
       this.loadCounts();
-      this.loadRetailerCities();
+      this.loadRetailerStates();
+      //this.loadRetailerCities();
       this.addPauseListeners();
     });
   };
 
-  loadRetailerCities = async () => {
-    let response = await retailerCityFetch();
+  loadRetailerStates = async () => {
+    let response = await retailerStateFetch();
+    if (response.data.success) {
+      this.setState({
+        retailerStateOptions: response.data.data,
+        processing: false,
+        //retailerStateSelected: response.data.data.length > 0 ? [response.data.data[0]] : null
+      });
+    } else {
+      this.setState({
+        processing: false,
+      });
+    }
+  };
+
+  loadRetailerCities = async (state = null) => {
+    console.log("state : ", state);
+    let retailerCityPatload = {};
+    if(state != null){
+      retailerCityPatload.state = state.id;
+    }
+    console.log("retailerCityPatload : ", retailerCityPatload);
+    let response = await retailerCityFetch(retailerCityPatload);
     if (response.data.success) {
       this.setState({
         retailerCityOptions: response.data.data,
@@ -458,12 +502,20 @@ class HomePage extends Component {
     }
   };
 
-  loadBestReatailers = async (city = null) => {
+  loadBestReatailers = async (state = null, city = null) => {
+    console.log("state : ", state);
     console.log("city : ", city);
     this.setState({
         bestRetailers: []
     });
-    let res = await bestRetailerList(city != null?{city: city.name} : {});
+    let retailerPatload = {};
+    if(state != null){
+      retailerPatload.state = state.id;
+    }
+    if(city != null){
+      retailerPatload.city = city.name;
+    }
+    let res = await bestRetailerList(retailerPatload);
     if (res.data.success) {
       console.log("bestRetailers : ", res.data.data);
       let result = [];
@@ -660,7 +712,9 @@ class HomePage extends Component {
       promocodes,
       bestRetailers,
       counts,
+      retailerStateSelected,
       retailerCitySelected,
+      retailerStateOptions,
       retailerCityOptions
     } = this.state;
 
@@ -695,7 +749,7 @@ class HomePage extends Component {
                         <div className="slider-banner">
                           <img src={item.image} alt="" />
                         </div>
-                        <span className="slider-title">{item.title}</span>
+                        {/* <span className="slider-title">{item.title}</span> */}
                       </Link>
                     </Carousel.Item>
                   ))}
@@ -1806,11 +1860,31 @@ class HomePage extends Component {
         </section> */}
 
         {bestRetailers.length > 0 ? (
-          <section className="feature-product best-retailer">
+          <section className="promise best-retailer">
             <div className="container-fluid">
+              <h2 className="text-center">Our Partners</h2>
               <div className="best-retailer-cont">
                 <div className="feature-product-header retailer-search-container">
-                  <h1 className="retailer-label">Our Partners</h1>
+                  <div className="retailer-label">
+                    <Typeahead
+                      id="autocomplete-field"
+                      labelKey="name"
+                      multiple={false}
+                      onChange={(stateV) => {
+                        console.log(stateV);
+                        this.setState({
+                          retailerStateSelected: stateV,
+                          retailerCitySelected: null
+                        }, () => {
+                          //this.loadBestReatailers(stateV[0], null);
+                        });
+                        
+                      }}
+                      options={retailerStateOptions}
+                      placeholder="In your state"
+                      selected={retailerStateSelected}
+                    />
+                  </div>
                   <div className="retailer-search">
                     <Typeahead
                       id="autocomplete-field"
@@ -1821,7 +1895,7 @@ class HomePage extends Component {
                         this.setState({
                           retailerCitySelected: cityV
                         }, () => {
-                          //this.loadBestReatailers(cityV[0]);
+                          //this.loadBestReatailers(null, cityV[0]);
                         });
                         
                       }}
@@ -2008,7 +2082,7 @@ class HomePage extends Component {
                               ></iframe>
                               <div className="list-wrapper">
                                 <div className="list-name">
-                                  <p>
+                                  {/*<p>
                                     All types of gemstones, diamond jewelry,
                                     rudraksha, and sphatik are provided to
                                     retail our partners at wholesale rates. We
@@ -2017,7 +2091,7 @@ class HomePage extends Component {
                                     be a difference in the current price from
                                     the order & catalog price, as per the
                                     current rate.
-                                  </p>
+                                  </p>*/}
                                   <h1> Branch Office</h1>
                                   <p>
                                     {" "}
@@ -2030,7 +2104,7 @@ class HomePage extends Component {
                                   </p>
                                 </div>
                                 <div className="list-name right-para">
-                                  <p>
+                                  {/*<p>
                                     {" "}
                                     WE PROVIDE THE SERVICE OF DISTRIBUTORSHIP TO
                                     YOU.{" "}
@@ -2039,16 +2113,16 @@ class HomePage extends Component {
                                     On order, we can make customized jewelry as
                                     per your designs. For all orders and
                                     inquiries, contact us.
-                                  </p>
+                                  </p>*/}
                                   <p> Store Timings: 11am to 9pm </p>
-                                  <p> WEBSITE: www.prakriti.one </p>
+                                  {/*<p> WEBSITE: www.prakriti.one </p>*/}
                                   <p> Contact Number: 9874445878</p>
                                   <div className="list-name margin-right">
                                     <a
                                       href="https://goo.gl/maps/6ZfV7dNiGwG6ZAJQ8"
                                       target="_blank"
                                     >
-                                      <Button variant="primary">
+                                      <Button variant="primary" className="rounded">
                                         GET DIRECTION
                                       </Button>
                                     </a>
@@ -2155,7 +2229,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators({retailerCityFetch}, dispatch),
+  actions: bindActionCreators({retailerCityFetch, retailerStateFetch}, dispatch),
   dispatch,
 });
 
