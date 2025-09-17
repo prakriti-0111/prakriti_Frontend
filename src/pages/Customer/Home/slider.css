@@ -168,6 +168,7 @@
 
   .festive-offer {
     /* background-color: #9f9999 !important; */
+    padding: 0px;
   }
 
   .festive-offer .festive-offer-header h1 {
@@ -232,6 +233,10 @@
 .carousel-indicators .active {
   background-color: #333;
   transform: scale(1.2); /* Optionally scale the active dot */
+}
+
+.diamond-offer{
+  padding: 0px;
 }
 
 .diamond-offer .diamond-inner {

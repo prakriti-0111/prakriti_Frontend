@@ -829,7 +829,7 @@ class HomePage extends Component {
                         }
                       >
                         <div className="promocode-banner">
-                          <img src={item.banner} alt="" />
+                          <img src={item.banner} alt="" style={{width:"100%"}} />
                         </div>
                         <span className="promocode-title">{item.title}</span>
                       
@@ -878,10 +878,11 @@ class HomePage extends Component {
             });
           break;
           case item.section_name.toLowerCase() == "newarrivals":
-            return (<>{newArrivals.length > 0 ? <section className={`new-arrival`}>
+            return (<>{newArrivals.length > 0 ? <section className={`neneww-arrival`}>
               <div className="container-fluid">
+                <h2 className="text-center ">New Arrivals</h2>
                 <div className="marquee-wrapper">
-                  <h1 className="marquee-heading">New Arrivals</h1>
+                  {/* <h1 className="marquee-heading">New Arrivals</h1> */}
                   <div className="marquee" tabIndex="0"  ref={el => (this.marqueeRef = el)}>
                       <span className="marquee-track" ref={el => (this.marqueeTrackRef = el)}>
                         {newArrivals.map((item, key) => (
@@ -929,10 +930,11 @@ class HomePage extends Component {
                         </Row>
                         </Container> */}
               <div className="container-fluid">
+                <h2 className="text-center ">Festive Offers</h2>
                 <div className="festive-offer-cont">
-                  <div className="festive-offer-header">
+                  {/* <div className="festive-offer-header">
                     <h1 style={{ color: "#001e38" }}>Festive Offers</h1>
-                  </div>
+                  </div> */}
                   <Carousel className="rounded-4">
                       {festiveOffers.map((item, key) => (
                         <Carousel.Item key={key}>
@@ -987,10 +989,7 @@ class HomePage extends Component {
                 return (<>{sliders.length > 0 && <section className={`selling-product`} > 
                   <div className="container-fluid">
                     <div className="selling-product-cont">
-                      {sliders.length > 0 && <div className="selling-product-header d-flex justify-content-between mb-1">
-                        <h1>Current Stock Products</h1>
-                        
-                      </div>}
+                      
                       <Swiper
                         spaceBetween={30}
                         //onSlideChange={() => console.log("slide change Current Stock banner")}
@@ -1064,7 +1063,7 @@ class HomePage extends Component {
                                 <div className="s-slider-content rounded-bottom">
                                   <div className="d-flex justify-content-between">
                                     <h2>{item.title}</h2>
-                                    <Button className="slider-button" variant="primary">{item.button_txt}</Button>
+                                    <Button className="slider-button" style={{backgroundColor: "#1C4848", borderColor:"#1C4848"}}>{item.button_txt}</Button>
                                   </div>
                                   
                                   <div className="ring-price">
@@ -1090,6 +1089,10 @@ class HomePage extends Component {
                         ))}
                         
                       </Swiper>
+                      {sliders.length > 0 && <div className="selling-product-header d-flex justify-content-between mb-1">
+                        <h1>Current Stock Products</h1>
+                        
+                      </div>}
                     </div>
                   </div>
                 </section>}</>);
@@ -1101,10 +1104,11 @@ class HomePage extends Component {
             {best_selling_products.length ? (
             <section className={`selling-product`}>
               <div className="container-fluid">
+                <h2 className="text-center ">Best Selling Products</h2>
                 <div className="selling-product-cont">
-                  <div className="selling-product-header">
+                  {/* <div className="selling-product-header">
                     <h1>Best Selling Products</h1>
-                  </div>
+                  </div> */}
                   <Swiper
                     spaceBetween={20}
                     //onSlideChange={() => console.log("slide change")}
@@ -1249,10 +1253,11 @@ class HomePage extends Component {
               {featured_products.length ? (
                 <section className={`feature-product bg-white`}>
                   <div className="container-fluid">
+                    <h2 className="text-center ">Featured Products</h2>
                     <div className="feature-product-cont">
-                      <div className="feature-product-header">
+                      {/* <div className="feature-product-header">
                         <h1 style={{ color: "#001e38" }}>Featured Products</h1>
-                      </div>
+                      </div> */}
                       <Swiper
                         spaceBetween={20}
                         //onSlideChange={() => console.log("slide change")}
