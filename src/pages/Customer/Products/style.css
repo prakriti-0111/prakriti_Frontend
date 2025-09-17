@@ -19,6 +19,12 @@
     display: block;
 }
 
+/* .banner-search{
+    height: "100px";
+    margin-left: 17px;
+    width: 66%;
+} */
+
 @media only screen and (max-width: 600px) {
     .search-wrapper .offers-wrapper {
         position: absolute;

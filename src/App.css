@@ -2613,8 +2613,14 @@ ul.authenticity_list li img {
 
 /*----- search page ------*/
 .search-wrapper {
-  padding: 0px 0 30px 0;
-  margin-top: 136px;
+    padding: 0px 0 30px 0;
+    margin-top: 100px;
+}
+@media only screen and (min-width: 768px) {
+  .search-wrapper {
+    padding: 0px 0 30px 0;
+    margin-top: 130px;
+  }
 }
 
 .search-wrapper .container {
