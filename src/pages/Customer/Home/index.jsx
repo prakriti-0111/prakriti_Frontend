@@ -209,40 +209,43 @@ class HomePage extends Component {
 
   setupMarquee = () => {
     const track = this.marqueeTrackRef;
-    if(this.animationFrameId == null){
+    console.log("track : ",track);
+    if(this.animationFrameId == null && track.current){
       // Duplicate the content for infinite loop
       const originalContent = track.innerHTML;
       track.innerHTML += originalContent;
     }
 
-    const itemWidth = track.children[0].offsetWidth;
+    const itemWidth = track.current && track.children && track.children.length > 0?track.children[0].offsetWidth:0;
 
     /* console.log("this.position : ", this.position);
     console.log("this.speed : ", this.speed); */
 
     const scroll = () => {
-      this.position -= this.speed;
-      /* console.log("inside scroll : ");
-      console.log("this.position : ", this.position);
-      console.log("this.speed : ", this.speed); */
-
-      // Reset when half the content has scrolled (i.e. one full set)
-      if (Math.abs(this.position) >= track.scrollWidth / 2) {
-        this.position = 0;
-      }
-
-      if(!this.props.isMobileView && -this.position % (itemWidth+15) == 0 || this.props.isMobileView && -this.position % (itemWidth+10) == 0){
-        /* console.log("===============================================");
-        console.log("itemWidth : ", itemWidth);
+      if(track.current){
+        this.position -= this.speed;
+        /* console.log("inside scroll : ");
         console.log("this.position : ", this.position);
         console.log("this.speed : ", this.speed); */
-        cancelAnimationFrame(this.animationFrameId);
-        setTimeout(() => {
-          if(this.animationFrameId) scroll();
-        }, 4000);
-      } else {
-        track.style.transform = `translateX(${this.position}px)`;
-        this.animationFrameId = requestAnimationFrame(scroll);
+
+        // Reset when half the content has scrolled (i.e. one full set)
+        if (Math.abs(this.position) >= track.scrollWidth / 2) {
+          this.position = 0;
+        }
+
+        if(!this.props.isMobileView && -this.position % (itemWidth+15) == 0 || this.props.isMobileView && -this.position % (itemWidth+10) == 0){
+          /* console.log("===============================================");
+          console.log("itemWidth : ", itemWidth);
+          console.log("this.position : ", this.position);
+          console.log("this.speed : ", this.speed); */
+          cancelAnimationFrame(this.animationFrameId);
+          setTimeout(() => {
+            if(this.animationFrameId) scroll();
+          }, 4000);
+        } else {
+          track.style.transform = `translateX(${this.position}px)`;
+          this.animationFrameId = requestAnimationFrame(scroll);
+        }
       }
     };
 
@@ -271,7 +274,8 @@ class HomePage extends Component {
       } */
       /* console.log("track.innerHTML : ", document.querySelector(".marquee-track-retailer").innerHTML);
       console.log("track.children : ", document.querySelector(".marquee-track-retailer").children); */
-      const itemWidth = track.children[0].offsetWidth;
+      //const itemWidth = track.children[0].offsetWidth;
+      const itemWidth = track.current && track.children && track.children.length > 0?track.children[0].offsetWidth:0;
 
       /* console.log("this.retailerPosition : ", this.retailerPosition);
       console.log("this.retailerSpeed : ", this.retailerSpeed); */
@@ -1351,13 +1355,13 @@ class HomePage extends Component {
               </Col>
               <Col md={8} className="blue-pearl-div">
                 
-                <div id="carouselExampleCaptions" class="carousel slide">
-                  <div class="carousel-indicators">
+                <div id="carouselExampleCaptions" className="carousel slide">
+                  <div className="carousel-indicators">
                     <button
                       type="button"
                       data-bs-target="#carouselExampleCaptions"
                       data-bs-slide-to="0"
-                      class="active"
+                      className="active"
                       aria-current="true"
                       aria-label="Slide 1"
                     ></button>
@@ -1374,10 +1378,10 @@ class HomePage extends Component {
                       aria-label="Slide 3"
                     ></button>
                   </div>
-                  <div class="carousel-inner">
-                    <div class="carousel-item active">
-                      <img src={pearlBlue2} class="d-block w-100" alt="..." />
-                      <div class="carousel-caption d-none d-md-block">
+                  <div className="carousel-inner">
+                    <div className="carousel-item active">
+                      <img src={pearlBlue2} className="d-block w-100" alt="..." />
+                      <div className="carousel-caption d-none d-md-block">
                         <h5>First slide label</h5>
                         <p>
                           Some representative placeholder content for the first
@@ -1385,9 +1389,9 @@ class HomePage extends Component {
                         </p>
                       </div>
                     </div>
-                    <div class="carousel-item">
-                      <img src={pearlBlue2} class="d-block w-100" alt="..." />
-                      <div class="carousel-caption d-none d-md-block">
+                    <div className="carousel-item">
+                      <img src={pearlBlue2} className="d-block w-100" alt="..." />
+                      <div className="carousel-caption d-none d-md-block">
                         <h5>Second slide label</h5>
                         <p>
                           Some representative placeholder content for the second
@@ -1395,9 +1399,9 @@ class HomePage extends Component {
                         </p>
                       </div>
                     </div>
-                    <div class="carousel-item">
-                      <img src={pearlBlue2} class="d-block w-100" alt="..." />
-                      <div class="carousel-caption d-none d-md-block">
+                    <div className="carousel-item">
+                      <img src={pearlBlue2} className="d-block w-100" alt="..." />
+                      <div className="carousel-caption d-none d-md-block">
                         <h5>Third slide label</h5>
                         <p>
                           Some representative placeholder content for the third
@@ -1407,28 +1411,28 @@ class HomePage extends Component {
                     </div>
                   </div>
                   <button
-                    class="carousel-control-prev"
+                    className="carousel-control-prev"
                     type="button"
                     data-bs-target="#carouselExampleCaptions"
                     data-bs-slide="prev"
                   >
                     <span
-                      class="carousel-control-prev-icon"
+                      className="carousel-control-prev-icon"
                       aria-hidden="true"
                     ></span>
-                    <span class="visually-hidden">Previous</span>
+                    <span className="visually-hidden">Previous</span>
                   </button>
                   <button
-                    class="carousel-control-next"
+                    className="carousel-control-next"
                     type="button"
                     data-bs-target="#carouselExampleCaptions"
                     data-bs-slide="next"
                   >
                     <span
-                      class="carousel-control-next-icon"
+                      className="carousel-control-next-icon"
                       aria-hidden="true"
                     ></span>
-                    <span class="visually-hidden">Next</span>
+                    <span className="visually-hidden">Next</span>
                   </button>
                 </div>
               </Col>
@@ -1598,7 +1602,7 @@ class HomePage extends Component {
 
         {/* <!-- Modal --> */}
         <div
-          class="modal fade"
+          className="modal fade"
           id="staticBackdrop"
           // data-bs-backdrop="static"
           // data-bs-keyboard="false"
@@ -1606,9 +1610,9 @@ class HomePage extends Component {
           aria-labelledby="staticBackdropLabel"
           aria-hidden="false"
         >
-          <div class="modal-dialog modal-dialog-centered ">
-            <div class="modal-content ">
-              <div class="modal-body p-2">
+          <div className="modal-dialog modal-dialog-centered ">
+            <div className="modal-content ">
+              <div className="modal-body p-2">
                 <h5 className="text-center mb-4 mx-auto">
                   <img
                     src={this.state.PromiseData.image}
