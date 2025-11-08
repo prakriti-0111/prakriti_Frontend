@@ -755,7 +755,7 @@ class ProductsPage extends React.Component {
                                 <span className="item-saving-price">
                                   {" "}
                                   Save
-                                  <h4>{displayAmount(product.total_save)}</h4>
+                                  <h4>{product.total_save}</h4>
                                 </span>
                               </div>
                               {/*<div className='making-chrg-mob'>
