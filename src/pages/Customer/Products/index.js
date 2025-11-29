@@ -464,7 +464,7 @@ class ProductsPage extends React.Component {
       bannerSearchStyle = {height: "100px", marginLeft:"17%", width:"66%" };
     }
 
-    let bannerSearchMobileStyle = {height: "100px", marginLeft:"7px", width:"95%", marginBottom:"5px" };
+    let bannerSearchMobileStyle = {height: "1px", marginLeft:"7px", width:"95%", marginBottom:"5px" };
     /* height: "100px", marginLeft:"7px", width:"95%", marginBottom:"5px", display:"none" */
 
     return (
