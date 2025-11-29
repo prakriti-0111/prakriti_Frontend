@@ -8200,7 +8200,7 @@ span.count.percent span {
   }
 
   .mobile-dropdown {
-    /* padding-top: 56px; */
+    margin-top: 40% !important;
     display: block;
   }
 
