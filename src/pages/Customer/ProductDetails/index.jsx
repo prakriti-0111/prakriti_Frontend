@@ -367,19 +367,60 @@ class ProductDetails extends React.Component {
     if(selIndex != -1){
       groupMaterialIndex.splice(selIndex,1);
     }
-    console.log([
+
+
+    let newGroupMaterialIndex = [
         ...groupMaterialIndex,
         selItem
-      ]);
+      ];
+    console.log(newGroupMaterialIndex);
     this.setState({
-      groupMaterialIndex: [
-        ...groupMaterialIndex,
-        selItem
-      ],
+      groupMaterialIndex: newGroupMaterialIndex
+    }, () => {
+      let selIdx = newGroupMaterialIndex.findIndex(itm => itm.grpId == grpId);
+      let selItm = newGroupMaterialIndex[selIdx];
+
+      this.handleCalculation(mtrlId, selItm.prtyId || 0, grpId);
     });
   }
 
-  handlePurityChange = (material_id, purity_id, group_id = null) => {
+  handlePurityChange = (mtrlId, prtyId, grpId = null) => {
+    console.log(`grpId : ${grpId}, mtrlId : ${mtrlId}`);
+    if(grpId != null){
+      let groupMaterialIndex = this.state.groupMaterialIndex;
+      let selIndex = groupMaterialIndex.findIndex(itm => itm.grpId == grpId);
+      let selItem = groupMaterialIndex[selIndex];
+      if(selItem){
+        selItem.mtrlId = mtrlId;
+        selItem.prtyId = prtyId;
+      } else {
+        selItem = {
+          grpId: grpId,
+          mtrlId: mtrlId,
+          prtyId: prtyId
+        };
+      }
+      if(selIndex != -1){
+        groupMaterialIndex.splice(selIndex,1);
+      }
+      console.log([
+          ...groupMaterialIndex,
+          selItem
+        ]);
+      this.setState({
+        groupMaterialIndex: [
+          ...groupMaterialIndex,
+          selItem
+        ],
+      }, () => {
+        this.handleCalculation(mtrlId, prtyId, grpId);
+      });
+    } else {
+      this.handleCalculation(mtrlId, prtyId, grpId);
+    }
+  };
+
+  handleCalculation = (material_id, purity_id, group_id = null) => {
     console.log(`material_id : ${material_id}, purity_id : ${purity_id}, group_id : ${group_id}`);
     let product = this.state.product;
     let sizeMaterial = product.size_materials[this.state.sizeMaterialIndex];
@@ -393,6 +434,7 @@ class ProductDetails extends React.Component {
             total_gst = 0;
 
       let selFGrM = sizeMaterial.materials.filter(itm => itm.group == group_id && itm.material_id == material_id);
+      console.log("selFGrM by matching grp and mtrl : ", selFGrM);
       let mIndex = 0;
       let purityIndex = 0;
       if(selFGrM.length > 0){
@@ -414,25 +456,24 @@ class ProductDetails extends React.Component {
             }
           //}
         }
+        console.log("sizeMaterial.materials[mIndex].purities : ", sizeMaterial.materials[mIndex].purities);
       }
-
+      console.log("loop over Material groups ....");
       let grCount = grM.length;
       for(let i=0; i<grCount; i++){
+        console.log(`check for grp ${grM[i]} with in sizeMaterial.materials to all related materials`);
         let selFGrM = sizeMaterial.materials.filter(itm => itm.group == grM[i]);
         console.log("selFGrM : ",selFGrM);
         if(selFGrM.length > 0){
           let grMaterialSelected = this.state.groupMaterialIndex.filter(itm => itm.grpId == grM[i]);
-          /* grIdxItems.push({
-            grpId: grM[i],
-            mtrlId: material_id
-          }); */
-          console.log("grMaterialSelected : ", grMaterialSelected);
+          
+          console.log("selected grMaterialSelected : ", grMaterialSelected);
           let mIndex = grMaterialSelected.length > 0?selFGrM.findIndex(itm => itm.material_id == grMaterialSelected[0].mtrlId):0;
-          console.log("mIndex : ", mIndex);
+          console.log("selected mIndex : ", mIndex);
           /* purity */
-          let purityIndex = sizeMaterial.materials[mIndex].purities.findIndex(pitm => pitm.is_selected == true);
+          let purityIndex = selFGrM[mIndex].purities.findIndex(pitm => pitm.is_selected == true);
           //selFGrM[0].purities[0].is_selected = true;
-          console.log("purityIndex : ", purityIndex);
+          console.log("selected purityIndex : ", purityIndex);
           /* for (
             let j = 0;
             j < selFGrM[materialIndex].purities.length;
@@ -449,13 +490,21 @@ class ProductDetails extends React.Component {
             }
           } */
           //console.log("sizeMaterial.materials[mIndex].purities[purityIndex] : ", sizeMaterial.materials[mIndex].purities[purityIndex]);
-          sizeMaterial.materials[mIndex].price =
+
+          /* get the selected material frm sizeMaterials */
+          let selectedsizeM = sizeMaterial.materials.filter(itm => itm.group == grM[i] && itm.material_id == grMaterialSelected[0].mtrlId);
+          /* sizeMaterial.materials[mIndex].price =
             sizeMaterial.materials[mIndex].purities[purityIndex].price;
           sizeMaterial.materials[mIndex].mrp_price =
-            sizeMaterial.materials[mIndex].purities[purityIndex].mrp_price;
+            sizeMaterial.materials[mIndex].purities[purityIndex].mrp_price; */
+
+          selectedsizeM[0].price =
+            selectedsizeM[0].purities[purityIndex].price;
+          selectedsizeM[0].mrp_price =
+            selectedsizeM[0].purities[purityIndex].mrp_price;
           
           //for (let i = 0; i < sizeMaterial.materials.length; i++) {
-            let m = _.filter(sizeMaterial.materials[mIndex].purities, {
+            let m = _.filter(selectedsizeM[0].purities, {
               is_selected: true,
             });
             console.log("m : ", m);
@@ -608,7 +657,7 @@ class ProductDetails extends React.Component {
     this.setState({
       product: product,
     });
-  };
+  }
 
   handleWishlist = async () => {
     if (isEmpty(this.state.auth)) {
@@ -848,18 +897,7 @@ class ProductDetails extends React.Component {
         let selMtr = [];
         if(selectedM.length > 0){
           selMtr = mtrs.filter(itm => itm.material_id == selectedM[0].mtrlId);
-          /* if(selMtr[0].material_id == '5'){
-            selMtr[0].purities = [
-              {
-                  "id": 1,
-                  "name": "18 Carat",
-                  "price": 24624,
-                  "mrp_price": 27360,
-                  "is_selected": true,
-                  "discount_percent": 10
-              }
-            ];
-          } */
+          
           materialGr.push({
             grpId: grpId,
             selectedMtrlId: selectedM[0].mtrlId,
