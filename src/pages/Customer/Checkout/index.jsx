@@ -770,13 +770,28 @@ class CheckoutPage extends React.Component {
                 <div className="checkout-single-wrapper bg-white border-right rounded">
                   <hr />
                   <div className="c-address-area ">
-                    <div className="header ">
+                    <div className="header " style={{display:"flex", justifyContent:"space-between"}}>
                       {/* <h4>Delivery Details</h4> */}
                       {this.state.isLoggedIn && !this.isSalesExecutive ? (
                         <>
                           <h5>Address</h5>
                         </>
                       ) : null}
+                      {this.state.isLoggedIn && !this.isSalesExecutive ? (
+                          <>
+                            <div
+                              className="add-address rounded bg-primary font-bold p-1 px-4"
+                              onClick={this.handleNewAddress}
+                            >
+                              {newAddress ? (
+                                <AiOutlineMinus />
+                              ) : (
+                                <AiOutlinePlus />
+                              )}
+                              ADD
+                            </div>
+                          </>
+                        ) : null}
 
                       {/* {!this.state.isLoggedIn ? (
                         <>
@@ -1622,7 +1637,7 @@ class CheckoutPage extends React.Component {
                         ></div>
                       </>
                     ) : null}
-                    {this.isSalesExecutive ? (
+                    {/* {this.isSalesExecutive ? (
                       <div className="checkout-total d-flex justify-content-between mb-2 align-items-center">
                         <span className="total"> Cash Discount </span>
                         <span
@@ -1638,7 +1653,7 @@ class CheckoutPage extends React.Component {
                           </InputGroup>
                         </span>
                       </div>
-                    ) : null}
+                    ) : null} */}
                     <div className="checkout-total d-flex justify-content-between mb-2 align-items-center">
                       <span className="total">
                         {" "}
@@ -1688,26 +1703,12 @@ class CheckoutPage extends React.Component {
                         } justify-content-between`}
                       >
                         {/* <h4>Delivery Details</h4> */}
-                        {this.state.isLoggedIn && !this.isSalesExecutive ? (
+                        {/* {this.state.isLoggedIn && !this.isSalesExecutive ? (
                           <>
                             <h5>Add New Address</h5>
                           </>
-                        ) : null}
-                        {this.state.isLoggedIn && !this.isSalesExecutive ? (
-                          <>
-                            <div
-                              className="add-address rounded bg-primary font-bold p-1 px-4"
-                              onClick={this.handleNewAddress}
-                            >
-                              {newAddress ? (
-                                <AiOutlineMinus />
-                              ) : (
-                                <AiOutlinePlus />
-                              )}
-                              ADD
-                            </div>
-                          </>
-                        ) : null}
+                        ) : null} */}
+                        
 
                         {!this.state.isLoggedIn ? (
                           <>
@@ -2083,6 +2084,87 @@ class CheckoutPage extends React.Component {
                           </Row>
                         </span>
                       ) : null}
+
+                      {this.isRetailer? (
+                        <span className="place-order gap-2 mb-2">
+                          <Row>
+                            {this.isRetailer ? (
+                              <>
+                                <Col
+                                  xs={12}
+                                  md={12}
+                                  className=""
+                                >
+                                  <Form.Group controlId="formFile">
+                                    <Form.Control
+                                      type="file"
+                                      onChange={this.handleImage}
+                                      accept="image/*"
+                                      className="p-3"
+                                    />
+                                  </Form.Group>
+                                </Col>
+                                {/* <Col xs={6} md={6} className="mb-2">
+                                  <InputGroup>
+                                    <FloatingLabel
+                                      controlId="floatingInput"
+                                      label="Advance "
+                                      className="font-1"
+                                    >
+                                      <Form.Control
+                                        name="paid_amount"
+                                        value={this.state.paid_amount}
+                                        onChange={(e) =>
+                                          this.setState({
+                                            paid_amount: e.target.value,
+                                          })
+                                        }
+                                        placeholder="Advance Amount"
+                                      />
+                                    </FloatingLabel>
+                                  </InputGroup>
+                                </Col> */}
+                                {/* {this.state.payment_mode == "cheque" ? (
+                                  <Col xs={12} md={6}>
+                                    <InputGroup>
+                                      <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Cheque #"
+                                        className=""
+                                      >
+                                        <Form.Control
+                                          name="cheque_no"
+                                          value={this.state.cheque_no}
+                                          onChange={(e) =>
+                                            this.setState({
+                                              cheque_no: e.target.value,
+                                            })
+                                          }
+                                          placeholder="Cheque #"
+                                        />
+                                      </FloatingLabel>
+                                    </InputGroup>
+                                  </Col>
+                                ) : null} */}
+                              </>
+                            ) : null}
+
+                            <Col xs={12} md={12}>
+                              <Form.Group className="mb-3 mt-3">
+                                <Form.Control
+                                  as="textarea"
+                                  rows={3}
+                                  placeholder="Write notes..."
+                                  value={this.state.notes}
+                                  onChange={(e) =>
+                                    this.setState({ notes: e.target.value })
+                                  }
+                                />
+                              </Form.Group>
+                            </Col>
+                          </Row>
+                        </span>
+                      ):null}
 
                       {this.state.isLoggedIn ? (
                         <Button

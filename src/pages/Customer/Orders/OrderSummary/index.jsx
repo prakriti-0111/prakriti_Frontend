@@ -340,11 +340,17 @@ class OrderSummary extends React.Component {
                                                         <div className='summary-content-right mb-4'>
                                                             <ul>
                                                                 <li>
-                                                                    <h5><b>{order.status_display}</b></h5>
+                                                                    <span>Order Status</span>
+                                                                    <span><strong>{order.status_display}</strong></span>
+                                                                    {/* <h5><b>{order.status_display}</b></h5> */}
                                                                 </li>
                                                                 <li>
                                                                     <span>Name</span>
                                                                     <span>{order.customer_name}</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>Company Name</span>
+                                                                    <span>{order.customer_company_name}</span>
                                                                 </li>
                                                                 <li>
                                                                     <span>Ship to: </span>
@@ -859,6 +865,17 @@ class OrderSummary extends React.Component {
                         <Button variant="primary" onClick={this.handleCancelSubmit} disabled={this.state.processing}>Submit</Button>
                     </Modal.Footer>
                 </Modal>
+                <div className="p-1">
+                    <p className="mb-1
+                    text-black-50 d-flex justify-content-between mx-2 ">
+                        {" "}
+                        <span>Any query ?</span> <span> Please contact us</span>
+                    </p>
+                    <p className="mb-1 text-black-50 mx-2 d-flex justify-content-between ">
+                        <span className="text-primary mb-0 ">support@prakriti.one</span>
+                        <span className="text-primary mb-0 ">9874445612</span>
+                    </p>
+                </div>
             </>
         )
     }
