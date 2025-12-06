@@ -69,6 +69,14 @@ class OrdersPage extends React.Component {
             <Loader />
           ) : (
             <>
+              <style>
+                {`
+                  .order-status-received {
+                    background: #4fe257ff !important;
+                    
+                  }
+                `}
+              </style>
               {this.state.items.length > 0 ? (
                 this.state.items.map((item, index) => (
                   <div key={index}>
@@ -85,17 +93,19 @@ class OrdersPage extends React.Component {
                             </div>
                             <div className="id-no">
                               <h2 className="mb-0">
-                                <span className="fw-bold">Order Payment:</span>{" "}
+                                <span className="fw-bold">Order Date:</span>{" "}
                                 <span>{item.order_date}</span>
                               </h2>
                               {/*<h3>Gold Plated Ring + 1 Item</h3>*/}
                             </div>
                           </div>
                           <div className="tracker">
-                            <div className="order-status rounded ">
-                              <h4 className="text-warning-emphasis">
+                            <div className={`order-status ${item.is_viewed?"order-status-received":""} rounded `}>
+                              {item.is_viewed?<h4 className="text-success-emphasis">
+                                Status: <span> {`Received`}</span>
+                              </h4>:<h4 className="text-warning-emphasis">
                                 Status: <span> {item.status_display}</span>
-                              </h4>
+                              </h4>}
                             </div>
                           </div>
                         </div>
@@ -205,6 +215,17 @@ class OrdersPage extends React.Component {
               )}
             </>
           )}
+          <div className="p-1">
+            <p className="mb-1
+            text-black-50 d-flex justify-content-between mx-2 ">
+              {" "}
+              <span>Any query ?</span> <span> Please contact us</span>
+            </p>
+            <p className="mb-1 text-black-50 mx-2 d-flex justify-content-between ">
+              <span className="text-primary mb-0 ">support@prakriti.one</span>
+              <span className="text-primary mb-0 ">9874445612</span>
+            </p>
+          </div>
         </Container>
       </div>
     );
