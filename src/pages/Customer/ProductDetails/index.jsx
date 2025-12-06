@@ -92,6 +92,7 @@ class ProductDetails extends React.Component {
       imageIndex: 0,
       play_video: true,
       sizeMaterialIndex: 0,
+      groupMaterialIndex: [],
       wl_actionCalled: this.props.wl_actionCalled,
       wl_createSuccess: this.props.wl_createSuccess,
       wl_successMessage: this.props.wl_successMessage,
@@ -138,10 +139,120 @@ class ProductDetails extends React.Component {
       recently_view: 1,
     });
     if (response.data.success) {
+      let product = response.data.data;
+      let sizeMaterialIndex = 0;
+      let sizeMaterial = product.size_materials[sizeMaterialIndex];
+      let grM = sizeMaterial.mgroup;
+      let grIdxItems = [];
+      let total_mrp_price = 0,
+            total_sale_price = 0,
+            total_gst = 0;
+      let grCount = grM.length;
+      for(let i=0; i<grCount; i++){
+        let selFGrM = sizeMaterial.materials.filter(itm => itm.group == grM[i]);
+        console.log("selFGrM : ",selFGrM);
+        if(selFGrM.length > 0){
+          let materialIndex = 0;
+          /* purity */
+          let purityIndex = 0;
+          let mIndex = sizeMaterial.materials.findIndex(itm => itm.material_id == selFGrM[materialIndex].material_id);
+          //selFGrM[0].purities[0].is_selected = true;
+          grIdxItems.push({
+            grpId: grM[i],
+            mtrlId: selFGrM[materialIndex].material_id,
+            prtyId: sizeMaterial.materials[mIndex].purities[purityIndex].id
+          });
+
+          for (
+            let j = 0;
+            j < selFGrM[materialIndex].purities.length;
+            j++
+          ) {
+            console.log("mIndex : ", mIndex);
+            if(mIndex !== -1){
+              sizeMaterial.materials[mIndex].purities[j].is_selected = false;
+              if (j == purityIndex) {
+                sizeMaterial.materials[mIndex].purities[j].is_selected = true;
+                sizeMaterial.materials[mIndex].discount_percent =
+                  sizeMaterial.materials[mIndex].purities[j].discount_percent;
+              }
+            }
+          }
+          console.log("sizeMaterial.materials[mIndex].purities[purityIndex] : ", sizeMaterial.materials[mIndex].purities[purityIndex]);
+          sizeMaterial.materials[mIndex].price =
+            sizeMaterial.materials[mIndex].purities[purityIndex].price;
+          sizeMaterial.materials[mIndex].mrp_price =
+            sizeMaterial.materials[mIndex].purities[purityIndex].mrp_price;
+          
+          //for (let i = 0; i < sizeMaterial.materials.length; i++) {
+            let m = _.filter(sizeMaterial.materials[mIndex].purities, {
+              is_selected: true,
+            });
+            console.log("m : ", m);
+            total_mrp_price += parseFloat(m[0].mrp_price);
+            total_sale_price += parseFloat(m[0].price);
+            console.log("total_sale_price + price : ", total_sale_price);
+          //}
+          if(i == (grCount -1)){
+            total_mrp_price += parseFloat(sizeMaterial.making_charge_mrp);
+            total_sale_price += parseFloat(sizeMaterial.making_charge);
+            console.log("total_sale_price + making_charge: ", total_sale_price);
+          }
+          if (product.tax_info && i == (grCount -1)) {
+            let igst = 0;
+            let cgst = !isEmpty(product.tax_info.cgst)
+              ? priceFormat(
+                  (total_sale_price * parseFloat(product.tax_info.cgst)) / 100,
+                  true
+                )
+              : 0;
+            let sgst = !isEmpty(product.tax_info.sgst)
+              ? priceFormat(
+                  (total_sale_price * parseFloat(product.tax_info.sgst)) / 100,
+                  true
+                )
+              : 0;
+            let cgst_m = !isEmpty(product.tax_info.cgst)
+              ? priceFormat(
+                  (total_mrp_price * parseFloat(product.tax_info.cgst)) / 100,
+                  true
+                )
+              : 0;
+            let sgst_m = !isEmpty(product.tax_info.sgst)
+              ? priceFormat(
+                  (total_mrp_price * parseFloat(product.tax_info.sgst)) / 100,
+                  true
+                )
+              : 0;
+            total_mrp_price += igst + cgst_m + sgst_m;
+            total_sale_price += igst + cgst + sgst;
+            console.log("total_sale_price + gst: ", total_sale_price);
+            total_gst = priceFormat(igst + cgst + sgst);
+          }
+
+          let discount_percent =
+            total_mrp_price > total_sale_price
+              ? Math.round(
+                  priceFormat(
+                    ((total_mrp_price - total_sale_price) / total_mrp_price) * 100
+                  )
+                )
+              : 0;
+          console.log("final : total_sale_price : ", total_sale_price);
+          sizeMaterial.mrp_price = priceFormat(total_mrp_price);
+          sizeMaterial.sale_price = priceFormat(total_sale_price);
+          sizeMaterial.discount_percent = discount_percent;
+          sizeMaterial.total_gst = total_gst;
+          sizeMaterial.have_offer = total_mrp_price > total_sale_price ? true : false;
+        }
+      }
+      product.size_materials[sizeMaterialIndex] = sizeMaterial;
+
       this.setState({
-        product: response.data.data,
+        product: product,
         processing: false,
-        sizeMaterialIndex: 0,
+        sizeMaterialIndex: sizeMaterialIndex,
+        groupMaterialIndex: grIdxItems
       });
       this.loadProductReviews(response.data.data.id);
     } else {
@@ -240,100 +351,313 @@ class ProductDetails extends React.Component {
     });
   };
 
-  handlePurityChange = (material_id, purity_id) => {
+  handleMaterialChange = (grpId, mtrlId) => {
+    console.log(`grpId : ${grpId}, mtrlId : ${mtrlId}`);
+    let groupMaterialIndex = this.state.groupMaterialIndex;
+    let selIndex = groupMaterialIndex.findIndex(itm => itm.grpId == grpId);
+    let selItem = groupMaterialIndex[selIndex];
+    if(selItem){
+      selItem.mtrlId = mtrlId;
+    } else {
+      selItem = {
+        grpId: grpId,
+        mtrlId: mtrlId
+      };
+    }
+    if(selIndex != -1){
+      groupMaterialIndex.splice(selIndex,1);
+    }
+
+
+    let newGroupMaterialIndex = [
+        ...groupMaterialIndex,
+        selItem
+      ];
+    console.log(newGroupMaterialIndex);
+    this.setState({
+      groupMaterialIndex: newGroupMaterialIndex
+    }, () => {
+      let selIdx = newGroupMaterialIndex.findIndex(itm => itm.grpId == grpId);
+      let selItm = newGroupMaterialIndex[selIdx];
+
+      this.handleCalculation(mtrlId, selItm.prtyId || 0, grpId);
+    });
+  }
+
+  handlePurityChange = (mtrlId, prtyId, grpId = null) => {
+    console.log(`grpId : ${grpId}, mtrlId : ${mtrlId}`);
+    if(grpId != null){
+      let groupMaterialIndex = this.state.groupMaterialIndex;
+      let selIndex = groupMaterialIndex.findIndex(itm => itm.grpId == grpId);
+      let selItem = groupMaterialIndex[selIndex];
+      if(selItem){
+        selItem.mtrlId = mtrlId;
+        selItem.prtyId = prtyId;
+      } else {
+        selItem = {
+          grpId: grpId,
+          mtrlId: mtrlId,
+          prtyId: prtyId
+        };
+      }
+      if(selIndex != -1){
+        groupMaterialIndex.splice(selIndex,1);
+      }
+      console.log([
+          ...groupMaterialIndex,
+          selItem
+        ]);
+      this.setState({
+        groupMaterialIndex: [
+          ...groupMaterialIndex,
+          selItem
+        ],
+      }, () => {
+        this.handleCalculation(mtrlId, prtyId, grpId);
+      });
+    } else {
+      this.handleCalculation(mtrlId, prtyId, grpId);
+    }
+  };
+
+  handleCalculation = (material_id, purity_id, group_id = null) => {
+    console.log(`material_id : ${material_id}, purity_id : ${purity_id}, group_id : ${group_id}`);
     let product = this.state.product;
     let sizeMaterial = product.size_materials[this.state.sizeMaterialIndex];
-    let materialIndex = _.findIndex(sizeMaterial.materials, function (item) {
-      return item.material_id == material_id;
-    });
-    let purityIndex = _.findIndex(
-      sizeMaterial.materials[materialIndex].purities,
-      function (item) {
-        return item.id == purity_id;
-      }
-    );
-    for (
-      let i = 0;
-      i < sizeMaterial.materials[materialIndex].purities.length;
-      i++
-    ) {
-      sizeMaterial.materials[materialIndex].purities[i].is_selected = false;
-      if (i == purityIndex) {
-        sizeMaterial.materials[materialIndex].purities[i].is_selected = true;
-        sizeMaterial.materials[materialIndex].discount_percent =
-          sizeMaterial.materials[materialIndex].purities[i].discount_percent;
-      }
-    }
 
-    sizeMaterial.materials[materialIndex].price =
-      sizeMaterial.materials[materialIndex].purities[purityIndex].price;
-    sizeMaterial.materials[materialIndex].mrp_price =
-      sizeMaterial.materials[materialIndex].purities[purityIndex].mrp_price;
-    let total_mrp_price = 0,
-      total_sale_price = 0,
-      total_gst = 0;
-    for (let i = 0; i < sizeMaterial.materials.length; i++) {
-      let m = _.filter(sizeMaterial.materials[i].purities, {
-        is_selected: true,
+    /* if group exists then for the specific materials only */
+    if(group_id != null){
+      let grM = sizeMaterial.mgroup;
+      let grIdxItems = [];
+      let total_mrp_price = 0,
+            total_sale_price = 0,
+            total_gst = 0;
+
+      let selFGrM = sizeMaterial.materials.filter(itm => itm.group == group_id && itm.material_id == material_id);
+      console.log("selFGrM by matching grp and mtrl : ", selFGrM);
+      let mIndex = 0;
+      let purityIndex = 0;
+      if(selFGrM.length > 0){
+        selFGrM = selFGrM[0];
+        mIndex = sizeMaterial.materials.findIndex(itm => itm.group == group_id && itm.material_id == material_id);
+        purityIndex = selFGrM.purities.findIndex(itm => itm.id == purity_id);
+        for (
+          let j = 0;
+          j < selFGrM.purities.length;
+          j++
+        ) {
+          //console.log("mIndex : ", mIndex);
+          //if(mIndex !== -1){
+            sizeMaterial.materials[mIndex].purities[j].is_selected = false;
+            if (j == purityIndex) {
+              sizeMaterial.materials[mIndex].purities[j].is_selected = true;
+              sizeMaterial.materials[mIndex].discount_percent =
+                sizeMaterial.materials[mIndex].purities[j].discount_percent;
+            }
+          //}
+        }
+        console.log("sizeMaterial.materials[mIndex].purities : ", sizeMaterial.materials[mIndex].purities);
+      }
+      console.log("loop over Material groups ....");
+      let grCount = grM.length;
+      for(let i=0; i<grCount; i++){
+        console.log(`check for grp ${grM[i]} with in sizeMaterial.materials to all related materials`);
+        let selFGrM = sizeMaterial.materials.filter(itm => itm.group == grM[i]);
+        console.log("selFGrM : ",selFGrM);
+        if(selFGrM.length > 0){
+          let grMaterialSelected = this.state.groupMaterialIndex.filter(itm => itm.grpId == grM[i]);
+          
+          console.log("selected grMaterialSelected : ", grMaterialSelected);
+          let mIndex = grMaterialSelected.length > 0?selFGrM.findIndex(itm => itm.material_id == grMaterialSelected[0].mtrlId):0;
+          console.log("selected mIndex : ", mIndex);
+          /* purity */
+          let purityIndex = selFGrM[mIndex].purities.findIndex(pitm => pitm.is_selected == true);
+          //selFGrM[0].purities[0].is_selected = true;
+          console.log("selected purityIndex : ", purityIndex);
+          /* for (
+            let j = 0;
+            j < selFGrM[materialIndex].purities.length;
+            j++
+          ) {
+            console.log("mIndex : ", mIndex);
+            if(mIndex !== -1){
+              sizeMaterial.materials[mIndex].purities[j].is_selected = false;
+              if (j == purityIndex) {
+                sizeMaterial.materials[mIndex].purities[j].is_selected = true;
+                sizeMaterial.materials[mIndex].discount_percent =
+                  sizeMaterial.materials[mIndex].purities[j].discount_percent;
+              }
+            }
+          } */
+          //console.log("sizeMaterial.materials[mIndex].purities[purityIndex] : ", sizeMaterial.materials[mIndex].purities[purityIndex]);
+
+          /* get the selected material frm sizeMaterials */
+          let selectedsizeM = sizeMaterial.materials.filter(itm => itm.group == grM[i] && itm.material_id == grMaterialSelected[0].mtrlId);
+          /* sizeMaterial.materials[mIndex].price =
+            sizeMaterial.materials[mIndex].purities[purityIndex].price;
+          sizeMaterial.materials[mIndex].mrp_price =
+            sizeMaterial.materials[mIndex].purities[purityIndex].mrp_price; */
+
+          selectedsizeM[0].price =
+            selectedsizeM[0].purities[purityIndex].price;
+          selectedsizeM[0].mrp_price =
+            selectedsizeM[0].purities[purityIndex].mrp_price;
+          
+          //for (let i = 0; i < sizeMaterial.materials.length; i++) {
+            let m = _.filter(selectedsizeM[0].purities, {
+              is_selected: true,
+            });
+            console.log("m : ", m);
+            total_mrp_price += parseFloat(m[0].mrp_price);
+            total_sale_price += parseFloat(m[0].price);
+            console.log("total_sale_price + price : ", total_sale_price);
+          //}
+          if(i == (grCount -1)){
+            total_mrp_price += parseFloat(sizeMaterial.making_charge_mrp);
+            total_sale_price += parseFloat(sizeMaterial.making_charge);
+            console.log("total_sale_price + making_charge: ", total_sale_price);
+          }
+          if (product.tax_info && i == (grCount -1)) {
+            let igst = 0;
+            let cgst = !isEmpty(product.tax_info.cgst)
+              ? priceFormat(
+                  (total_sale_price * parseFloat(product.tax_info.cgst)) / 100,
+                  true
+                )
+              : 0;
+            let sgst = !isEmpty(product.tax_info.sgst)
+              ? priceFormat(
+                  (total_sale_price * parseFloat(product.tax_info.sgst)) / 100,
+                  true
+                )
+              : 0;
+            let cgst_m = !isEmpty(product.tax_info.cgst)
+              ? priceFormat(
+                  (total_mrp_price * parseFloat(product.tax_info.cgst)) / 100,
+                  true
+                )
+              : 0;
+            let sgst_m = !isEmpty(product.tax_info.sgst)
+              ? priceFormat(
+                  (total_mrp_price * parseFloat(product.tax_info.sgst)) / 100,
+                  true
+                )
+              : 0;
+            total_mrp_price += igst + cgst_m + sgst_m;
+            total_sale_price += igst + cgst + sgst;
+            console.log("total_sale_price + gst: ", total_sale_price);
+            total_gst = priceFormat(igst + cgst + sgst);
+          }
+
+          let discount_percent =
+            total_mrp_price > total_sale_price
+              ? Math.round(
+                  priceFormat(
+                    ((total_mrp_price - total_sale_price) / total_mrp_price) * 100
+                  )
+                )
+              : 0;
+          console.log("final : total_sale_price : ", total_sale_price);
+          sizeMaterial.mrp_price = priceFormat(total_mrp_price);
+          sizeMaterial.sale_price = priceFormat(total_sale_price);
+          sizeMaterial.discount_percent = discount_percent;
+          sizeMaterial.total_gst = total_gst;
+          sizeMaterial.have_offer = total_mrp_price > total_sale_price ? true : false;
+        }
+      }
+      product.size_materials[this.state.sizeMaterialIndex] = sizeMaterial;
+    } else {
+      let materialIndex = _.findIndex(sizeMaterial.materials, function (item) {
+        return item.material_id == material_id;
       });
-      total_mrp_price += parseFloat(m[0].mrp_price);
-      total_sale_price += parseFloat(m[0].price);
-    }
+      let purityIndex = _.findIndex(
+        sizeMaterial.materials[materialIndex].purities,
+        function (item) {
+          return item.id == purity_id;
+        }
+      );
+      for (
+        let i = 0;
+        i < sizeMaterial.materials[materialIndex].purities.length;
+        i++
+      ) {
+        sizeMaterial.materials[materialIndex].purities[i].is_selected = false;
+        if (i == purityIndex) {
+          sizeMaterial.materials[materialIndex].purities[i].is_selected = true;
+          sizeMaterial.materials[materialIndex].discount_percent =
+            sizeMaterial.materials[materialIndex].purities[i].discount_percent;
+        }
+      }
 
-    total_mrp_price += parseFloat(sizeMaterial.making_charge_mrp);
-    total_sale_price += parseFloat(sizeMaterial.making_charge);
+      sizeMaterial.materials[materialIndex].price =
+        sizeMaterial.materials[materialIndex].purities[purityIndex].price;
+      sizeMaterial.materials[materialIndex].mrp_price =
+        sizeMaterial.materials[materialIndex].purities[purityIndex].mrp_price;
+      let total_mrp_price = 0,
+        total_sale_price = 0,
+        total_gst = 0;
+      for (let i = 0; i < sizeMaterial.materials.length; i++) {
+        let m = _.filter(sizeMaterial.materials[i].purities, {
+          is_selected: true,
+        });
+        total_mrp_price += parseFloat(m[0].mrp_price);
+        total_sale_price += parseFloat(m[0].price);
+      }
 
-    if (product.tax_info) {
-      let igst = 0;
-      let cgst = !isEmpty(product.tax_info.cgst)
-        ? priceFormat(
-            (total_sale_price * parseFloat(product.tax_info.cgst)) / 100,
-            true
-          )
-        : 0;
-      let sgst = !isEmpty(product.tax_info.sgst)
-        ? priceFormat(
-            (total_sale_price * parseFloat(product.tax_info.sgst)) / 100,
-            true
-          )
-        : 0;
-      let cgst_m = !isEmpty(product.tax_info.cgst)
-        ? priceFormat(
-            (total_mrp_price * parseFloat(product.tax_info.cgst)) / 100,
-            true
-          )
-        : 0;
-      let sgst_m = !isEmpty(product.tax_info.sgst)
-        ? priceFormat(
-            (total_mrp_price * parseFloat(product.tax_info.sgst)) / 100,
-            true
-          )
-        : 0;
-      total_mrp_price += igst + cgst_m + sgst_m;
-      total_sale_price += igst + cgst + sgst;
-      total_gst = priceFormat(igst + cgst + sgst);
-    }
+      total_mrp_price += parseFloat(sizeMaterial.making_charge_mrp);
+      total_sale_price += parseFloat(sizeMaterial.making_charge);
 
-    let discount_percent =
-      total_mrp_price > total_sale_price
-        ? Math.round(
-            priceFormat(
-              ((total_mrp_price - total_sale_price) / total_mrp_price) * 100
+      if (product.tax_info) {
+        let igst = 0;
+        let cgst = !isEmpty(product.tax_info.cgst)
+          ? priceFormat(
+              (total_sale_price * parseFloat(product.tax_info.cgst)) / 100,
+              true
             )
-          )
-        : 0;
+          : 0;
+        let sgst = !isEmpty(product.tax_info.sgst)
+          ? priceFormat(
+              (total_sale_price * parseFloat(product.tax_info.sgst)) / 100,
+              true
+            )
+          : 0;
+        let cgst_m = !isEmpty(product.tax_info.cgst)
+          ? priceFormat(
+              (total_mrp_price * parseFloat(product.tax_info.cgst)) / 100,
+              true
+            )
+          : 0;
+        let sgst_m = !isEmpty(product.tax_info.sgst)
+          ? priceFormat(
+              (total_mrp_price * parseFloat(product.tax_info.sgst)) / 100,
+              true
+            )
+          : 0;
+        total_mrp_price += igst + cgst_m + sgst_m;
+        total_sale_price += igst + cgst + sgst;
+        total_gst = priceFormat(igst + cgst + sgst);
+      }
 
-    sizeMaterial.mrp_price = priceFormat(total_mrp_price);
-    sizeMaterial.sale_price = priceFormat(total_sale_price);
-    sizeMaterial.discount_percent = discount_percent;
-    sizeMaterial.total_gst = total_gst;
-    sizeMaterial.have_offer = total_mrp_price > total_sale_price ? true : false;
-    product.size_materials[this.state.sizeMaterialIndex] = sizeMaterial;
+      let discount_percent =
+        total_mrp_price > total_sale_price
+          ? Math.round(
+              priceFormat(
+                ((total_mrp_price - total_sale_price) / total_mrp_price) * 100
+              )
+            )
+          : 0;
 
+      sizeMaterial.mrp_price = priceFormat(total_mrp_price);
+      sizeMaterial.sale_price = priceFormat(total_sale_price);
+      sizeMaterial.discount_percent = discount_percent;
+      sizeMaterial.total_gst = total_gst;
+      sizeMaterial.have_offer = total_mrp_price > total_sale_price ? true : false;
+      product.size_materials[this.state.sizeMaterialIndex] = sizeMaterial;
+    }
     this.setState({
       product: product,
     });
-  };
+  }
 
   handleWishlist = async () => {
     if (isEmpty(this.state.auth)) {
@@ -558,6 +882,34 @@ class ProductDetails extends React.Component {
       ? Math.ceil(review_data.total / this.state.limit)
       : 1;
     let cartWeight = this.state.weight ? parseFloat(this.state.weight) : 1;
+    console.log("sizeMaterial : ", sizeMaterial);
+
+    /* divided material into groups */
+    let materialGr = [];
+    let hasGrMaterials = false;
+    if(sizeMaterial && sizeMaterial.mgroup.length > 0){
+      hasGrMaterials = true;
+      for(let i=0; i<sizeMaterial.mgroup.length; i++){
+        let grpId = sizeMaterial.mgroup[i];
+        let mtrs = sizeMaterial.materials.filter(itm => itm.group == grpId);
+        console.log("this.state.groupMaterialIndex : ", this.state.groupMaterialIndex);
+        let selectedM = this.state.groupMaterialIndex.filter(itm => itm.grpId == grpId);
+        let selMtr = [];
+        if(selectedM.length > 0){
+          selMtr = mtrs.filter(itm => itm.material_id == selectedM[0].mtrlId);
+          
+          materialGr.push({
+            grpId: grpId,
+            selectedMtrlId: selectedM[0].mtrlId,
+            materials : mtrs,
+            purities: selMtr.length > 0?selMtr[0].purities:mtrs[0].purities
+          });
+        }
+      }
+    }
+
+    console.log("materialGr : ", materialGr);
+
     return (
       <div>
         {this.state.processing ? (
@@ -814,7 +1166,7 @@ class ProductDetails extends React.Component {
                               <h2>Price Breakup</h2>
                               <div className="underline"></div>
                               <div className="breakup-content">
-                                {sizeMaterial.materials.map((item, key) => (
+                                {!hasGrMaterials?(sizeMaterial.materials.map((item, key) => (
                                   <div className="breakup-item" key={key}>
                                     <span>
                                       {item.material_name} &nbsp;&nbsp;&nbsp;{" "}
@@ -832,7 +1184,31 @@ class ProductDetails extends React.Component {
                                       {displayAmount(item.price)}
                                     </span>
                                   </div>
-                                ))}
+                                ))):(
+                                  materialGr.length > 0 && materialGr.map((grItem, key) => {
+                                    return (<>
+                                      {grItem.materials.filter(itm => itm.material_id == grItem.selectedMtrlId).map((item, k) => {
+                                        return (<>
+                                          <div className="breakup-item" key={k}>
+                                            <span>
+                                              {item.material_name} &nbsp;&nbsp;&nbsp;{" "}
+                                              ({item.weight+" "+item.unit_name})
+                                              
+                                            </span>{" "}
+                                            <span>
+                                              {item.mrp_price > item.price ? (
+                                                <span className="line-through">
+                                                  {displayAmount(item.mrp_price)}
+                                                </span>
+                                              ) : null}
+                                              {displayAmount(item.price)}
+                                            </span>
+                                          </div>
+                                        </>);
+                                      })}
+                                    </>);
+                                  })
+                                )}
 
                                 <div className="breakup-item">
                                   <span>
@@ -1015,7 +1391,7 @@ class ProductDetails extends React.Component {
                                         </Form.Select>
                                       </span>
                                     ) : null}
-                                    {sizeMaterial.materials.map((item, key) => (
+                                    {!hasGrMaterials?(sizeMaterial.materials.map((item, key) => (
                                       <span className="gold-type" key={key}>
                                         {sizeMaterial.materials.length > 1
                                           ? item.material_name
@@ -1038,7 +1414,47 @@ class ProductDetails extends React.Component {
                                           ))}
                                         </Form.Select>
                                       </span>
-                                    ))}
+                                    ))):(materialGr.length > 0 && materialGr.map((grItem, key) => {
+                                      
+                                      return (
+                                        <span className="gold-type" key={key}>
+                                          <Form.Select
+                                            onChange={(e) => 
+                                              this.handleMaterialChange(
+                                                grItem.grpId,
+                                                e.target.value
+                                              )
+                                            }
+                                            value={grItem.selectedMtrlId}
+                                          >
+                                            {grItem.materials.map((val, i) => (
+                                              <option value={val.material_id} key={i}>
+                                                {val.material_name}
+                                              </option>
+                                            ))}
+                                          </Form.Select>
+                                          &nbsp;
+                                          <Form.Select
+                                            onChange={(e) => 
+                                              this.handlePurityChange(
+                                                grItem.selectedMtrlId,
+                                                e.target.value,
+                                                grItem.grpId
+                                              )
+                                            }
+                                            /* value={this.getSelectedVal(
+                                              materialGr[grItem][0].purities
+                                            )} */
+                                          >
+                                            {grItem.purities.map((val, i) => (
+                                              <option value={val.id} key={i}>
+                                                {val.name}
+                                              </option>
+                                            ))}
+                                          </Form.Select>
+                                        </span>
+                                      );
+                                    }))}
                                   </div>
                                 </Tab>
                                 <Tab eventKey="details" title="Product Details">
@@ -1649,7 +2065,7 @@ class ProductDetails extends React.Component {
                             <h2>Price Breakup</h2>
                             <div className="underline"></div>
                             <div className="breakup-content">
-                              {sizeMaterial.materials.map((item, key) => (
+                              {!hasGrMaterials?(sizeMaterial.materials.map((item, key) => (
                                 <div className="breakup-item" key={key}>
                                   <span>
                                     {item.material_name} &nbsp;&nbsp;&nbsp;{" "}
@@ -1667,7 +2083,31 @@ class ProductDetails extends React.Component {
                                     {displayAmount(item.price)}
                                   </span>
                                 </div>
-                              ))}
+                              ))):(
+                                materialGr.length > 0 && materialGr.map((grItem, key) => {
+                                  return (<>
+                                    {grItem.materials.filter(itm => itm.material_id == grItem.selectedMtrlId).map((item, k) => {
+                                      return (<>
+                                        <div className="breakup-item" key={k}>
+                                          <span>
+                                            {item.material_name} &nbsp;&nbsp;&nbsp;{" "}
+                                            ({item.weight+" "+item.unit_name})
+                                            
+                                          </span>{" "}
+                                          <span>
+                                            {item.mrp_price > item.price ? (
+                                              <span className="line-through">
+                                                {displayAmount(item.mrp_price)}
+                                              </span>
+                                            ) : null}
+                                            {displayAmount(item.price)}
+                                          </span>
+                                        </div>
+                                      </>);
+                                    })}
+                                  </>);
+                                })
+                              )}
 
                               <div className="breakup-item">
                                 <span>
@@ -1690,14 +2130,14 @@ class ProductDetails extends React.Component {
                                 </span>
                               </div>
                               <div className="breakup-item">
-                                <span>GST</span>
+                                <span>GST</span>{" "}
                                 <span>
                                   {displayAmount(sizeMaterial.total_gst)}
                                 </span>
                               </div>
                               <hr style={{ margin: "8px 0" }} />
                               <div className="breakup-item">
-                                <span className="total">Total </span>{" "}
+                                <span className="total">Total</span>{" "}
                                 <span className="total">
                                   {displayAmount(
                                     sizeMaterial.sale_price * cartWeight
@@ -1885,7 +2325,7 @@ class ProductDetails extends React.Component {
                           <div className="tabs-side-by-side shadow">
                             <Tabs defaultActiveKey="customize">
                               <Tab eventKey="customize" title="Customize Your Product">
-                                <div className="p-size">
+                                {/* <div className="p-size">
                                   {product.type != "material" ? (
                                     <span>
                                       Select Size
@@ -1930,6 +2370,92 @@ class ProductDetails extends React.Component {
                                       </Form.Select>
                                     </span>
                                   ))}
+                                </div> */}
+                                <div className="p-size">
+                                  {product.type != "material" ? (
+                                    <span>
+                                      Select Size
+                                      <Form.Select
+                                        onChange={(e) =>
+                                          this.handleSizeChange(
+                                            e.target.value
+                                          )
+                                        }
+                                      >
+                                        {product.size_materials.map(
+                                          (item, index) => (
+                                            <option value={index} key={index}>
+                                              {item.size_name}
+                                            </option>
+                                          )
+                                        )}
+                                      </Form.Select>
+                                    </span>
+                                  ) : null}
+                                  {!hasGrMaterials?(sizeMaterial.materials.map((item, key) => (
+                                    <span className="gold-type" key={key}>
+                                      {sizeMaterial.materials.length > 1
+                                        ? item.material_name
+                                        : "Purity"}
+                                      <Form.Select
+                                        onChange={(e) =>
+                                          this.handlePurityChange(
+                                            item.material_id,
+                                            e.target.value
+                                          )
+                                        }
+                                        value={this.getSelectedVal(
+                                          item.purities
+                                        )}
+                                      >
+                                        {item.purities.map((val, i) => (
+                                          <option value={val.id} key={i}>
+                                            {val.name}
+                                          </option>
+                                        ))}
+                                      </Form.Select>
+                                    </span>
+                                  ))):(materialGr.length > 0 && materialGr.map((grItem, key) => {
+                                    
+                                    return (
+                                      <span className="gold-type" key={key}>
+                                        <Form.Select
+                                          onChange={(e) => 
+                                            this.handleMaterialChange(
+                                              grItem.grpId,
+                                              e.target.value
+                                            )
+                                          }
+                                          value={grItem.selectedMtrlId}
+                                        >
+                                          {grItem.materials.map((val, i) => (
+                                            <option value={val.material_id} key={i}>
+                                              {val.material_name}
+                                            </option>
+                                          ))}
+                                        </Form.Select>
+                                        &nbsp;
+                                        <Form.Select
+                                          onChange={(e) => 
+                                            this.handlePurityChange(
+                                              grItem.selectedMtrlId,
+                                              e.target.value,
+                                              grItem.grpId
+                                            )
+                                          }
+                                          /* value={this.getSelectedVal(
+                                            materialGr[grItem][0].purities
+                                          )} */
+                                        >
+                                          {grItem.purities.map((val, i) => (
+                                            <option value={val.id} key={i}>
+                                              {val.name}
+                                            </option>
+                                          ))}
+                                        </Form.Select>
+                                      </span>
+                                    );
+                                  }))}
                                 </div>
                               </Tab>
                               <Tab eventKey="details" title="Product Details">

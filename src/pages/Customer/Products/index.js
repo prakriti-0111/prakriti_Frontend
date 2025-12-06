@@ -455,6 +455,18 @@ class ProductsPage extends React.Component {
     let banner = this.getBanner();
     let mobile = this.getMobile();
     let searchBy = this.getSearchBy();
+
+    let bannerSearchStyle = {};
+    console.log("window.innerWidth : ", window.innerWidth);
+    if(window.innerWidth > 750 && window.innerWidth <= 1024){
+      bannerSearchStyle = {height: "100px" };
+    }else{
+      bannerSearchStyle = {height: "100px", marginLeft:"17%", width:"66%" };
+    }
+
+    let bannerSearchMobileStyle = {height: "1px", marginLeft:"7px", width:"95%", marginBottom:"5px" };
+    /* height: "100px", marginLeft:"7px", width:"95%", marginBottom:"5px", display:"none" */
+
     return (
       <div className="search-wrapper">
         <div className="search_wrapper_header ">
@@ -470,13 +482,13 @@ class ProductsPage extends React.Component {
             banner ? (
               <div
                 className="banner-search rounded mb-3 "
-                style={{ height: "100px" }}
+                style={{ ...bannerSearchStyle  }}
               >
                 <img src={banner} className="rounded" alt="" />
               </div>
             ) : null
           ) : mobile ? (
-            <div className=" rounded" style={{ height: "100px" }}>
+            <div className=" rounded" style={{ ...bannerSearchMobileStyle  }}>
               <img src={mobile} className="rounded" alt="" />
             </div>
           ) : null}
@@ -743,7 +755,7 @@ class ProductsPage extends React.Component {
                                 <span className="item-saving-price">
                                   {" "}
                                   Save
-                                  <h4>{displayAmount(product.total_save)}</h4>
+                                  <h4>{product.total_save}</h4>
                                 </span>
                               </div>
                               {/*<div className='making-chrg-mob'>

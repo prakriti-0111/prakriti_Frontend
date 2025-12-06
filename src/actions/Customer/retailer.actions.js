@@ -46,13 +46,25 @@ export const retailerFetch = async (data) => {
     return await axios.get(`/customer/best-retailers/view${data}`);
 }
 
+export const retailerStateFetch = async (data) => {
+    /* if(!isObject(data)){
+        data = {id: data}
+    }
+    data = objectToQuery(data, true);
+    console.log("---------cokkie id in DAta  ",data); */
+    return await axios.get(`/customer/best-retailers/states`);
+}
+
 export const retailerCityFetch = async (data) => {
     /* if(!isObject(data)){
         data = {id: data}
     }
     data = objectToQuery(data, true);
     console.log("---------cokkie id in DAta  ",data); */
-    return await axios.get(`/customer/best-retailers/cities`);
+    console.log("retailerCityFetch data : ====================== ", data);
+    let params = objectToQuery(data, true);
+    console.log("retailerCityFetch params : ====================== ", params);
+    return await axios.get(`/customer/best-retailers/cities${params}`);
 }
 
 export const retailerUpdate = (id, data) => {

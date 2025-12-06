@@ -171,35 +171,71 @@ class RetailerDetails extends React.Component {
                             </div>
                             
                             <div className="price-breakup mt-3 rounded bg-white shadow">
-                              <h2>Address</h2>
+                              <h2>Contact Details</h2>
                               <div className="underline"></div>
                               <div className="breakup-content">
                                 
                                   <div className="breakup-item" >
-                                    <span>
+                                  <span>
+                                      {`Email :`}
+                                  </span>{" "}
+                                  <span>
+                                      {retailer.email}
+                                  </span>
+                                  </div>
+
+                                  <div className="breakup-item" >
+                                  <span>
+                                      {`Contact Number :`}
+                                  </span>{" "}
+                                  <span>
+                                      {retailer.mobile}
+                                  </span>
+                                  </div>
+
+                                  <div className="breakup-item" >
+                                  <span>
+                                      {`Addeess :`}
+                                  </span>{" "}
+                                  <span>
+                                      {retailer.address}
+                                  </span>
+                                  </div>
+
+                                  <div className="breakup-item" >
+                                  <span>
+                                      {`Landmark :`}
+                                  </span>{" "}
+                                  <span>
+                                      {retailer.landmark}
+                                  </span>
+                                  </div>
+                              
+                                  <div className="breakup-item" >
+                                  <span>
                                       {`City :`}
-                                    </span>{" "}
-                                    <span>
+                                  </span>{" "}
+                                  <span>
                                       {retailer.city}
-                                    </span>
+                                  </span>
                                   </div>
 
                                   <div className="breakup-item" >
-                                    <span>
+                                  <span>
                                       {`District :`}
-                                    </span>{" "}
-                                    <span>
+                                  </span>{" "}
+                                  <span>
                                       {retailer.district_name}
-                                    </span>
+                                  </span>
                                   </div>
 
                                   <div className="breakup-item" >
-                                    <span>
+                                  <span>
                                       {`State :`}
-                                    </span>{" "}
-                                    <span>
+                                  </span>{" "}
+                                  <span>
                                       {retailer.state_name}
-                                    </span>
+                                  </span>
                                   </div>
                               </div>
                             </div>
@@ -268,9 +304,45 @@ class RetailerDetails extends React.Component {
                           </div>
 
                           <div className="price-breakup mt-3 rounded bg-light shadow">
-                            <h2>Address</h2>
+                            <h2>Contact Details</h2>
                             <div className="underline"></div>
                             <div className="breakup-content">
+
+                                <div className="breakup-item" >
+                                <span>
+                                    {`Email :`}
+                                </span>{" "}
+                                <span>
+                                    {retailer.email}
+                                </span>
+                                </div>
+
+                                <div className="breakup-item" >
+                                <span>
+                                    {`Contact Number :`}
+                                </span>{" "}
+                                <span>
+                                    {retailer.mobile}
+                                </span>
+                                </div>
+
+                                <div className="breakup-item" >
+                                <span>
+                                    {`Addeess :`}
+                                </span>{" "}
+                                <span>
+                                    {retailer.address}
+                                </span>
+                                </div>
+
+                                <div className="breakup-item" >
+                                <span>
+                                    {`Landmark :`}
+                                </span>{" "}
+                                <span>
+                                    {retailer.landmark}
+                                </span>
+                                </div>
                             
                                 <div className="breakup-item" >
                                 <span>
