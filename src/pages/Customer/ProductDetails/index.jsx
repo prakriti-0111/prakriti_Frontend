@@ -446,15 +446,12 @@ class ProductDetails extends React.Component {
           j < selFGrM.purities.length;
           j++
         ) {
-          //console.log("mIndex : ", mIndex);
-          //if(mIndex !== -1){
-            sizeMaterial.materials[mIndex].purities[j].is_selected = false;
-            if (j == purityIndex) {
-              sizeMaterial.materials[mIndex].purities[j].is_selected = true;
-              sizeMaterial.materials[mIndex].discount_percent =
-                sizeMaterial.materials[mIndex].purities[j].discount_percent;
-            }
-          //}
+          sizeMaterial.materials[mIndex].purities[j].is_selected = false;
+          if (j == purityIndex) {
+            sizeMaterial.materials[mIndex].purities[j].is_selected = true;
+            sizeMaterial.materials[mIndex].discount_percent =
+              sizeMaterial.materials[mIndex].purities[j].discount_percent;
+          }
         }
         console.log("sizeMaterial.materials[mIndex].purities : ", sizeMaterial.materials[mIndex].purities);
       }
@@ -472,46 +469,24 @@ class ProductDetails extends React.Component {
           console.log("selected mIndex : ", mIndex);
           /* purity */
           let purityIndex = selFGrM[mIndex].purities.findIndex(pitm => pitm.is_selected == true);
-          //selFGrM[0].purities[0].is_selected = true;
           console.log("selected purityIndex : ", purityIndex);
-          /* for (
-            let j = 0;
-            j < selFGrM[materialIndex].purities.length;
-            j++
-          ) {
-            console.log("mIndex : ", mIndex);
-            if(mIndex !== -1){
-              sizeMaterial.materials[mIndex].purities[j].is_selected = false;
-              if (j == purityIndex) {
-                sizeMaterial.materials[mIndex].purities[j].is_selected = true;
-                sizeMaterial.materials[mIndex].discount_percent =
-                  sizeMaterial.materials[mIndex].purities[j].discount_percent;
-              }
-            }
-          } */
-          //console.log("sizeMaterial.materials[mIndex].purities[purityIndex] : ", sizeMaterial.materials[mIndex].purities[purityIndex]);
 
           /* get the selected material frm sizeMaterials */
           let selectedsizeM = sizeMaterial.materials.filter(itm => itm.group == grM[i] && itm.material_id == grMaterialSelected[0].mtrlId);
-          /* sizeMaterial.materials[mIndex].price =
-            sizeMaterial.materials[mIndex].purities[purityIndex].price;
-          sizeMaterial.materials[mIndex].mrp_price =
-            sizeMaterial.materials[mIndex].purities[purityIndex].mrp_price; */
 
           selectedsizeM[0].price =
             selectedsizeM[0].purities[purityIndex].price;
           selectedsizeM[0].mrp_price =
             selectedsizeM[0].purities[purityIndex].mrp_price;
           
-          //for (let i = 0; i < sizeMaterial.materials.length; i++) {
-            let m = _.filter(selectedsizeM[0].purities, {
-              is_selected: true,
-            });
-            console.log("m : ", m);
-            total_mrp_price += parseFloat(m[0].mrp_price);
-            total_sale_price += parseFloat(m[0].price);
-            console.log("total_sale_price + price : ", total_sale_price);
-          //}
+          let m = _.filter(selectedsizeM[0].purities, {
+            is_selected: true,
+          });
+          console.log("m : ", m);
+          total_mrp_price += parseFloat(m[0].mrp_price);
+          total_sale_price += parseFloat(m[0].price);
+          console.log("total_sale_price + price : ", total_sale_price);
+          
           if(i == (grCount -1)){
             total_mrp_price += parseFloat(sizeMaterial.making_charge_mrp);
             total_sale_price += parseFloat(sizeMaterial.making_charge);
