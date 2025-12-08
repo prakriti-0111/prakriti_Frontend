@@ -734,6 +734,7 @@ class ProductDetails extends React.Component {
       }
     }
     console.log("product : ", product);
+    
     let selected_materials = product
       ? product.size_materials[this.state.sizeMaterialIndex].materials
       : [];
@@ -743,30 +744,64 @@ class ProductDetails extends React.Component {
     let rate = product
       ? product.size_materials[this.state.sizeMaterialIndex].sale_price
       : null;
+
+    let grM = product.size_materials[this.state.sizeMaterialIndex].mgroup;
+
     let total_weight = 0;
     let materials = [];
     console.log("selected_materials : ", selected_materials);
-    for (let i = 0; i < selected_materials.length; i++) {
-      let thisM = selected_materials[i];
-      let m = _.filter(thisM.purities, { is_selected: true });
-      console.log("m : ", m);
-      let total_gram = convertUnitToGram(
-        thisM.unit_name,
-        weight ? weight : thisM.weight
-      );
-      total_gram = weightFormat(total_gram); //(product.type == 'material') ? weightFormat(total_gram / parseInt(thisM.quantity)) : weightFormat(total_gram);
-      total_weight += parseFloat(total_gram);
 
-      materials.push({
-        material_id: thisM.material_id,
-        purity_id: m[0]?m[0].id:null,
-        weight: weight ? weight : thisM.weight,
-        unit_id: thisM.unit_id,
-        quantity: weight ? quantity : thisM.quantity,
-      });
+    if(grM.length > 0){
+      for(let i=0; i<grM.length; i++){
+        console.log(`check for grp ${grM[i]} with in sizeMaterial.materials to get all related materials`);
+        let grMaterialSelected = this.state.groupMaterialIndex.filter(itm => itm.grpId == grM[i]);
+        let sizeMaterial = product.size_materials[this.state.sizeMaterialIndex];
+        //let selFGrM = sizeMaterial.materials.filter(itm => itm.group == grM[i]);
+        let selFGrM = sizeMaterial.materials.filter(itm => itm.group == grM[i] && itm.material_id == grMaterialSelected[0].mtrlId);
+        console.log("selFGrM : ",selFGrM);
+        if(selFGrM.length > 0){
+          //for(let j=0; j < selFGrM.length; j++){
+            let thisM = selFGrM[0];
+            let m = _.filter(thisM.purities, { is_selected: true });
+            console.log("m : ", m);
+            let total_gram = convertUnitToGram(
+              thisM.unit_name,
+              weight ? weight : thisM.weight
+            );
+            total_gram = weightFormat(total_gram); //(product.type == 'material') ? weightFormat(total_gram / parseInt(thisM.quantity)) : weightFormat(total_gram);
+            total_weight += parseFloat(total_gram);
+
+            materials.push({
+              material_id: thisM.material_id,
+              purity_id: m[0]?m[0].id:null,
+              weight: weight ? weight : thisM.weight,
+              unit_id: thisM.unit_id,
+              quantity: weight ? quantity : thisM.quantity,
+            });
+          //}
+        }
+      }
+    } else {
+      for (let i = 0; i < selected_materials.length; i++) {
+        let thisM = selected_materials[i];
+        let m = _.filter(thisM.purities, { is_selected: true });
+        console.log("m : ", m);
+        let total_gram = convertUnitToGram(
+          thisM.unit_name,
+          weight ? weight : thisM.weight
+        );
+        total_gram = weightFormat(total_gram); //(product.type == 'material') ? weightFormat(total_gram / parseInt(thisM.quantity)) : weightFormat(total_gram);
+        total_weight += parseFloat(total_gram);
+
+        materials.push({
+          material_id: thisM.material_id,
+          purity_id: m[0]?m[0].id:null,
+          weight: weight ? weight : thisM.weight,
+          unit_id: thisM.unit_id,
+          quantity: weight ? quantity : thisM.quantity,
+        });
+      }
     }
-
-  
 
     let data = {
       product_id: product.id,
