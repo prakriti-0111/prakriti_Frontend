@@ -284,7 +284,23 @@ class CartPage extends React.Component {
       let sizeMaterial = _.filter(item.size_materials, function (s) {
         return s.size_id == item.size_id;
       });
-      return sizeMaterial[0];
+      //return sizeMaterial[0];
+      sizeMaterial = sizeMaterial[0];
+      let newSizeMaterials = []; 
+
+      for(let i=0; i<sizeMaterial.materials.length; i++){
+        let cartMaterialExists = _.filter(item.cart_material, function (s) {
+          return s.material_id == sizeMaterial.materials[i].material_id;
+        });
+
+        if(cartMaterialExists.length > 0){
+          newSizeMaterials.push(sizeMaterial.materials[i]);
+        }
+      }
+
+      sizeMaterial.materials = newSizeMaterials;
+
+      return sizeMaterial;
     }
   };
 
