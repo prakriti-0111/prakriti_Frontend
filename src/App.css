@@ -1773,7 +1773,7 @@ section.ornament-slider .swiper {
 /*------ Product Details Page -----*/
 .product-details-wrapper {
   padding: 0px 0 60px 0;
-  margin-top: 136px;
+  margin-top: 60px;
 }
 
 .product-details-wrapper .breadcrumb,
@@ -3228,7 +3228,7 @@ button.close-btn.btn.btn-secondary {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: top center;
 }
 
@@ -3432,7 +3432,7 @@ button.close-btn.btn.btn-secondary {
 
 .cart-wrapper {
   padding: 12px 0;
-  margin-top: 136px;
+  margin-top: 85px;
 }
 
 .cart-wrapper .breadcrumb .breadcrumb-item,
@@ -3759,7 +3759,7 @@ button.close-btn.btn.btn-secondary {
 
 .wrapper-checkout {
   display: grid;
-  margin-top: 136px;
+  margin-top: 70px;
   /* grid-template-columns: repeat(auto-fill, minmax(425px, 1fr));
   grid-gap: 25px; */
 }
@@ -7034,7 +7034,7 @@ span.count.percent span {
 
   .order-success {
     padding: 18px 0 0 0;
-    margin-top: 52px;
+    margin-top: 28px;
   }
 
   .order-success-wrapper {
@@ -8228,7 +8228,7 @@ span.count.percent span {
 
   .product-details-wrapper {
     padding: 0px 0 25px 0;
-    margin-top: 52px;
+    margin-top: 25px;
   }
 
   .desktop-cart {
@@ -8371,7 +8371,7 @@ span.count.percent span {
 
   .mobile-cart {
     display: block;
-    margin-top: 50px;
+    margin-top: 0px;
   }
 
   .mobile-cart .cart-image-content {
@@ -8384,7 +8384,7 @@ span.count.percent span {
 
   .wrapper-checkout {
     /* grid-template-columns: repeat(auto-fill, minmax(315px, 1fr)); */
-    margin-top: 56px;
+    margin-top: 0px;
   }
 
   .checkout-desktop {
