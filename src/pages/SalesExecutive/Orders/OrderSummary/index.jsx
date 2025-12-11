@@ -113,7 +113,7 @@ class OrderSummary extends React.Component {
                                                                             <h3>{item.product_name}</h3>
                                                                             {
                                                                                 item.materials.map((val, key) => (
-                                                                                    <h4 key={key}>{val.material_name}: {val.quantity > 0 ? (val.quantity + ' ' + val.material_name + ', ') : ''} {val.purity_name}, {val.weight} {val.unit_name}</h4>
+                                                                                    <h4 key={key}>{val.material_name}: {val.quantity > 0 ? (val.quantity + ' ' + 'qty, ') : ''} {val.purity_name}, {val.weight} {val.unit_name}</h4> /*  + val.material_name */
                                                                                 ))
                                                                             }
                                                                             <h5>Size: {item.size_name}</h5>
@@ -210,7 +210,7 @@ class OrderSummary extends React.Component {
                                                     <h2 className='mb-2'>Order ID: #{order.order_no}</h2>
                                                     { order.orderProducts.map((item1, index) => (
                                                     item1.materials.map((val, key) => (
-                                                            <h3 className='s-sub-content' key={key}>{val.material_name}: {val.quantity > 0 ? (val.quantity + ' ' + val.material_name + ', ') : ''} {val.purity_name}, {val.weight} {val.unit_name}</h3>
+                                                            <h3 className='s-sub-content' key={key}>{val.material_name}: {val.quantity > 0 ? (val.quantity + ' ' + 'qty, ') : ''} {val.purity_name}, {val.weight} {val.unit_name}</h3> /*  + val.material_name */
                                                         ))
                                                     )) }
                                                     <div className='order-summary-statue mb-2'>

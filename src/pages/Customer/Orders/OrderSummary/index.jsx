@@ -256,10 +256,10 @@ class OrderSummary extends React.Component {
                                                                                         <h3><Link to={"/products/" + item.certificate_no}>{item.product_name} {`${item.certificate_no != ""?"(Certificate no. "+item.certificate_no+")":""}`}</Link></h3>
                                                                                         {
                                                                                             item.materials.map((val, key) => (
-                                                                                                <h4 key={key}>{val.material_name}: {val.quantity > 0 ? (val.quantity + ' ' + val.material_name + ', ') : ''} {val.purity_name}, {val.weight} {val.unit_name}</h4>
+                                                                                                <h4 key={key} className="fw-semibold">{val.material_name}: {val.quantity > 0 ? (val.quantity + ' qty, ') : ''} {val.purity_name}, {val.weight} {val.unit_name}</h4>
                                                                                             ))
-                                                                                        }
-                                                                                        <h5>Size: {item.size_name}</h5>
+                                                                                        }{/*  + val.material_name */}
+                                                                                        <h5 className="fw-semibold">Size: {item.size_name}</h5>
                                                                                     </span>
                                                                                 </div>
                                                                             </div>
@@ -279,22 +279,22 @@ class OrderSummary extends React.Component {
                                                                 <div className='header-price'>
                                                                     <ul>
                                                                         <li>
-                                                                            <span>Sub Total</span>
-                                                                            <span>{order.sub_total}</span>
+                                                                            <span className="fw-semibold">Sub Total</span>
+                                                                            <span >{order.sub_total}</span>
                                                                         </li>
                                                                         {
                                                                             order.promocode ?
                                                                                 <li>
-                                                                                    <span>Voucher code ({order.promocode})</span>
-                                                                                    <span>{order.promocode_discount_display}</span>
+                                                                                    <span className="fw-semibold">Voucher code ({order.promocode})</span>
+                                                                                    <span >{order.promocode_discount_display}</span>
                                                                                 </li>
                                                                                 : null
                                                                         }
                                                                         {
                                                                             order.discount_amount ?
                                                                                 <li>
-                                                                                    <span>Discount</span>
-                                                                                    <span>{order.discount_amount}</span>
+                                                                                    <span className="fw-semibold">Discount</span>
+                                                                                    <span >{order.discount_amount}</span>
                                                                                 </li>
                                                                                 : null
                                                                         }
@@ -318,14 +318,14 @@ class OrderSummary extends React.Component {
                                                                     <div className='underline-hr'></div>
                                                                     <ul>
                                                                         <li>
-                                                                            <span>Total</span>
-                                                                            <span>{order.total_amount}</span>
+                                                                            <span className="fw-semibold">Total</span>
+                                                                            <span >{order.total_amount}</span>
                                                                         </li>
                                                                         {
                                                                             order.paid_amount > 0 ?
                                                                                 <li>
-                                                                                    <span>Paid Amount</span>
-                                                                                    <span>{displayAmount(order.paid_amount)}</span>
+                                                                                    <span className="fw-semibold">Paid Amount</span>
+                                                                                    <span >{displayAmount(order.paid_amount)}</span>
                                                                                 </li>
                                                                                 : null
                                                                         }
@@ -345,54 +345,54 @@ class OrderSummary extends React.Component {
                                                                     {/* <h5><b>{order.status_display}</b></h5> */}
                                                                 </li>
                                                                 <li>
-                                                                    <span>Name</span>
-                                                                    <span>{order.customer_name}</span>
+                                                                    <span className="fw-semibold">Name</span>
+                                                                    <span style={{width:"50%"}}>{order.customer_name}</span>
                                                                 </li>
                                                                 <li>
-                                                                    <span>Company Name</span>
-                                                                    <span>{order.customer_company_name}</span>
+                                                                    <span className="fw-semibold">Company Name</span>
+                                                                    <span style={{width:"50%"}}>{order.customer_company_name}</span>
                                                                 </li>
                                                                 <li>
-                                                                    <span>Ship to: </span>
-                                                                    <span>{order.delivery_address}</span>
+                                                                    <span className="fw-semibold">Ship to: </span>
+                                                                    <span style={{width:"50%"}}>{order.delivery_address}</span>
                                                                 </li>
                                                                 <li>
-                                                                    <span>Payment Mode: </span>
-                                                                    <span>{order.payment_mode}</span>
+                                                                    <span className="fw-semibold">Payment Mode: </span>
+                                                                    <span style={{width:"50%"}}>{order.payment_mode}</span>
                                                                 </li>
                                                                 <li>
-                                                                    <span>Date Ordered: </span>
-                                                                    <span>{order.order_date}</span>
+                                                                    <span className="fw-semibold">Date Ordered: </span>
+                                                                    <span style={{width:"50%"}}>{order.order_date}</span>
                                                                 </li>
                                                                 {
                                                                     order.status == "delivered" ?
                                                                         <li>
-                                                                            <span>Delivery Date: </span>
-                                                                            <span>{order.delivered_at}</span>
+                                                                            <span className="fw-semibold">Delivery Date: </span>
+                                                                            <span style={{width:"50%"}}>{order.delivered_at}</span>
                                                                         </li>
                                                                         : null
                                                                 }
                                                                 {
                                                                     order.status != "delivered" && order.status != "cancelled" && order.status != "return_request" && order.status != "picked_up" ?
                                                                         <li>
-                                                                            <span>Expected Delivery Date: </span>
-                                                                            <span>{order.expected_delivery_date}</span>
+                                                                            <span className="fw-semibold">Expected Delivery Date: </span>
+                                                                            <span style={{width:"33%"}}>{order.expected_delivery_date}</span>
                                                                         </li>
                                                                         : null
                                                                 }
                                                                 {
                                                                     !isEmpty(order.notes) ?
                                                                         <li>
-                                                                            <span>Notes: </span>
-                                                                            <span>{order.notes}</span>
+                                                                            <span className="fw-semibold">Notes: </span>
+                                                                            <span style={{width:"50%"}}>{order.notes}</span>
                                                                         </li>
                                                                         : null
                                                                 }
                                                                 {
                                                                     !isEmpty(order.image) ?
                                                                         <li className='image_link'>
-                                                                            <span>Image: </span>
-                                                                            <span><a href={order.image} target="_blank">Click here</a></span>
+                                                                            <span className="fw-semibold">Image: </span>
+                                                                            <span style={{width:"50%"}}><a href={order.image} target="_blank">Click here</a></span>
                                                                         </li>
                                                                         : null
                                                                 }
@@ -453,37 +453,58 @@ class OrderSummary extends React.Component {
                                                             <div className='summary-content-right mb-2'>
                                                                 <ul>
                                                                     <li>
-                                                                        <span>Name</span>
-                                                                        <span>{order.customer_name}</span>
+                                                                        <span className="fw-semibold">Name</span>
+                                                                        <span style={{width:"50%"}}>{order.customer_name}</span>
                                                                     </li>
                                                                     <li>
-                                                                        <span>Ship to</span>
-                                                                        <span>{order.delivery_address}</span>
+                                                                        <span className="fw-semibold">Company Name</span>
+                                                                        <span style={{width:"50%"}}>{order.customer_company_name}</span>
                                                                     </li>
                                                                     <li>
-                                                                        <span>Payment Mode</span>
-                                                                        <span>{order.payment_mode}</span>
+                                                                        <span className="fw-semibold">Ship to</span>
+                                                                        <span style={{width:"50%"}}>{order.delivery_address}</span>
                                                                     </li>
                                                                     <li>
-                                                                        <span>Date Ordered</span>
-                                                                        <span>{order.order_date}</span>
+                                                                        <span className="fw-semibold">Payment Mode</span>
+                                                                        <span style={{width:"50%"}}>{order.payment_mode}</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span className="fw-semibold">Date Ordered</span>
+                                                                        <span style={{width:"50%"}}>{order.order_date}</span>
                                                                     </li>
                                                                     {
                                                                         order.status == "delivered" ?
                                                                             <li>
-                                                                                <span>Delivery Date: </span>
-                                                                                <span>{order.delivered_at}</span>
+                                                                                <span className="fw-semibold">Delivery Date: </span>
+                                                                                <span style={{width:"50%"}}>{order.delivered_at}</span>
                                                                             </li>
                                                                             : null
                                                                     }
                                                                     {
                                                                         order.status != "delivered" && order.status != "cancelled" && order.status != "return_request" && order.status != "picked_up" ?
                                                                             <li>
-                                                                                <span>Expected Delivery Date: </span>
-                                                                                <span>{order.expected_delivery_date}</span>
+                                                                                <span className="fw-semibold">Expected Delivery Date: </span>
+                                                                                <span style={{width:"45%"}}>{order.expected_delivery_date}</span>
                                                                             </li>
                                                                             : null
                                                                     }
+                                                                    {
+                                                                    !isEmpty(order.notes) ?
+                                                                            <li>
+                                                                                <span className="fw-semibold">Notes: </span>
+                                                                                <span style={{width:"50%"}}>{order.notes}</span>
+                                                                            </li>
+                                                                            : null
+                                                                    }
+                                                                    {
+                                                                        !isEmpty(order.image) ?
+                                                                            <li className='image_link'>
+                                                                                <span className="fw-semibold">Image: </span>
+                                                                                <span style={{width:"50%"}}><a href={order.image} target="_blank">Click here</a></span>
+                                                                            </li>
+                                                                            : null
+                                                                    }
+                                                                    
                                                                 </ul>
                                                             </div>
                                                             <div className='underline-hr'></div>
@@ -491,32 +512,35 @@ class OrderSummary extends React.Component {
                                                                 <h3>ITEMS</h3>
                                                                 {
                                                                     order.orderProducts.map((item, index) => (
-                                                                        <div className='header-item-img' key={index}>
+                                                                        <div className='header-item-img w-100' key={index}>
                                                                             <span>
                                                                                 <img src={item.image} alt='' />
                                                                             </span>
-                                                                            <span>
-                                                                                <h3><Link to={"/products/" + item.product_slug}>{item.product_name}</Link> <span className='float-right'>{item.quantity} item(s)</span></h3>
+                                                                            <span className="w-100">
+                                                                                <h3 className="d-flex justify-content-between">
+                                                                                    <span className="fw-semibold">Name : </span><span><Link to={"/products/" + item.product_slug}>{item.product_name}</Link></span></h3>
+                                                                                <h3 className="d-flex justify-content-between">
+                                                                                    <span className="fw-semibold">Quantity : </span><span >{item.quantity} item(s)</span></h3>
                                                                                 {
                                                                                     item.materials.map((val, key) => (
-                                                                                        <h4 key={key}>{val.material_name}: {val.quantity > 0 ? (val.quantity + ' ' + val.material_name + ', ') : ''} {val.purity_name}, {val.weight} {val.unit_name}</h4>
+                                                                                        <h3 key={key} className="d-flex justify-content-between"><span className="fw-semibold">{val.material_name}:</span><span>{val.quantity > 0 ? (val.quantity + ' ' + 'qty, ') : ''} {val.purity_name}, {val.weight} {val.unit_name}</span></h3> /*  + val.material_name */
                                                                                     ))
                                                                                 }
-                                                                                <span className='s-footer-price'>
+                                                                                {/* <span className='s-footer-price'> */}
                                                                                     {
                                                                                         item.size_name ?
-                                                                                            <h4>Size: {item.size_name}</h4>
+                                                                                            <h3 className="d-flex justify-content-between"><span className="fw-semibold">Size:</span><span>{item.size_name}</span></h3>
                                                                                             : null
                                                                                     }
-                                                                                    <h5>
-                                                                                        {item.rate}
-                                                                                    </h5>
+                                                                                    <h3 className="d-flex justify-content-between">
+                                                                                        <span className="fw-semibold">Price:</span><span>{item.rate}</span>
+                                                                                    </h3>
                                                                                     {
                                                                                         !item.have_review ?
-                                                                                            <h6 className='rate_review' onClick={() => this.handleRateReview(item)}>Rate & Review</h6>
+                                                                                            <h3 className="d-flex justify-content-between"><span></span><h6 className="rate_review" onClick={() => this.handleRateReview(item)}>Rate & Review</h6></h3>
                                                                                             : null
                                                                                     }
-                                                                                </span>
+                                                                                {/* </span> */}
                                                                             </span>
                                                                         </div>
                                                                     ))
@@ -527,30 +551,30 @@ class OrderSummary extends React.Component {
                                                                 <div className='header-price'>
                                                                     <ul>
                                                                         <li>
-                                                                            <span>Sub Total</span>
-                                                                            <span>{order.sub_total}</span>
+                                                                            <span className="fw-semibold">Sub Total</span>
+                                                                            <span >{order.sub_total}</span>
                                                                         </li>
                                                                         {
                                                                             order.promocode ?
                                                                                 <li>
-                                                                                    <span>Voucher code ({order.promocode})</span>
-                                                                                    <span>{order.promocode_discount_display}</span>
+                                                                                    <span className="fw-semibold">Voucher code ({order.promocode})</span>
+                                                                                    <span >{order.promocode_discount_display}</span>
                                                                                 </li>
                                                                                 : null
                                                                         }
                                                                         {
                                                                             order.discount_amount ?
                                                                                 <li>
-                                                                                    <span>Discount</span>
-                                                                                    <span>{order.discount_amount}</span>
+                                                                                    <span className="fw-semibold">Discount</span>
+                                                                                    <span >{order.discount_amount}</span>
                                                                                 </li>
                                                                                 : null
                                                                         }
                                                                         {
                                                                             order.promocode ?
                                                                                 <li>
-                                                                                    <span>Voucher code ({order.promocode})</span>
-                                                                                    <span>{order.promocode_discount_display}</span>
+                                                                                    <span className="fw-semibold">Voucher code ({order.promocode})</span>
+                                                                                    <span >{order.promocode_discount_display}</span>
                                                                                 </li>
                                                                                 : null
                                                                         }
@@ -574,14 +598,14 @@ class OrderSummary extends React.Component {
                                                                     <div className='underline-hr'></div>
                                                                     <ul>
                                                                         <li>
-                                                                            <span>Total</span>
-                                                                            <span>{order.total_amount}</span>
+                                                                            <span className="fw-semibold">Total</span>
+                                                                            <span >{order.total_amount}</span>
                                                                         </li>
                                                                         {
                                                                             order.paid_amount > 0 ?
                                                                                 <li>
-                                                                                    <span>Paid Amount</span>
-                                                                                    <span>{displayAmount(order.paid_amount)}</span>
+                                                                                    <span className="fw-semibold">Paid Amount</span>
+                                                                                    <span >{displayAmount(order.paid_amount)}</span>
                                                                                 </li>
                                                                                 : null
                                                                         }

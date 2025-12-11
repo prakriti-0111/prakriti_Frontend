@@ -99,7 +99,7 @@ class OrderSummary extends React.Component {
                                                                             <h3>{item.product_name}</h3>
                                                                             {
                                                                                 item.materials.map((val, key) => (
-                                                                                    <h4 key={key}>{val.material_name}: {val.quantity > 0 ? (val.quantity + ' ' + val.material_name + ', ') : ''} {val.purity_name}, {val.weight} {val.unit_name}</h4>
+                                                                                    <h4 key={key}>{val.material_name}: {val.quantity > 0 ? (val.quantity + ' ' + 'qty, ') : ''} {val.purity_name}, {val.weight} {val.unit_name}</h4> /*  + val.material_name */
                                                                                 ))
                                                                             }
                                                                             <h5>Size: {item.size_name}</h5>
