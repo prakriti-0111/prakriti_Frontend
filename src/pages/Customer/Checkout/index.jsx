@@ -1492,15 +1492,15 @@ class CheckoutPage extends React.Component {
                           <div className="checkout-item-content justify-content-between ">
                             <div>
                               <div className="checkout_price_header justify-content-between d-flex">
-                                <h2>{item.product_name}</h2>
+                                <h2 className="fw-semibold">{item.product_name}</h2>
                                 <div className="checkout-price">
-                                  <h4>
+                                  <h4 className="d-flex flex-column">
                                     {item.have_offer ? (
                                       <span className="strikethrough">
                                         {item.total_price_without_dis_display}
                                       </span>
                                     ) : null}
-                                    &nbsp; {item.total_price_display}
+                                    <span>{item.total_price_display}</span>
                                   </h4>
                                 </div>
                               </div>
@@ -1529,34 +1529,37 @@ class CheckoutPage extends React.Component {
                                 </h6>
                               ))}
                               <div
-                                style={{
-                                  display: "flex",
-                                  justifyItems: "center",
-                                  justifyContent: "space-between",
-                                }}
+                                className="d-flex justify-content-between"
                               >
-                                <div style={{ display: "flex", gap: "10px" }}>
-                                  <p
+                                
+                                  <span
                                     className="fw-semibold"
-                                    style={{ fontStyle: "14px" }}
+                                    style={{ fontSize: "12px" }}
                                   >
-                                    Size: <span> {item.size_name} </span>
-                                  </p>
-                                  <p>
-                                    Qty: <span> {item.quantity} </span>
-                                  </p>
-                                </div>
-                                <div>
+                                    Size: </span>
+                                  <span style={{ fontSize: "12px" }}> {item.size_name} </span>
+                              </div>
+                              <div
+                                className="d-flex justify-content-between"
+                              >
+                                  <span
+                                    className="fw-semibold"
+                                    style={{ fontSize: "12px" }}
+                                  >
+                                    Qty:&nbsp;&nbsp;{item.quantity}</span>
+                                  
                                   <Button
                                     variant=""
-                                    className=""
+                                    className="pr-0"
                                     onClick={() => this.removeConfirm(item)}
                                   >
                                     {" "}
-                                    <i class="bi bi-trash3 me-2 bg-danger text-white p-2 rounded"></i>
+                                    <i class="bi bi-trash3 bg-danger text-white p-2 rounded"></i>
                                   </Button>
-                                </div>
+                                
                               </div>
+                                
+                             
                             </div>
                           </div>
                         </div>

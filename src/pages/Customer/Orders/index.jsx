@@ -80,7 +80,7 @@ class OrdersPage extends React.Component {
               {this.state.items.length > 0 ? (
                 this.state.items.map((item, index) => (
                   <div key={index}>
-                    <div className="bg-light border mb-2 my-order-wrapper px-4 rounded">
+                    <div className="bg-light border mb-2 my-order-wrapper px-2 rounded">
                       <div className="order-id mb-2 d-block">
                         <div className="d-flex align-items-center justify-content-between  ">
                           <div>
