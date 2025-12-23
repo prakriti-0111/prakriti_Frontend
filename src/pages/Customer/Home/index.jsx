@@ -101,7 +101,7 @@ class HomePage extends Component {
       festiveOffers: [],
       stockProductsSlider: [],
       auth: this.props.auth,
-      bestRetailers: [],
+      bestRetailers: null,
       counts: null,
       promise_box: "",
       currentMarqueeIndex: 0,
@@ -157,7 +157,7 @@ class HomePage extends Component {
       this.loadBestReatailers(state, city);
       //this.retailerAnimationFrameId = null;
     } 
-    if (this.state.bestRetailers.length !== prevState.bestRetailers.length) {
+    if (this.state.bestRetailers && prevState.bestRetailers && this.state.bestRetailers.length !== prevState.bestRetailers.length) {
       //this.pauseRetailerMarquee();
       this.retailerAnimationFrameId = null;
       this.setupRetailerMarquee();
@@ -210,19 +210,16 @@ class HomePage extends Component {
   setupMarquee = () => {
     const track = this.marqueeTrackRef;
     console.log("track : ",track);
-    if(this.animationFrameId == null && track.current){
+    if(this.animationFrameId == null && track){
       // Duplicate the content for infinite loop
       const originalContent = track.innerHTML;
       track.innerHTML += originalContent;
     }
 
-    const itemWidth = track.current && track.children && track.children.length > 0?track.children[0].offsetWidth:0;
-
-    /* console.log("this.position : ", this.position);
-    console.log("this.speed : ", this.speed); */
+    const itemWidth = track && track.children && track.children.length > 0?track.children[0].offsetWidth:0;
 
     const scroll = () => {
-      if(track.current){
+      if(track){
         this.position -= this.speed;
         /* console.log("inside scroll : ");
         console.log("this.position : ", this.position);
@@ -233,6 +230,9 @@ class HomePage extends Component {
           this.position = 0;
         }
 
+        console.log("itemWidth : ", itemWidth);
+        console.log("this.position : ", this.position);
+        console.log("this.speed : ", this.speed); 
         if(!this.props.isMobileView && -this.position % (itemWidth+15) == 0 || this.props.isMobileView && -this.position % (itemWidth+10) == 0){
           /* console.log("===============================================");
           console.log("itemWidth : ", itemWidth);
@@ -727,7 +727,7 @@ class HomePage extends Component {
       {homepage_settings.map((item, k) => {
         switch(true){
           case item.section_name.toLowerCase() == "banners":
-            return (<><section className={`banner-sec`}>
+            return (<section key={`section_item_${k}`} className={`banner-sec`}>
               {/* <Container className='position-relative'>
                     <Row>
                         <Col xs={7} md={7}>
@@ -745,7 +745,7 @@ class HomePage extends Component {
                         </Col>
                     </Row>
                     </Container> */}
-              <div className="container-fluid" >
+              <div className="container-fluid p-1" >
                 {banners.length > 0 && <Carousel className="rounded-4">
                   {banners.map((item, key) => (
                     <Carousel.Item key={key}>
@@ -764,10 +764,10 @@ class HomePage extends Component {
                   </Placeholder>
                 ) : null}
               </div>
-            </section></>);
+            </section>);
           break;
           case item.section_name.toLowerCase() == "mobilecategories":
-            return (<section className={`ornament-slider`}>
+            return (<section key={`section_item_${k}`} className={`ornament-slider`}>
                 <div className="container-fluid">
                   <Swiper
                     spaceBetween={10}
@@ -807,7 +807,7 @@ class HomePage extends Component {
           break;
           case item.section_name.toLowerCase().startsWith("promocodes"):
             //console.log("item.section_name.toLowerCase() : ", item.section_name.toLowerCase());
-            return ["platinum-jewelery", "diamond-jewellery", "gems-stone"].map((catSlug, k) => {
+            return ["diamond-jewellery", "gems-certified", "loose-stone", "rudraksh"].map((catSlug, ky) => {
               //console.log("catSlug : ", catSlug);
               //console.log("item.section_name.toLowerCase().indexOf(catSlug) : ", item.section_name.toLowerCase().indexOf(catSlug));
               if(item.section_name.toLowerCase().indexOf(catSlug) !== -1){
@@ -815,9 +815,9 @@ class HomePage extends Component {
                 return (<>{promocodes.map((item, key) => item.category_slug == catSlug?(
                   <section
                     className={`promocode`}
-                    key={key}
+                    key={`section_item_${k}_${ky}`}
                   >
-                    <div className="container-fluid">
+                    <div className="container-fluid p-0">
                       <Link
                         to={
                           isEmpty(item.products)
@@ -882,8 +882,8 @@ class HomePage extends Component {
             });
           break;
           case item.section_name.toLowerCase() == "newarrivals":
-            return (<>{newArrivals.length > 0 ? <section className={`neneww-arrival`}>
-              <div className="container-fluid">
+            return (<>{newArrivals.length > 0 ? <section key={`section_item_${k}`} className={`new-arrival`}>
+              <div className="container-fluid p-0">
                 <h2 className="text-center ">New Arrivals</h2>
                 <div className="marquee-wrapper">
                   {/* <h1 className="marquee-heading">New Arrivals</h1> */}
@@ -915,7 +915,7 @@ class HomePage extends Component {
             </section>:''}</>);
           break;
           case item.section_name.toLowerCase() == "festiveoffers":
-            return (<>{festiveOffers.length > 0 ?<section className={`festive-offer`}>
+            return (<>{festiveOffers.length > 0 ?<section key={`section_item_${k}`} className={`festive-offer`}>
               {/* <Container className='position-relative'>
                         <Row>
                             <Col xs={7} md={7}>
@@ -933,7 +933,7 @@ class HomePage extends Component {
                             </Col>
                         </Row>
                         </Container> */}
-              <div className="container-fluid">
+              <div className="container-fluid p-3">
                 <h2 className="text-center ">Festive Offers</h2>
                 <div className="festive-offer-cont">
                   {/* <div className="festive-offer-header">
@@ -941,7 +941,7 @@ class HomePage extends Component {
                   </div> */}
                   <Carousel className="rounded-4">
                       {festiveOffers.map((item, key) => (
-                        <Carousel.Item key={key}>
+                        <Carousel.Item key={`festive_offers_section_item_${key}`}>
                           <Link
                             to={
                               isEmpty(item.products)
@@ -989,10 +989,10 @@ class HomePage extends Component {
               console.log("sliders.length : ", sliders.length);
               if(item.section_name.toLowerCase().indexOf(catSlug) !== -1){
                 //console.log("=================================="+catSlug);
-                
-                return (<>{sliders.length > 0 && <section className={`selling-product`} > 
-                  <div className="container-fluid">
-                    <div className="selling-product-cont">
+
+                return (<>{sliders.length > 0 && <section key={`section_item_${k}`} className={`selling-product`} >
+                  <div className="container-fluid p-3">
+                    <div className="selling-product-cont p-1">
                       
                       <Swiper
                         spaceBetween={30}
@@ -1106,7 +1106,7 @@ class HomePage extends Component {
           case item.section_name.toLowerCase() == "bestsellingproducts":
             return (<>
             {best_selling_products.length ? (
-            <section className={`selling-product`}>
+            <section key={`section_item_${k}`} className={`selling-product`}>
               <div className="container-fluid">
                 <h2 className="text-center ">Best Selling Products</h2>
                 <div className="selling-product-cont">
@@ -1141,7 +1141,7 @@ class HomePage extends Component {
                     }}
                   >
                     {best_selling_products.map((product, key) => (
-                      <SwiperSlide key={key}>
+                      <SwiperSlide key={`best_selling_product_${key}`}>
                         <div className="slide-swipe-inner rounded overflow-hidden">
                           <div className="s-slider-image rounded-top">
                             <Link to={"products/" + product.slug}>
@@ -1255,8 +1255,8 @@ class HomePage extends Component {
           case item.section_name.toLowerCase() == "featuredproducts":
             return (<>
               {featured_products.length ? (
-                <section className={`feature-product bg-white`}>
-                  <div className="container-fluid">
+                <section key={`section_item_${k}`} className={`feature-product bg-white`}>
+                  <div className="container-fluid p-3">
                     <h2 className="text-center ">Featured Products</h2>
                     <div className="feature-product-cont">
                       {/* <div className="feature-product-header">
@@ -1290,7 +1290,7 @@ class HomePage extends Component {
                         }}
                       >
                         {featured_products.map((product, key) => (
-                          <SwiperSlide className=" rounded" key={key}>
+                          <SwiperSlide className=" rounded" key={`featured_product_${key}`}>
                             <div className="slide-swipe-inner rounded overflow-hidden">
                               <div className="s-slider-image rounded-top">
                                 <Link to={"products/" + product.slug}>
@@ -1440,7 +1440,7 @@ class HomePage extends Component {
           </Container>
         </section> */}
         <section className="promise promise-desktop bg-light">
-          <div className="container-fluid">
+          <div className="container-fluid p-2">
             <h2 className="text-center ">Our Promise</h2>
 
             <Row>
@@ -1630,7 +1630,7 @@ class HomePage extends Component {
           </div>
         </div>
         <section className="promise promise-mobile">
-          <div className="container-fluid">
+          <div className="container-fluid p-0">
             <h2 className="text-center">Our Promise</h2>
 
             <Row>
@@ -1868,9 +1868,9 @@ class HomePage extends Component {
           </div>
         </section> */}
 
-        {bestRetailers.length > 0 ? (
+        {bestRetailers && bestRetailers.length > 0 ? (
           <section className="promise best-retailer">
-            <div className="container-fluid">
+            <div className="container-fluid p-1">
               <h2 className="text-center">Our Partners</h2>
               <div className="best-retailer-cont">
                 <div className="feature-product-header retailer-search-container">
@@ -1971,7 +1971,7 @@ class HomePage extends Component {
               </div>
             </div>
           </section>
-        ) : <section className="feature-product best-retailer"><div className="container-fluid"><div className="best-retailer-cont"><Loader /></div></div></section>}
+        ) : (bestRetailers == null ? <section className="feature-product best-retailer"><div className="container-fluid"><div className="best-retailer-cont"><Loader /></div></div></section> : null)}
 
       
         {/* <section className="ratn-banner">
