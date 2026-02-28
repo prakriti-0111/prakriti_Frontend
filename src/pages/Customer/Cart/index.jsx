@@ -522,25 +522,26 @@ class CartPage extends React.Component {
                                           Product Code :{" "}
                                           <span>{val.product_code}</span>
                                         </p>
-                                      </div>
-                                      <div className="d-flex align-items-center">
-                                        <div className="price-wrapper">
-                                          <div className="cart-original-price">
-                                            {val.have_offer ? (
-                                              <span className="strikethrough">
-                                                {
-                                                  val.total_price_without_dis_display
-                                                }
+                                        <div className="d-flex align-items-center">
+                                          <div className="price-wrapper">
+                                            <div className="cart-original-price">
+                                              {val.have_offer ? (
+                                                <span className="strikethrough">
+                                                  {
+                                                    val.total_price_without_dis_display
+                                                  }
+                                                </span>
+                                              ) : null}
+                                            </div>
+                                            <div className="cart-discount-price">
+                                              <span className="price">
+                                                {val.total_price_display}
                                               </span>
-                                            ) : null}
-                                          </div>
-                                          <div className="cart-discount-price">
-                                            <span className="price">
-                                              {val.total_price_display}
-                                            </span>
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
+
                                       <Row className="mt-3">
                                         {val.product_type != "material" ? (
                                           <Col md={6}>
@@ -621,10 +622,15 @@ class CartPage extends React.Component {
                                                 :
                                               </Form.Label>
                                               <Form.Select
-                                                value={this.getSelectedPurity(
-                                                  val,
-                                                  item.material_id,
-                                                )}
+                                                value={
+                                                  this.getSelectedPurity(
+                                                    val,
+                                                    item.material_id,
+                                                  ) ||
+                                                  (item.purities.length > 0
+                                                    ? item.purities[0].id
+                                                    : "")
+                                                }
                                                 onChange={(e) =>
                                                   this.handlPurityChange(
                                                     val.id,
@@ -632,21 +638,8 @@ class CartPage extends React.Component {
                                                     e.target.value,
                                                   )
                                                 }
-                                                className={
-                                                  this.getSelectedPurity(
-                                                    val,
-                                                    item.material_id,
-                                                  ) == ""
-                                                    ? "error_input"
-                                                    : "" + "rounded"
-                                                }
+                                                className="rounded"
                                               >
-                                                {this.getSelectedPurity(
-                                                  val,
-                                                  item.material_id,
-                                                ) == "" ? (
-                                                  <option value=""></option>
-                                                ) : null}
                                                 {item.purities.map((i, k) => (
                                                   <option value={i.id} key={k}>
                                                     {i.name}
@@ -664,7 +657,7 @@ class CartPage extends React.Component {
                                         style={{ alignItems: "center" }}
                                         className="justify-content-end mt-3"
                                       >
-                                        <Col xs={6}>
+                                        <Col xs={8}>
                                           <div className="cart-icons justify-content-end">
                                             <Button
                                               variant="primary"
