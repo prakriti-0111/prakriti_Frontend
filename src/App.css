@@ -3242,7 +3242,7 @@ button.close-btn.btn.btn-secondary {
 
 .cart-inner {
   display: grid;
-  grid-template-columns: 150px auto;
+  grid-template-columns: 260px auto;
   grid-gap: 12px;
 }
 

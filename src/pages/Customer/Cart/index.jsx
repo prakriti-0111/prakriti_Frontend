@@ -284,23 +284,7 @@ class CartPage extends React.Component {
       let sizeMaterial = _.filter(item.size_materials, function (s) {
         return s.size_id == item.size_id;
       });
-      //return sizeMaterial[0];
-      sizeMaterial = sizeMaterial[0];
-      let newSizeMaterials = []; 
-
-      for(let i=0; i<sizeMaterial.materials.length; i++){
-        let cartMaterialExists = _.filter(item.cart_material, function (s) {
-          return s.material_id == sizeMaterial.materials[i].material_id;
-        });
-
-        if(cartMaterialExists.length > 0){
-          newSizeMaterials.push(sizeMaterial.materials[i]);
-        }
-      }
-
-      sizeMaterial.materials = newSizeMaterials;
-
-      return sizeMaterial;
+      return sizeMaterial[0];
     }
   };
 
@@ -368,7 +352,7 @@ class CartPage extends React.Component {
 
     let data = {
       product_id: cart.product_id,
-      stock_id: cart.stock_id,
+      stock_id: null,
       total_weight: total_weight,
       size_id: cart.product_type != "material" ? cart.size_id : null,
       type: cart.product_type,
@@ -511,9 +495,13 @@ class CartPage extends React.Component {
                             >
                               <div className="cart-inner">
                                 <div className="cart-image">
-                                  <Link to={"/products/" + val.certificate_no}>
-                                                  <img
-                                                      src={val.current_image == null ? val.product_image : val.current_image}
+                                  <Link to={"/products/" + val.product_slug}>
+                                    <img
+                                      src={
+                                        val.current_image == null
+                                          ? val.product_image
+                                          : val.current_image
+                                      }
                                       className="rounded "
                                       alt=""
                                     />
@@ -525,7 +513,7 @@ class CartPage extends React.Component {
                                       <div className="cart-image-title">
                                         <h2>
                                           <Link
-                                            to={"/products/" + val.certificate_no}
+                                            to={"/products/" + val.product_slug}
                                           >
                                             {val.product_name}
                                           </Link>
@@ -534,68 +522,98 @@ class CartPage extends React.Component {
                                           Product Code :{" "}
                                           <span>{val.product_code}</span>
                                         </p>
-                                        <p>
-                                          Certificate No :{" "}
-                                          <span>{val.certificate_no}</span>
-                                        </p>
-                                                      </div>
-                                                      <div className="d-flex align-items-center">
-                                                
-                                      <div className="price-wrapper">
-                                        <div className="cart-original-price">
-                                          {val.have_offer ? (
-                                            <span className="strikethrough">
-                                              {
-                                                val.total_price_without_dis_display
+                                        <div className="d-flex align-items-center">
+                                          <div className="price-wrapper">
+                                            <div className="cart-original-price">
+                                              {val.have_offer ? (
+                                                <span className="strikethrough">
+                                                  {
+                                                    val.total_price_without_dis_display
+                                                  }
+                                                </span>
+                                              ) : null}
+                                            </div>
+                                            <div className="cart-discount-price">
+                                              <span className="price">
+                                                {val.total_price_display}
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <Row className="mt-3">
+                                        {val.product_type != "material" ? (
+                                          <Col md={6}>
+                                            <Form.Group className="d-flex flex-column">
+                                              <Form.Label>Size</Form.Label>
+                                              <Form.Select
+                                                value={val.size_id}
+                                                className="rounded"
+                                                onChange={(e) =>
+                                                  this.handleSizeChange(
+                                                    val,
+                                                    e.target.value,
+                                                  )
+                                                }
+                                              >
+                                                {val.size_materials.map(
+                                                  (i, k) => (
+                                                    <option
+                                                      value={i.size_id}
+                                                      key={k}
+                                                    >
+                                                      {i.size_name}
+                                                    </option>
+                                                  ),
+                                                )}
+                                              </Form.Select>
+                                            </Form.Group>
+                                          </Col>
+                                        ) : null}
+                                        <Col
+                                          md={
+                                            val.product_type != "material"
+                                              ? 6
+                                              : 12
+                                          }
+                                        >
+                                          <Form.Group className="d-flex flex-column">
+                                            <Form.Label>Quantity</Form.Label>
+                                            <Form.Select
+                                              className="rounded"
+                                              value={val.quantity}
+                                              onChange={(e) =>
+                                                this.handleQtyChange(
+                                                  val.id,
+                                                  e.target.value,
+                                                )
                                               }
-                                            </span>
-                                          ) : null}
-                                        </div>
-                                        <div className="cart-discount-price">
-                                          <span className="price">
-                                            {val.total_price_display}
-                                          </span>
-                                        </div>
-                                                          </div>
-                                                          <Col style={{ width: "150px" }} className="ms-3">
-                                                              {val.product_type !=
-                                                                  "material" ? (
-                                                                      <Form.Group className="d-flex align-items-center">
-                                                                          <Form.Label className="me-2">Size</Form.Label>
-                                                                      <Form.Select
-                                                                          value={val.size_id}
-                                                                          className="rounded"
-                                                                          onChange={(e) =>
-                                                                              this.handleSizeChange(
-                                                                                  val,
-                                                                                  e.target.value
-                                                                              )
-                                                                          }
-                                                                      >
-                                                                          {val.size_materials.map(
-                                                                              (i, k) => (
-                                                                                  <option
-                                                                                      value={i.size_id}
-                                                                                      key={k}
-                                                                                  >
-                                                                                      {i.size_name}
-                                                                                  </option>
-                                                                              )
-                                                                          )}
-                                                                      </Form.Select>
-                                                                  </Form.Group>
-                                                              ) : null}
-                                                          </Col>
-                                                      </div>
+                                            >
+                                              {[...Array(10).keys()].map(
+                                                (i, k) => (
+                                                  <option value={i + 1} key={k}>
+                                                    {i + 1}
+                                                  </option>
+                                                ),
+                                              )}
+                                            </Form.Select>
+                                          </Form.Group>
+                                        </Col>
+                                      </Row>
                                       {/*<p className='making-charge'>(0% MAKING CHARGE)</p>*/}
                                     </div>
-                                    <div className="purity-wrapper">
+                                    <div className="purity-wrapper mt-3">
                                       <Form.Group>
-                                        {this.getSizeMaterial(
-                                          val
-                                        ).materials.map((item, key) => (
-                                          <Row key={key}>
-                                            <Col>
+                                        <Row>
+                                          {this.getSizeMaterial(
+                                            val,
+                                          ).materials.map((item, key) => (
+                                            <Col
+                                              md={6}
+                                              key={key}
+                                              className="mb-3"
+                                            >
                                               <Form.Label>
                                                 {this.getSizeMaterial(val)
                                                   .materials.length > 1
@@ -603,33 +621,25 @@ class CartPage extends React.Component {
                                                   : "Purity"}
                                                 :
                                               </Form.Label>
-                                                    <Form.Select 
-                                                value={this.getSelectedPurity(
-                                                  val,
-                                                  item.material_id
-                                                )}
+                                              <Form.Select
+                                                value={
+                                                  this.getSelectedPurity(
+                                                    val,
+                                                    item.material_id,
+                                                  ) ||
+                                                  (item.purities.length > 0
+                                                    ? item.purities[0].id
+                                                    : "")
+                                                }
                                                 onChange={(e) =>
                                                   this.handlPurityChange(
                                                     val.id,
                                                     item.material_id,
-                                                    e.target.value
+                                                    e.target.value,
                                                   )
                                                 }
-                                                className={
-                                                  this.getSelectedPurity(
-                                                    val,
-                                                    item.material_id
-                                                  ) == ""
-                                                    ? "error_input"
-                                                    : "" + "rounded"
-                                                }
+                                                className="rounded"
                                               >
-                                                {this.getSelectedPurity(
-                                                  val,
-                                                  item.material_id
-                                                ) == "" ? (
-                                                  <option value=""></option>
-                                                ) : null}
                                                 {item.purities.map((i, k) => (
                                                   <option value={i.id} key={k}>
                                                     {i.name}
@@ -638,39 +648,8 @@ class CartPage extends React.Component {
                                                 ))}
                                               </Form.Select>
                                             </Col>
-                                            <Col>
-                                              <Form.Group>
-                                                <Form.Label>
-                                                  Quantity:
-                                                </Form.Label>
-                                                <Form.Select
-                                                  className="rounded"
-                                                  value={val.quantity}
-                                                  onChange={(e) =>
-                                                    this.handleQtyChange(
-                                                      val.id,
-                                                      e.target.value
-                                                    )
-                                                  }
-                                                >
-                                                  {[...Array(10).keys()].map(
-                                                    (i, k) => (
-                                                      <option
-                                                        value={i + 1}
-                                                        key={k}
-                                                      >
-                                                        {i + 1}
-                                                      </option>
-                                                    )
-                                                  )}
-                                                </Form.Select>
-                                                {/*{val.quantity}*/}
-                                              </Form.Group>
-                                            </Col>
-                                            
-                                          </Row>
-                                        ))}
-                                                          
+                                          ))}
+                                        </Row>
                                       </Form.Group>
                                     </div>
                                     {!val.is_manual ? (
@@ -678,7 +657,7 @@ class CartPage extends React.Component {
                                         style={{ alignItems: "center" }}
                                         className="justify-content-end mt-3"
                                       >
-                                        <Col xs={6}>
+                                        <Col xs={8}>
                                           <div className="cart-icons justify-content-end">
                                             <Button
                                               variant="primary"
@@ -720,7 +699,7 @@ class CartPage extends React.Component {
                                                 className={
                                                   this.getManualErr(
                                                     index,
-                                                    "weight"
+                                                    "weight",
                                                   )
                                                     ? "is-invalid error_input"
                                                     : ""
@@ -744,7 +723,7 @@ class CartPage extends React.Component {
                                               <Form.Control.Feedback type="invalid">
                                                 {this.getManualErr(
                                                   index,
-                                                  "weight"
+                                                  "weight",
                                                 )}
                                               </Form.Control.Feedback>
                                             </Form.Group>
@@ -763,7 +742,7 @@ class CartPage extends React.Component {
                                                   className={
                                                     this.getManualErr(
                                                       index,
-                                                      "qty rounded-end"
+                                                      "qty rounded-end",
                                                     )
                                                       ? "is-invalid error_input"
                                                       : ""
@@ -772,7 +751,7 @@ class CartPage extends React.Component {
                                                 <Form.Control.Feedback type="invalid">
                                                   {this.getManualErr(
                                                     index,
-                                                    "qty"
+                                                    "qty",
                                                   )}
                                                 </Form.Control.Feedback>
                                                 <Form.Label>&nbsp;</Form.Label>
@@ -781,7 +760,7 @@ class CartPage extends React.Component {
                                                   className="dark_button"
                                                   onClick={() =>
                                                     this.handleManulUpdate(
-                                                      index
+                                                      index,
                                                     )
                                                   }
                                                 >
@@ -998,7 +977,8 @@ class CartPage extends React.Component {
                               </li>
                               <li>
                                 {" "}
-                                <img src={jewelleryHome} alt="" /> Genuine Price{" "}
+                                <img src={jewelleryHome} alt="" /> Genuine
+                                Price{" "}
                               </li>
                             </ul>
                             {/* <p className='mt-2 m-0 text-center'>Every piece of jewellery
@@ -1046,7 +1026,11 @@ class CartPage extends React.Component {
                         <div className="cart-inner">
                           <div className="cart-image">
                             <Link to={"/products/" + val.product_slug}>
-                              <img src={val.product_image} alt="" className="rounded"/>
+                              <img
+                                src={val.product_image}
+                                alt=""
+                                className="rounded"
+                              />
                             </Link>
                           </div>
                           <div className="cart-image-content">
@@ -1120,7 +1104,10 @@ class CartPage extends React.Component {
                           <Form.Group>
                             {this.getSizeMaterial(val).materials.map(
                               (item, key) => (
-                                <Row key={key} className="justify-content-between" >
+                                <Row
+                                  key={key}
+                                  className="justify-content-between"
+                                >
                                   <Col xs={4} md={4}>
                                     <Form.Label>
                                       {this.getSizeMaterial(val).materials
@@ -1134,19 +1121,19 @@ class CartPage extends React.Component {
                                     <Form.Select
                                       value={this.getSelectedPurity(
                                         val,
-                                        item.material_id
+                                        item.material_id,
                                       )}
                                       onChange={(e) =>
                                         this.handlPurityChange(
                                           val.id,
                                           item.material_id,
-                                          e.target.value
+                                          e.target.value,
                                         )
                                       }
                                       className={
                                         this.getSelectedPurity(
                                           val,
-                                          item.material_id
+                                          item.material_id,
                                         ) == ""
                                           ? "error_input"
                                           : ""
@@ -1154,7 +1141,7 @@ class CartPage extends React.Component {
                                     >
                                       {this.getSelectedPurity(
                                         val,
-                                        item.material_id
+                                        item.material_id,
                                       ) == "" ? (
                                         <option value=""></option>
                                       ) : null}
@@ -1167,7 +1154,7 @@ class CartPage extends React.Component {
                                     </Form.Select>
                                   </Col>
                                 </Row>
-                              )
+                              ),
                             )}
                           </Form.Group>
                         </div>
@@ -1384,7 +1371,8 @@ class CartPage extends React.Component {
                             </li>
                             <li>
                               {" "}
-                              <img src={jewelleryHome} alt="" /> Genuine Price{" "}
+                              <img src={jewelleryHome} alt="" /> Genuine
+                              Price{" "}
                             </li>
                           </ul>
                         </div>
@@ -1496,10 +1484,10 @@ const mapDispatchToProps = (dispatch) => ({
       CartUpdateSizeMaterial,
       CartApplyPromocode,
     },
-    dispatch
+    dispatch,
   ),
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(CartPage)
+  connect(mapStateToProps, mapDispatchToProps)(CartPage),
 );
