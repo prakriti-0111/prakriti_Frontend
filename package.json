@@ -17,7 +17,7 @@
     "dotenv-webpack": "^8.0.1",
     "file-loader": "^6.2.0",
     "i": "^0.3.7",
-    "image-webpack-loader": "^8.1.0",
+    "image-webpack-loader": "^8.0.1",
     "immutable": "^4.1.0",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
@@ -43,7 +43,7 @@
     "react-redux": "^8.0.2",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "^5.0.1",
+    "react-scripts": "^0.0.0",
     "react-secure-storage": "^1.0.21",
     "react-select": "^5.7.0",
     "react-simple-star-rating": "^5.1.7",
@@ -54,9 +54,9 @@
     "redux": "^4.2.0",
     "redux-form": "^8.3.8",
     "redux-thunk": "^2.4.1",
-    "swiper": "^8.3.2",
-    "universal-cookie": "^4.0.4",
-    "uuidv4": "^6.2.13",
+    "swiper": "^14.0.2",
+    "universal-cookie": "^8.1.2",
+    "uuidv4": "^1.0.0",
     "web-vitals": "^2.1.4"
   },
   "graceful-fs": {
@@ -102,8 +102,8 @@
     "sass": "^1.54.9",
     "sass-loader": "^13.0.2",
     "webpack": "^5.92.0",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.11.0"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^6.0.0"
   },
   "resolutions": {
     "hoek": "4.2.1"
