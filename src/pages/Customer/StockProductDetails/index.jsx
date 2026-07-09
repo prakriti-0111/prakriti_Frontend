@@ -138,9 +138,40 @@ class ProductDetails extends React.Component {
       recently_view: 1,
     });
     if (response.data.success) {
-      let product = response.data.data;
+      let product = response.data.data || {};
+      // ensure commonly accessed arrays/fields exist to avoid runtime errors
+      product.images = Array.isArray(product.images) ? product.images : [];
+      product.certificates = Array.isArray(product.certificates)
+        ? product.certificates
+        : [];
+      product.size_materials = Array.isArray(product.size_materials)
+        ? product.size_materials
+        : [];
+      product.rating = product.rating !== undefined ? product.rating : 0;
+      product.video = product.video || "";
+      product.description = product.description || "";
       let sizeMaterialIndex = 0;
-      let sizeMaterial = product.size_materials[sizeMaterialIndex];
+      // defensive defaults to avoid undefined.length errors
+      let sizeMaterial = (product.size_materials && product.size_materials.length > 0)
+        ? product.size_materials[sizeMaterialIndex]
+        : {
+            mgroup: [],
+            materials: [],
+            making_charge_mrp: 0,
+            making_charge: 0,
+            making_charge_dis_percent: 0,
+            mrp_price: 0,
+            sale_price: 0,
+            discount_percent: 0,
+            total_gst: 0,
+            have_offer: false,
+          };
+      sizeMaterial.mgroup = Array.isArray(sizeMaterial.mgroup)
+        ? sizeMaterial.mgroup
+        : [];
+      sizeMaterial.materials = Array.isArray(sizeMaterial.materials)
+        ? sizeMaterial.materials
+        : [];
       let grM = sizeMaterial.mgroup;
       let grIdxItems = [];
       let total_mrp_price = 0,
