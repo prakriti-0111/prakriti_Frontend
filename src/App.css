@@ -2622,7 +2622,7 @@ ul.authenticity_list li img {
     padding: 0px 0 30px 0;
     margin-top: 130px;
   }
-  
+
 }
 
 .search-wrapper .container {
@@ -2633,6 +2633,15 @@ ul.authenticity_list li img {
 .search_wrapper_header {
   width: 97%;
   margin: auto;
+}
+
+.nav-height {
+  height: 122px;
+}
+@media (max-width: 767px) {
+  .nav-height {
+    height: 46px;
+  }
 }
 
 .search-area {
@@ -8133,7 +8142,7 @@ span.count.percent span {
 
   .search-wrapper {
     padding: 0;
-    margin-top: 6px;
+    margin-top: 10px;
   }
 
   .terms-conditions,
@@ -8228,7 +8237,7 @@ span.count.percent span {
 
   .product-details-wrapper {
     padding: 0px 0 25px 0;
-    margin-top: 25px;
+    margin-top: 20px;
   }
 
   .desktop-cart {
