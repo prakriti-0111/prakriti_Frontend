@@ -2622,7 +2622,7 @@ ul.authenticity_list li img {
     padding: 0px 0 30px 0;
     margin-top: 130px;
   }
-  
+
 }
 
 .search-wrapper .container {
@@ -2633,6 +2633,15 @@ ul.authenticity_list li img {
 .search_wrapper_header {
   width: 97%;
   margin: auto;
+}
+
+.nav-height {
+  height: 122px;
+}
+@media (max-width: 767px) {
+  .nav-height {
+    height: 46px;
+  }
 }
 
 .search-area {

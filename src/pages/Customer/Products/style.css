@@ -2,6 +2,19 @@
     display: none;
 }
 
+/* This page renders under the fixed Customer header, whose height is
+   already reserved by the .nav-height spacer div, so the generic
+   .search-wrapper top margin (meant for header-less pages) must not
+   be added again here. */
+.search-wrapper.category-listing-wrapper {
+    margin-top: 0;
+}
+@media only screen and (min-width: 768px) {
+    .search-wrapper.category-listing-wrapper {
+        margin-top: 0;
+    }
+}
+
 .content-name-action{
     display: none;
 }
