@@ -6,9 +6,6 @@ section {
   padding-top: 10px;
 }
 
-.nav-height {
-  height: 122px;
-}
 
 .container-fluid {
     padding-left: 85px;
@@ -648,9 +645,6 @@ section {
     /* .festive-offer .diamond-inner{
         background-position: right -100% center !important;
     } */
-     .nav-height {
-        height: 46px;
-      }
       .container-fluid {
         padding-left: 15px;
         padding-right: 15px;

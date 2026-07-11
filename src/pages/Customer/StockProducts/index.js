@@ -468,7 +468,7 @@ class ProductsPage extends React.Component {
     /* height: "100px", marginLeft:"7px", width:"95%", marginBottom:"5px", display:"none" */
 
     return (
-      <div className="search-wrapper">
+      <div className="search-wrapper category-listing-wrapper">
         <div className="search_wrapper_header ">
           <div className="breadcrumb-wrapper">
             <Breadcrumb>
