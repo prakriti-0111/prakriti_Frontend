@@ -346,9 +346,137 @@ class ProductDetails extends React.Component {
   };
 
   handleSizeChange = (index) => {
-    this.setState({
-      sizeMaterialIndex: index,
-    });
+    // When size changes, reinitialize group selections and recompute prices
+    let product = this.state.product;
+    if (!product) {
+      this.setState({ sizeMaterialIndex: index });
+      return;
+    }
+    let sizeMaterialIndex = index;
+    let sizeMaterial = product.size_materials[sizeMaterialIndex];
+    let grM = sizeMaterial.mgroup || [];
+    let grIdxItems = [];
+    let total_mrp_price = 0,
+      total_sale_price = 0,
+      total_gst = 0;
+
+    let prevGroupIndex = this.state.groupMaterialIndex || [];
+    let grCount = grM.length;
+    for (let i = 0; i < grCount; i++) {
+      let grpId = grM[i];
+      let selFGrM = sizeMaterial.materials.filter((itm) => itm.group == grpId);
+      if (selFGrM.length > 0) {
+        // preserve previous selection if possible
+        let prevSel = prevGroupIndex.find((p) => p.grpId == grpId);
+        let selectedMaterialId = null;
+        let selectedPurityId = null;
+
+        if (prevSel) {
+          // check if previously selected material exists in this size
+          let exists = selFGrM.find((s) => s.material_id == prevSel.mtrlId);
+          if (exists) {
+            selectedMaterialId = prevSel.mtrlId;
+            // check purity exists
+            let mIndexTmp = selFGrM.findIndex((s) => s.material_id == selectedMaterialId);
+            let purityExists = selFGrM[mIndexTmp].purities.find((p) => p.id == prevSel.prtyId);
+            if (purityExists) selectedPurityId = prevSel.prtyId;
+          }
+        }
+
+        // fallback to defaults
+        if (!selectedMaterialId) {
+          selectedMaterialId = selFGrM[0].material_id;
+        }
+
+        let mIndex = sizeMaterial.materials.findIndex((itm) => itm.material_id == selectedMaterialId);
+
+        // choose purity
+        if (!selectedPurityId) {
+          selectedPurityId = sizeMaterial.materials[mIndex].purities[0]?.id || 0;
+        }
+
+        grIdxItems.push({
+          grpId: grpId,
+          mtrlId: selectedMaterialId,
+          prtyId: selectedPurityId,
+        });
+
+        // set selected flags and prices
+        for (let j = 0; j < sizeMaterial.materials[mIndex].purities.length; j++) {
+          sizeMaterial.materials[mIndex].purities[j].is_selected = false;
+          if (sizeMaterial.materials[mIndex].purities[j].id == selectedPurityId) {
+            sizeMaterial.materials[mIndex].purities[j].is_selected = true;
+            sizeMaterial.materials[mIndex].discount_percent = sizeMaterial.materials[mIndex].purities[j].discount_percent;
+          }
+        }
+
+        sizeMaterial.materials[mIndex].price = sizeMaterial.materials[mIndex].purities.find((p) => p.is_selected).price;
+        sizeMaterial.materials[mIndex].mrp_price = sizeMaterial.materials[mIndex].purities.find((p) => p.is_selected).mrp_price;
+
+        let m = _.filter(sizeMaterial.materials[mIndex].purities, { is_selected: true });
+        total_mrp_price += parseFloat(m[0].mrp_price);
+        total_sale_price += parseFloat(m[0].price);
+
+        if (i == grCount - 1) {
+          total_mrp_price += parseFloat(sizeMaterial.making_charge_mrp);
+          total_sale_price += parseFloat(sizeMaterial.making_charge);
+        }
+
+        if (product.tax_info && i == grCount - 1) {
+          let igst = 0;
+          let cgst = !isEmpty(product.tax_info.cgst)
+            ? priceFormat((total_sale_price * parseFloat(product.tax_info.cgst)) / 100, true)
+            : 0;
+          let sgst = !isEmpty(product.tax_info.sgst)
+            ? priceFormat((total_sale_price * parseFloat(product.tax_info.sgst)) / 100, true)
+            : 0;
+          let cgst_m = !isEmpty(product.tax_info.cgst)
+            ? priceFormat((total_mrp_price * parseFloat(product.tax_info.cgst)) / 100, true)
+            : 0;
+          let sgst_m = !isEmpty(product.tax_info.sgst)
+            ? priceFormat((total_mrp_price * parseFloat(product.tax_info.sgst)) / 100, true)
+            : 0;
+          total_mrp_price += igst + cgst_m + sgst_m;
+          total_sale_price += igst + cgst + sgst;
+          total_gst = priceFormat(igst + cgst + sgst);
+        }
+
+        let discount_percent =
+          total_mrp_price > total_sale_price
+            ? Math.round(priceFormat(((total_mrp_price - total_sale_price) / total_mrp_price) * 100))
+            : 0;
+        sizeMaterial.mrp_price = priceFormat(total_mrp_price);
+        sizeMaterial.sale_price = priceFormat(total_sale_price);
+        sizeMaterial.discount_percent = discount_percent;
+        sizeMaterial.total_gst = total_gst;
+        sizeMaterial.have_offer = total_mrp_price > total_sale_price ? true : false;
+      }
+    }
+
+    product.size_materials[sizeMaterialIndex] = sizeMaterial;
+
+    this.setState(
+      {
+        sizeMaterialIndex: sizeMaterialIndex,
+        product: product,
+        groupMaterialIndex: grIdxItems,
+      },
+      () => {
+        // Recompute calculation to ensure UI shows updated totals
+        if (grIdxItems.length > 0) {
+          // call handleCalculation for the first group's selected material/purity
+          let first = grIdxItems[0];
+          this.handleCalculation(first.mtrlId, first.prtyId || 0, first.grpId);
+        } else {
+          // non-grouped, recompute full calculation
+          if (sizeMaterial.materials && sizeMaterial.materials.length > 0) {
+            let mid = sizeMaterial.materials[0].material_id;
+            let pid = sizeMaterial.materials[0].purities[0]?.id || 0;
+            this.handleCalculation(mid, pid, null);
+          }
+        }
+      }
+    );
   };
 
   handleMaterialChange = (grpId, mtrlId) => {
