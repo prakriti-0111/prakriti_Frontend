@@ -1843,7 +1843,7 @@ img.p_details_slider {
   left: 0;
   height: 100%;
   width: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 .slider-thumbnail {
   position: relative;
