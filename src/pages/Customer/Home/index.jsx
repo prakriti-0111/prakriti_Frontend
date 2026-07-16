@@ -594,8 +594,16 @@ class HomePage extends Component {
   };
 
   getNewArrivalLink = (item) => {
-    console.log("link : ", item.url.replace(process.env.BASE_URL + "/", "/")); 
-    return item.url; //.replace(process.env.BASE_URL + "/", "/")
+    // Convert the absolute URL returned by the API into an in-app relative
+    // path (pathname + query) so the link navigates within the SPA instead of
+    // doing a cross-origin redirect to the production domain. Domain-agnostic
+    // so it works on localhost, test and production alike.
+    try {
+      const u = new URL(item.url);
+      return u.pathname + u.search + u.hash;
+    } catch (e) {
+      return item.url;
+    }
   };
 
   getfestiveOfferLink = (item) => {
