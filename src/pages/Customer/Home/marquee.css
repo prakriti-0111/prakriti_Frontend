@@ -687,12 +687,16 @@ section {
         margin-bottom: 5px !important;
       }
 
+      .retailer-label {
+        width: 159px;
+      }
+
       .retailer-search {
         /* padding-top: 10px; */
         padding-right: 5px;
         width: 159px;
       }
-      
+
       .best-retailer .b-slider-content h2{
         font-size: 12px;
       }
