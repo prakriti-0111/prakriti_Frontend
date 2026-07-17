@@ -274,8 +274,11 @@ class HomePage extends Component {
       } */
       /* console.log("track.innerHTML : ", document.querySelector(".marquee-track-retailer").innerHTML);
       console.log("track.children : ", document.querySelector(".marquee-track-retailer").children); */
-      //const itemWidth = track.children[0].offsetWidth;
-      const itemWidth = track.current && track.children && track.children.length > 0?track.children[0].offsetWidth:0;
+      // The retailer list is already duplicated in state (see loadBestReatailers),
+      // so the track holds two identical sets and can loop seamlessly like New Arrivals.
+      const itemWidth = track.children && track.children.length > 0?track.children[0].offsetWidth:0;
+      // Gap between retailer cards (see .marquee-retailer span in marquee.css)
+      const gap = this.props.isMobileView ? 20 : 40;
 
       /* console.log("this.retailerPosition : ", this.retailerPosition);
       console.log("this.retailerSpeed : ", this.retailerSpeed); */
@@ -283,16 +286,14 @@ class HomePage extends Component {
       const scrollRetailer = () => { //alert("here");
         if(document.querySelector(".marquee-track-retailer")){
           this.retailerPosition -= this.retailerSpeed;
-          
-          
-          // Reset when half the content has scrolled (i.e. one full set)
-          if(this.props.isMobileView && Math.abs(this.retailerPosition) >= (document.querySelector(".marquee-track-retailer").scrollWidth / 2)){
-            this.retailerPosition = -5;
-          }else if (!this.props.isMobileView && Math.abs(this.retailerPosition) >= (document.querySelector(".marquee-track-retailer").scrollWidth / 2) - 600) {
-            this.retailerPosition = -5;
+
+          // Reset when half the content has scrolled (i.e. one full set) for a
+          // seamless infinite loop — the second half is identical to the first.
+          if (Math.abs(this.retailerPosition) >= document.querySelector(".marquee-track-retailer").scrollWidth / 2) {
+            this.retailerPosition = 0;
           }
 
-          if(-this.retailerPosition % (itemWidth+20) == 0){
+          if(-this.retailerPosition % (itemWidth+gap) == 0){
             /* console.log("===============================================");
             console.log("itemWidth : ", itemWidth);
             console.log("this.retailerPosition : ", this.retailerPosition);
@@ -593,8 +594,16 @@ class HomePage extends Component {
   };
 
   getNewArrivalLink = (item) => {
-    console.log("link : ", item.url.replace(process.env.BASE_URL + "/", "/")); 
-    return "";
+    // Convert the absolute URL returned by the API into an in-app relative
+    // path (pathname + query) so the link navigates within the SPA instead of
+    // doing a cross-origin redirect to the production domain. Domain-agnostic
+    // so it works on localhost, test and production alike.
+    try {
+      const u = new URL(item.url);
+      return u.pathname + u.search + u.hash;
+    } catch (e) {
+      return item.url;
+    }
   };
 
   getfestiveOfferLink = (item) => {
@@ -745,7 +754,7 @@ class HomePage extends Component {
                         </Col>
                     </Row>
                     </Container> */}
-              <div className="container-fluid p-1" >
+              <div className="container-fluid p-3" >
                 {banners.length > 0 && <Carousel className="rounded-4">
                   {banners.map((item, key) => (
                     <Carousel.Item key={key}>
@@ -817,7 +826,7 @@ class HomePage extends Component {
                     className={`promocode`}
                     key={`section_item_${k}_${ky}`}
                   >
-                    <div className="container-fluid p-0">
+                    <div className="container-fluid p-3">
                       <Link
                         to={
                           isEmpty(item.products)
@@ -834,9 +843,9 @@ class HomePage extends Component {
                       >
                         <div className="promocode-banner">
                           <img src={item.banner} alt="" style={{width:"100%"}} />
+                          <span className="promocode-title">{item.title}</span>
                         </div>
-                        <span className="promocode-title">{item.title}</span>
-                      
+
                         {/* <Container
                           className={
                             (key % 2 == 0 ? "promocode-banner" : "promocode-banner") +
@@ -891,13 +900,15 @@ class HomePage extends Component {
                       <span className="marquee-track" ref={el => (this.marqueeTrackRef = el)}>
                         {newArrivals.map((item, key) => (
                           
-                            <div className="marquee-item" key={`NewArrivals_${key}`} style={{cursor:"pointer"}} onClick={() => window.location = this.getNewArrivalLink(item)} >
+                            <div className="marquee-item" key={`NewArrivals_${key}`} style={{cursor:"pointer"}} >
                               <Container className='diamond-inner mt-3 mb-3 mt-md-4 mb-md-4 position-relative' style={{ /* backgroundImage:`url(${item.image}) ` */ }}>
                                   {/*<div className='offer-header'>
                                       <h2>{item.title}</h2>
                                       <a href={this.getNewArrivalLink(item)} className='shop-now'>Shop Now</a>
                                   </div>*/}
+                                <a href={this.getNewArrivalLink(item)}>
                                   <img src={item.image} alt="" className="d-block w-100" />
+                                </a>
                               </Container>
                             </div>
                         
@@ -992,8 +1003,9 @@ class HomePage extends Component {
 
                 return (<>{sliders.length > 0 && <section key={`section_item_${k}`} className={`selling-product`} >
                   <div className="container-fluid p-3">
+                    <h2 className="text-center ">Current Stock Products</h2>
                     <div className="selling-product-cont p-1">
-                      
+
                       <Swiper
                         spaceBetween={30}
                         //onSlideChange={() => console.log("slide change Current Stock banner")}
@@ -1093,10 +1105,6 @@ class HomePage extends Component {
                         ))}
                         
                       </Swiper>
-                      {sliders.length > 0 && <div className="selling-product-header d-flex justify-content-between mb-1">
-                        <h1>Current Stock Products</h1>
-                        
-                      </div>}
                     </div>
                   </div>
                 </section>}</>);
@@ -1107,9 +1115,9 @@ class HomePage extends Component {
             return (<>
             {best_selling_products.length ? (
             <section key={`section_item_${k}`} className={`selling-product`}>
-              <div className="container-fluid">
+              <div className="container-fluid p-3">
                 <h2 className="text-center ">Best Selling Products</h2>
-                <div className="selling-product-cont">
+                <div className="selling-product-cont p-1">
                   {/* <div className="selling-product-header">
                     <h1>Best Selling Products</h1>
                   </div> */}

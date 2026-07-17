@@ -94,3 +94,34 @@
         gap: 6px;
     }
 }
+
+/* Scrollable subcategory filter dropdown when there are many subcategories */
+.subcategory-filter .dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Keep the banner + search/sort-filter bar pinned below the fixed header
+   while scrolling the product list (Task: sticky banner & filter). */
+.category-listing-wrapper .sticky-filter-bar {
+    position: sticky;
+    top: 122px; /* desktop fixed-header height (.nav-height) */
+    z-index: 100;
+    background: #fff;
+    padding-bottom: 6px;
+}
+
+/* Product cards have a wishlist badge with z-index:999; since the card
+   itself isn't a stacking context, that badge would paint OVER the sticky
+   bar as cards scroll underneath. Make each card its own stacking context
+   with a low z-index so its badges stay trapped inside and the sticky bar
+   cleanly covers them. */
+.category-listing-wrapper .search-slider .search-inner {
+    position: relative;
+    z-index: 0;
+}
+@media (max-width: 767px) {
+    .category-listing-wrapper .sticky-filter-bar {
+        top: 46px; /* mobile fixed-header height */
+    }
+}

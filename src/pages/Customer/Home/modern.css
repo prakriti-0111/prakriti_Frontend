@@ -1,13 +1,54 @@
 
+/* Normalize all promo banner sections to the exact same width.
+   All three use `container-fluid p-3`, so the only remaining
+   difference is a stray margin on the banner element itself —
+   zero it and force full width so hero, promocode & festive match.
+   !important guards against any leftover margin-left:6% / max-width:87.2%. */
+.banner-sec .carousel,
+.promocode .promocode-banner,
+.festive-offer .diamond-inner {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.promocode .promocode-banner img {
+  width: 100% !important;
+}
+
+/* Make the section headings inside `.promise` sections — "Our Partners"
+   and "Our Promise" (desktop + mobile) — match the other slider-section
+   headings (default h2: 2rem Roboto #212529) instead of `.promise h2`'s
+   44px Muli. */
+.promise > .container-fluid > h2.text-center {
+  font-family: "Roboto", sans-serif;
+  font-size: 2rem;
+  font-weight: 500;
+  color: #212529;
+  margin-bottom: 0.5rem;
+}
+
 /* Remove blue background from promocode section */
 .promocode {
   background-color: #f8f9fa; /* Light gray background instead of blue */
   color: #000;
   text-align: center;
-  padding: 40px 20px;
+  /* No horizontal padding so the banner width matches Festive Offer
+     (whose section has 0 horizontal padding). Only the container-fluid
+     16px padding insets the banner. */
+  padding: 8px 0;
   font-size: 1.5rem;
   font-weight: bold;
   border-radius: 10px;
+}
+
+/* Hero section: drop the generic section's 15px side padding so its
+   banner lines up with promocode & festive (all inset only by the
+   container-fluid p-3). */
+.banner-sec {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* Ensure all sections have equal width */
@@ -36,12 +77,22 @@ section {
   border-bottom: 1px solid #e0e0e0;
 }
 
-/* Promocode heading alignment */
+.promocode-banner {
+  position: relative;
+}
+
+/* Promocode heading alignment — centered overlay at top of banner */
 .promocode-title {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
   text-align: center;
   font-weight: bold;
   font-size: 2rem;
-  margin-bottom: 20px;
+  margin: 0;
+  z-index: 2;
 }
 
 /* Remove extra gaps in promocode items */
@@ -88,11 +139,14 @@ section {
 }
 
 .best-retailer .b-slider-image {
-  margin: 20px;
+  margin: 8px;
 }
 
 .best-retailer .b-slider-image img {
-  border-radius: 50%;
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
   border: 4px solid #fff;
   transition: transform 0.3s ease;
 }

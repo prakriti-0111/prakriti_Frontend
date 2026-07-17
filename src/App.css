@@ -682,10 +682,11 @@ section.pendant-offer .pendant-inner {
 }
 
 .best-retailer .b-slider-image img {
-  margin: 20px auto;
+  margin: 8px auto;
   width: 160px;
   height: 160px;
-  border-radius: 100%;
+  object-fit: cover;
+  border-radius: 8px;
   border: 8px solid #cdcdcd;
 }
 
@@ -705,6 +706,7 @@ section.pendant-offer .pendant-inner {
   display: flex;
   justify-content: center;
   gap: 5px;
+  margin: 2px 0;
 }
 
 .seller-description ul li {
@@ -728,6 +730,7 @@ section.pendant-offer .pendant-inner {
   font-family: "Muli";
   font-size: 24px;
   text-align: center;
+  margin: 4px 0;
 }
 
 .offer-header,
@@ -6880,10 +6883,11 @@ span.count.percent span {
   }
 
   .best-retailer .b-slider-image img {
-    margin: 20px auto;
-    width: 100px;
-    height: 100px;
-    border-radius: 100%;
+    margin: 8px auto;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
   }
 
   .best-retailer .b-slider-content h2 {
@@ -8250,7 +8254,7 @@ span.count.percent span {
   }
 
   .mobile-dropdown {
-    margin-top: 40% !important;
+    margin-top: 10px !important;
     display: block;
   }
 
