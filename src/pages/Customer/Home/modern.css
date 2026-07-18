@@ -150,6 +150,131 @@ section {
   transform: scale(1.05);
 }
 
+/* Defensive: prevent any child element wider than the viewport from
+   producing a page-level horizontal scrollbar. Applied at every
+   ancestor + explicit width constraint so the browser can't compute
+   a scroll-width larger than the viewport. Vertical scroll untouched. */
+html,
+body,
+#root,
+.wrapper {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+}
+
+/* ---------- "Our Partners" section (best-retailer) ---------- */
+
+/* State/city selector row — flush to the edges of the dark navy
+   container (no top gap, no left/right gap). Overrides multiple
+   `.retailer-label` / `.retailer-search` rules across marquee.css
+   media queries that add 10px top padding, 1-2% left padding,
+   5-15px right padding, and fixed widths. */
+.best-retailer .retailer-search-container {
+  display: flex !important;
+  gap: 8px;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.best-retailer .retailer-label,
+.best-retailer .retailer-search {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  width: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* The Typeahead root inside each box should stretch to fill. */
+.best-retailer .retailer-label > div,
+.best-retailer .retailer-search > div {
+  width: 100% !important;
+}
+
+/* Left-align the retailer card text (company name + city + phone)
+   and let long names wrap onto a second line instead of truncating.
+   Overrides:
+     - `.best-retailer .b-slider-content h2 { text-align: center }` (App.css)
+     - `.seller-description ul { justify-content: center }` (App.css)
+     - `.marquee-item-retailer { white-space: nowrap }` (marquee.css). */
+.best-retailer .marquee-item-retailer {
+  white-space: normal !important;
+}
+.best-retailer .b-slider-content {
+  text-align: left !important;
+  padding: 8px !important;
+}
+.best-retailer .b-slider-content h2 {
+  text-align: left !important;
+  padding-left: 0 !important;
+  margin: 4px 0 !important;
+  white-space: normal !important;
+  overflow-wrap: break-word;
+}
+.best-retailer .b-slider-content .seller-description {
+  display: block !important;
+  white-space: normal !important;
+}
+.best-retailer .b-slider-content .seller-description ul {
+  justify-content: flex-start !important;
+  padding-left: 0 !important;
+  margin: 2px 0 !important;
+  list-style: none !important;
+  white-space: normal !important;
+}
+.best-retailer .b-slider-content .seller-description ul li {
+  white-space: normal !important;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Retailer card widths — computed so a whole number of cards fits
+   inside the dark navy container. Formula:
+     inner = 100vw - 30px (section 15px each side) - 8px (.p-1 4px each) = 100vw - 38px
+     with N cards + (N-1) gaps of G:  card = (inner - (N-1)G) / N
+   Gap G matches `index.jsx:281` (retailer marquee JS uses 20px on
+   mobile viewport <768px, 40px otherwise) so the marquee's snap step
+   (offsetWidth + gap) aligns to card boundaries and each pause shows
+   whole cards.
+     ≤480px:  2 cards, gap 20  →  (100vw - 58) / 2
+     ≤768px:  3 cards, gap 20  →  (100vw - 78) / 3                    */
+@media (max-width: 768px) {
+  .best-retailer .marquee-item-retailer {
+    min-width: calc((100vw - 78px) / 3) !important;
+    width: calc((100vw - 78px) / 3) !important;
+    max-width: calc((100vw - 78px) / 3) !important;
+  }
+  .best-retailer .marquee-track-retailer,
+  .best-retailer .marquee-retailer span {
+    gap: 20px !important;
+  }
+}
+@media (max-width: 480px) {
+  .best-retailer .marquee-item-retailer {
+    min-width: calc((100vw - 58px) / 2) !important;
+    width: calc((100vw - 58px) / 2) !important;
+    max-width: calc((100vw - 58px) / 2) !important;
+  }
+}
+
+/* Ensure the retailer image scales to the card width instead of
+   being a fixed 100px / 80px that doesn't fill wider cards. */
+@media (max-width: 768px) {
+  .best-retailer .b-slider-image {
+    display: flex !important;
+    justify-content: center;
+    margin: 4px !important;
+  }
+  .best-retailer .b-slider-image img {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    margin: 0 !important;
+  }
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .banner-sec .slider-title {
