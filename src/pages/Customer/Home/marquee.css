@@ -102,10 +102,6 @@ section {
     text-align: center;
 }
 
-.promocode .promocode-title {
-    /* margin-left: 7%; */
-    font-size: 25px;
-}
 
 /* sale products */
 .wrapper .selling-product {
@@ -415,10 +411,6 @@ section {
         margin-right: 4% !important; */
     }
 
-    .promocode .promocode-title {
-      /* margin-left: 6% !important; */
-      font-size: 23px !important; 
-    }
 
     .retailer-search-container {
       display: flex;
@@ -497,10 +489,6 @@ section {
         margin-right: 4% !important; */
     }
 
-    .promocode .promocode-title {
-      /* margin-left: 6% !important; */
-      font-size: 23px !important; 
-    }
 
     .diamond-inner {
       /* height: 250px; */
@@ -582,10 +570,6 @@ section {
         margin-right: 4% !important; */
     }
 
-    .promocode .promocode-title {
-      /* margin-left: 6% !important; */
-      font-size: 23px !important; 
-    }
 
     /* .festive-offer .diamond-inner{
         background-position: right -100% center !important;
@@ -709,11 +693,6 @@ section {
         width: 352px !important;
         margin-left: 1% !important;
         margin-right: 1% !important; */
-    }
-
-    .promocode .promocode-title {
-      /* margin-left: 2% !important; */
-      font-size: 15px !important;
     }
 
     .wrapper section.ornament-slider .swiper {
@@ -848,11 +827,6 @@ section {
         width: 352px !important;
         margin-left: 1% !important;
         margin-right: 1% !important; */
-    }
-
-    .promocode .promocode-title {
-      /* margin-left: 2% !important; */
-      font-size: 15px !important;
     }
 
     .retailer-search-container {

@@ -827,6 +827,7 @@ class HomePage extends Component {
                     key={`section_item_${k}_${ky}`}
                   >
                     <div className="container-fluid p-3">
+                      <h2 className="promocode-title text-center">{item.title}</h2>
                       <Link
                         to={
                           isEmpty(item.products)
@@ -843,7 +844,6 @@ class HomePage extends Component {
                       >
                         <div className="promocode-banner">
                           <img src={item.banner} alt="" style={{width:"100%"}} />
-                          <span className="promocode-title">{item.title}</span>
                         </div>
 
                         {/* <Container
