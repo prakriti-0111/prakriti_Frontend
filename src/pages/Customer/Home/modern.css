@@ -17,16 +17,25 @@
   width: 100% !important;
 }
 
-/* Make the section headings inside `.promise` sections — "Our Partners"
-   and "Our Promise" (desktop + mobile) — match the other slider-section
-   headings (default h2: 2rem Roboto #212529) instead of `.promise h2`'s
-   44px Muli. */
-.promise > .container-fluid > h2.text-center {
+/* Uniform styling for every homepage section title — match "Festive
+   Offers" (a plain `<h2 className="text-center">` using Bootstrap
+   defaults: 2rem, weight 500, Roboto) and use tight top/bottom spacing.
+   This overrides:
+     - `.promise h2` (44px Muli / 20px on mobile) → Our Promise / Our Partners
+     - `.review-header h3` (50px Muli / 20px on mobile) → The Prakriti Store
+     - Any residual `.promocode-title` custom sizing.
+   Selector is scoped to homepage section headings so we don't affect
+   modal/card h2/h3 elsewhere. */
+.wrapper > section > .container-fluid > h2.text-center,
+.wrapper > section > .container-fluid > h2.promocode-title,
+.wrapper > section > .container-fluid > .review-header > h3.text-center {
   font-family: "Roboto", sans-serif;
   font-size: 2rem;
   font-weight: 500;
   color: #212529;
-  margin-bottom: 0.5rem;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0 0 0.75rem 0;
 }
 
 /* Remove blue background from promocode section */
@@ -79,20 +88,6 @@ section {
 
 .promocode-banner {
   position: relative;
-}
-
-/* Promocode heading alignment — centered overlay at top of banner */
-.promocode-title {
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  text-align: center;
-  font-weight: bold;
-  font-size: 2rem;
-  margin: 0;
-  z-index: 2;
 }
 
 /* Remove extra gaps in promocode items */
@@ -162,10 +157,6 @@ section {
     padding: 10px 15px;
   }
 
-  .promocode-title {
-    font-size: 1.5rem;
-  }
-
   .selling-product .card-body h5,
   .feature-product .card-body h5 {
     font-size: 1rem;
@@ -180,16 +171,45 @@ section {
     width: 100px;
     height: 100px;
   }
+
+  /* Tighten vertical spacing between homepage sections on mobile so
+     sections sit close together instead of feeling disconnected.
+     Keep the horizontal padding — Bootstrap <Row> uses -0.75rem side
+     margins, and removing the horizontal inset lets those rows push
+     past the viewport and produce a horizontal page scrollbar. */
+  section {
+    padding: 0 15px;
+    margin-bottom: 0;
+    border-bottom: 0;
+  }
+  section > .container-fluid.p-3 {
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+  }
+
+  /* Shrink section titles on mobile so long headings like
+     "Current Stock Products" fit on one line inside the 360px viewport
+     (2rem/32px wraps; 1.4rem/~22px fits and still matches the visual
+     weight of "Festive Offers" on this breakpoint). */
+  .wrapper > section > .container-fluid > h2.text-center,
+  .wrapper > section > .container-fluid > h2.promocode-title,
+  .wrapper > section > .container-fluid > .review-header > h3.text-center {
+    font-size: 1.4rem;
+    padding: 0 0 0.5rem 0;
+  }
+
+  /* Override `.festive-offer { padding-top: 5px !important }` from
+     slider.css so the gap above "Festive Offers" matches the gap
+     above other section titles. */
+  section.festive-offer {
+    padding-top: 0 !important;
+  }
 }
 
 @media (max-width: 480px) {
   .banner-sec .slider-title {
     font-size: 1.2rem;
     padding: 8px 12px;
-  }
-
-  .promocode-title {
-    font-size: 1.2rem;
   }
 
   .selling-product .card-body h5,
