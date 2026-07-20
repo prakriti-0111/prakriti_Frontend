@@ -36,6 +36,7 @@ import {
   setLastVisitPage,
   convertUnitToGram,
   weightFormat,
+  objectToQuery,
 } from "src/helpers/helper";
 import Searchbanner from "src/assets/images/ratn_banner.png";
 import { CUSTOMER_PRODUCT_WISHLIST_UPDATE } from "actionTypes/Customer/product.types";
@@ -426,6 +427,34 @@ class ProductsPage extends React.Component {
     return "Search";
   };
 
+  getSubCategories = () => {
+    let categorySlug = this.props.query.get("category");
+    if (!categorySlug) return [];
+    let category = _.filter(this.state.categories, (s) => {
+      return s.slug == categorySlug;
+    });
+    return category.length && category[0].subCategories
+      ? category[0].subCategories
+      : [];
+  };
+
+  getSelectedSubcategoryName = () => {
+    let subSlug = this.props.query.get("subcategory");
+    if (!subSlug) return "";
+    let sub = _.filter(this.getSubCategories(), (s) => {
+      return s.slug == subSlug;
+    });
+    return sub.length ? sub[0].name : "";
+  };
+
+  handleSubcategory = (slug) => {
+    let params = { category: this.props.query.get("category") || "" };
+    if (slug) {
+      params.subcategory = slug;
+    }
+    this.props.navigate("/stock-products" + objectToQuery(params, true));
+  };
+
   getBanner = () => {
     if (this.props.query.get("category")) {
       let category = _.filter(this.state.categories, (s) => {
@@ -464,7 +493,7 @@ class ProductsPage extends React.Component {
       bannerSearchStyle = {height: "100px", marginLeft:"17%", width:"66%" };
     }
 
-    let bannerSearchMobileStyle = {height: "1px", marginLeft:"7px", width:"95%", marginBottom:"5px" };
+    let bannerSearchMobileStyle = {height: "auto", marginLeft:"7px", width:"95%", marginBottom:"5px" };
     /* height: "100px", marginLeft:"7px", width:"95%", marginBottom:"5px", display:"none" */
 
     return (
@@ -478,6 +507,22 @@ class ProductsPage extends React.Component {
               </Breadcrumb.Item>
             </Breadcrumb>
           </div>
+        </div>
+        <Container>
+          {/* <div className="products_header_title">
+            <ul>
+              <li>
+                <h1>{searchBy}</h1>
+              </li>
+              <li>|</li>
+              <li>
+                <span> {this.state.total} </span> DESIGNS
+              </li>
+            </ul>
+          </div> */}
+          {/* Banner + search / sort-filter bar are sticky together below the
+              fixed header so the whole section pins while scrolling products. */}
+          <div className="sticky-filter-bar">
           {window.innerWidth > 750 ? (
             banner ? (
               <div
@@ -492,19 +537,6 @@ class ProductsPage extends React.Component {
               <img src={mobile} className="rounded" alt="" />
             </div>
           ) : null}
-        </div>
-        <Container>
-          {/* <div className="products_header_title">
-            <ul>
-              <li>
-                <h1>{searchBy}</h1>
-              </li>
-              <li>|</li>
-              <li>
-                <span> {this.state.total} </span> DESIGNS
-              </li>
-            </ul>
-          </div> */}
           <div className="search-area desktop-search rounded bg-light">
             <InputGroup className=" rounded bg-light">
               <Form.Control
@@ -521,7 +553,39 @@ class ProductsPage extends React.Component {
                 <BiSearchAlt2 />
               </InputGroup.Text>
             </InputGroup>
-            <div className="filter-button">
+            <div className="filter-button d-flex gap-2">
+              {this.getSubCategories().length > 0 && (
+                <Dropdown className="rounded subcategory-filter">
+                  <Dropdown.Toggle
+                    variant="primary"
+                    id="dropdown-subcategory"
+                    className="filter-icon"
+                  >
+                    {this.getSelectedSubcategoryName() || "Subcategory"}{" "}
+                    <BsFilterLeft />
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => this.handleSubcategory("")}>
+                      {!this.props.query.get("subcategory") ? <BsCheck2 /> : ""}{" "}
+                      All
+                    </Dropdown.Item>
+                    {this.getSubCategories().map((sub) => (
+                      <Dropdown.Item
+                        key={sub.slug}
+                        onClick={() => this.handleSubcategory(sub.slug)}
+                      >
+                        {this.props.query.get("subcategory") == sub.slug ? (
+                          <BsCheck2 />
+                        ) : (
+                          ""
+                        )}{" "}
+                        {sub.name}
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+              )}
               <Dropdown className="rounded">
                 <Dropdown.Toggle
                   variant="primary"
@@ -638,6 +702,7 @@ class ProductsPage extends React.Component {
                 </Dropdown.Menu>
               </Dropdown>
             </div>
+          </div>
           </div>
           {this.state.processing ? (
             <Loader />
