@@ -464,7 +464,7 @@ class ProductsPage extends React.Component {
       bannerSearchStyle = {height: "100px", marginLeft:"17%", width:"66%" };
     }
 
-    let bannerSearchMobileStyle = {height: "1px", marginLeft:"7px", width:"95%", marginBottom:"5px" };
+    let bannerSearchMobileStyle = {height: "auto", marginLeft:"7px", width:"95%", marginBottom:"5px" };
     /* height: "100px", marginLeft:"7px", width:"95%", marginBottom:"5px", display:"none" */
 
     return (
@@ -478,6 +478,19 @@ class ProductsPage extends React.Component {
               </Breadcrumb.Item>
             </Breadcrumb>
           </div>
+        </div>
+        <Container>
+          {/* <div className="products_header_title">
+            <ul>
+              <li>
+                <h1>{searchBy}</h1>
+              </li>
+              <li>|</li>
+              <li>
+                <span> {this.state.total} </span> DESIGNS
+              </li>
+            </ul>
+          </div> */}
           {window.innerWidth > 750 ? (
             banner ? (
               <div
@@ -492,19 +505,11 @@ class ProductsPage extends React.Component {
               <img src={mobile} className="rounded" alt="" />
             </div>
           ) : null}
-        </div>
-        <Container>
-          {/* <div className="products_header_title">
-            <ul>
-              <li>
-                <h1>{searchBy}</h1>
-              </li>
-              <li>|</li>
-              <li>
-                <span> {this.state.total} </span> DESIGNS
-              </li>
-            </ul>
-          </div> */}
+          {/* Only the compact search / sort-filter bar is sticky below the
+              fixed header. The banner scrolls away normally so the sticky
+              element stays short and pins reliably on small screens (a tall
+              sticky bar — banner + filters — mis-behaves on mobile). */}
+          <div className="sticky-filter-bar">
           <div className="search-area desktop-search rounded bg-light">
             <InputGroup className=" rounded bg-light">
               <Form.Control
@@ -638,6 +643,7 @@ class ProductsPage extends React.Component {
                 </Dropdown.Menu>
               </Dropdown>
             </div>
+          </div>
           </div>
           {this.state.processing ? (
             <Loader />

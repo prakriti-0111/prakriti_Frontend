@@ -95,6 +95,35 @@
     }
 }
 
+/* Keep the offer price and the strike-through MRP together on a SINGLE line
+   (priority). Shrink the type slightly on mobile so even long 7-digit prices
+   fit inside the narrow card, and clip as a safety net so nothing ever paints
+   past the card border. */
+.category-listing-wrapper .ring-price-wrapper {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    gap: 4px;
+    min-width: 0;
+}
+.category-listing-wrapper .s-slider-content .ring-price {
+    overflow: hidden;
+}
+
+@media only screen and (max-width: 767px) {
+    .category-listing-wrapper .search-inner .s-slider-content .ring-price {
+        padding: 0 8px;
+    }
+    .category-listing-wrapper .search-slider .offer-price {
+        font-size: 11px;
+    }
+    .category-listing-wrapper .search-slider .item-price {
+        font-size: 10px;
+    }
+    .category-listing-wrapper .ring-price-wrapper {
+        gap: 3px;
+    }
+}
+
 /* Scrollable subcategory filter dropdown when there are many subcategories */
 .subcategory-filter .dropdown-menu {
     max-height: 300px;
