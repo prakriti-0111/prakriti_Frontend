@@ -119,6 +119,52 @@
     }
 }
 
+/* Scrollable subcategory filter dropdown when there are many subcategories */
+.subcategory-filter .dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Mobile: show the SAME search + Sort By filter section as desktop. It was
+   hidden on mobile (only a small "Sort By" dropdown showed). Because this row
+   lives inside .sticky-filter-bar it stays pinned below the header while
+   scrolling the products. The duplicate mobile-only sort row is hidden. */
+@media only screen and (max-width: 767px) {
+    /* search box + filter dropdown(s) all on ONE row (like desktop). The
+       search input shrinks to share the row with the compact filter buttons. */
+    .category-listing-wrapper .search-area.desktop-search {
+        display: flex !important;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        gap: 6px;
+        margin-bottom: 6px;
+    }
+    .category-listing-wrapper .search-area .input-group {
+        flex: 1 1 auto;
+        min-width: 0;
+        font-size: 14px;
+    }
+    .category-listing-wrapper .search-area .input-group .form-control {
+        font-size: 14px;
+        min-width: 0;
+    }
+    .category-listing-wrapper .search-area .input-group .input-group-text {
+        font-size: 18px;
+    }
+    .category-listing-wrapper .filter-button {
+        flex: 0 0 auto;
+    }
+    .category-listing-wrapper .filter-button .filter-icon {
+        padding: 6px 10px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+    .category-listing-wrapper .mobile-dropdown,
+    .category-listing-wrapper .mobile-search {
+        display: none !important;
+    }
+}
+
 /* Keep the banner + search/sort-filter bar pinned below the fixed header
    while scrolling the product list (sticky header, matches Products page). */
 .category-listing-wrapper .sticky-filter-bar {
