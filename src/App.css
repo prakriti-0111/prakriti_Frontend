@@ -960,6 +960,7 @@ section.pendant-offer .pendant-inner {
 }
 
 .slide-swipe-inner {
+  border: 1px solid #e0e0e0;
   -webkit-box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 30%);
   -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 30%);
@@ -1776,7 +1777,7 @@ section.ornament-slider .swiper {
 /*------ Product Details Page -----*/
 .product-details-wrapper {
   padding: 0px 0 60px 0;
-  margin-top: 60px;
+  margin-top: 20px;
 }
 
 .product-details-wrapper .breadcrumb,
@@ -1812,8 +1813,8 @@ section.ornament-slider .swiper {
 
 .product-slider .swiper-button-next,
 .product-slider .swiper-button-prev {
-  width: 34px;
-  height: 34px;
+  width: 22px;
+  height: 22px;
   background-color: #fff;
   border-radius: 50%;
   color: #2c2a2b;
@@ -1822,9 +1823,14 @@ section.ornament-slider .swiper {
 
 .product-slider .swiper-button-next:after,
 .product-slider .swiper-button-prev:after {
-  font-size: 12px;
+  font-size: 8px;
   color: #000000;
   font-weight: bold;
+}
+
+.product-slider .mySwiper2 .swiper-button-next,
+.product-slider .mySwiper2 .swiper-button-prev {
+  display: none;
 }
 
 .gap-30 {

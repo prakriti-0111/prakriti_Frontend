@@ -35,7 +35,7 @@ import facebookBg from 'src/assets/images/fb_bg.png';
 import fb from 'src/assets/images/facebook.png';
 import insta from 'src/assets/images/insta.png';
 import getSlider from 'src/json/slider_data';
-import { Navigation } from "swiper";
+import { Navigation } from "swiper/modules";
 import { HiHome } from "react-icons/hi";
 import { BiShoppingBag } from "react-icons/bi";
 import { TbUserCircle } from "react-icons/tb";
