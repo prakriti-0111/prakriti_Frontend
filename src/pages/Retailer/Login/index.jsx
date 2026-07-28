@@ -141,7 +141,7 @@ class Login extends React.Component {
                                     </Form.Group>
                                     <Form.Group className="mt-2 d-flex justify-content-between forgot-password" controlId="formBasicCheckbox">
                                         <Form.Check type="checkbox" label="Remember Me" />
-                                        <a href=''>Forgot Password?</a>
+                                        <a href='/retailer/forgot-password'>Forgot Password?</a>
                                     </Form.Group>
 
                                     <div className='login-button mb-0 mt-4'>
