@@ -10,7 +10,7 @@ import { bindActionCreators } from "redux";
 import { connect, useSelector } from "react-redux";
 import withRouter from "src/helpers/withRouter";
 import Loader from "./Loader";
-import { forgotPassword } from "actions/Customer/auth.actions";
+import { forgotPasswordSendLink } from "actions/Customer/auth.actions";
 import { toast } from "react-toastify";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { FaFacebookF } from "react-icons/fa";
@@ -23,18 +23,16 @@ class ForgotPassword extends React.Component {
     super(props);
 
     this.state = {
-      forgotError: this.props.forgotError,
+      forgotError: null,
+      forgotSuccess: null,
+      submitting: false,
       isLoggedIn: this.props.isLoggedIn,
       formValaues: {
-        mobile: "",
-        //password: "",
+        email: "",
       },
       formErrors: {
-        mobile: null,
-        //password: null,
+        email: null,
       },
-      //passwordShow: false,
-      //googleBtnTxt: "LOGIN WITH GOOGLE",
     };
   }
 
@@ -57,29 +55,7 @@ class ForgotPassword extends React.Component {
       update.isLoggedIn = props.isLoggedIn;
     }
 
-    if (props.forgotError !== state.forgotError) {
-      update.forgotError = props.forgotError;
-    }
-
     return update;
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.state.forgotSuccess) {
-      //let lastVisitPage = getLastVisitPage();
-      toast.success(this.state.forgotSuccess);
-      // setLastVisitPage("");
-      // let url = lastVisitPage
-      //   ? lastVisitPage.replace(process.env.BASE_URL, "/")
-      //   : "/";
-      // let startFirstTwo = url.substring(0, 2);
-      // url =
-      //   startFirstTwo == "//" || startFirstTwo == "///" ? url.substr(1) : url;
-      // console.log("url", url);
-      // this.props.navigate(url);
-      this.props.navigate("/login");
-      //window.location.href = process.env.BASE_URL;
-    }
   }
 
   handleChange = (e) => {
@@ -95,22 +71,45 @@ class ForgotPassword extends React.Component {
   onSubmit = (event) => {
     event.preventDefault();
 
-    if (this.formValidate()) {
-      this.props.actions.forgotPassword(this.state.formValaues);
+    if (!this.formValidate() || this.state.submitting) {
+      return;
     }
+
+    this.setState({ submitting: true, forgotError: null, forgotSuccess: null });
+
+    forgotPasswordSendLink({ email: this.state.formValaues.email.trim() })
+      .then((response) => {
+        if (response.data.success) {
+          this.setState({ forgotSuccess: response.data.message });
+          toast.success(response.data.message);
+        } else {
+          this.setState({ forgotError: response.data.message });
+        }
+      })
+      .catch((err) => {
+        let message =
+          err && err.response && err.response.data
+            ? err.response.data.message
+            : null;
+        this.setState({
+          forgotError: message || "Something went wrong. Please try again.",
+        });
+      })
+      .finally(() => this.setState({ submitting: false }));
   };
 
   formValidate = () => {
     let formValaues = this.state.formValaues;
-    let formErrors = this.state.formErrors;
+    let formErrors = { email: null };
     let hasErr = false;
-    if (!formValaues.mobile) {
-      formErrors.mobile = "Mobile # is required.";
+    if (!formValaues.email.trim()) {
+      formErrors.email = "Email is required.";
       hasErr = true;
-    } else {
-      formErrors.mobile = null;
+    } else if (!/^\S+@\S+\.\S+$/.test(formValaues.email.trim())) {
+      formErrors.email = "Please enter a valid email address.";
+      hasErr = true;
     }
-    
+
     this.setState({
       formErrors: formErrors,
     });
@@ -118,8 +117,8 @@ class ForgotPassword extends React.Component {
   };
 
   render() {
-    const { forgotError, formValaues, formErrors, passwordShow } = this.state;
-    console.log("forgotError", forgotError);
+    const { forgotError, forgotSuccess, submitting, formValaues, formErrors } =
+      this.state;
     return (
       <div className="login-wrapper pt-0">
         <Container>
@@ -185,9 +184,15 @@ Note -: In our place jewellery is made by applying gold, silver and diamond in P
               <div className="login-form-wrapper shadow">
                 <h2 className="text-danger text-center">Forgot Password</h2>
                 <hr />
-                <span className="h5">Forgot your password?</span>
+                <span className="h5">
+                  Enter your registered email and we'll send you a link to reset
+                  your password.
+                </span>
                 {forgotError ? (
                   <Alert variant="danger">{forgotError}</Alert>
+                ) : null}
+                {forgotSuccess ? (
+                  <Alert variant="success">{forgotSuccess}</Alert>
                 ) : null}
                 <form onSubmit={this.onSubmit}>
                   <Form.Group
@@ -195,24 +200,29 @@ Note -: In our place jewellery is made by applying gold, silver and diamond in P
                     controlId="formEmailAddress"
                   >
                     <Form.Control
-                      name="mobile"
+                      name="email"
                       onChange={(e) => this.handleChange(e)}
-                      value={formValaues.mobile}
-                      type="text"
+                      value={formValaues.email}
+                      type="email"
                       className="rounded"
-                      placeholder="Enter Mobile Number"
-                      required
+                      placeholder="Enter Registered Email"
+                      disabled={!!forgotSuccess}
                     />
                     <span type="invalid" style={{ color: "red" }}>
                       {" "}
-                      {formErrors.mobile}{" "}
+                      {formErrors.email}{" "}
                     </span>
                   </Form.Group>
 
-                  
+
                   <div className="login-button mb-0 mt-3">
-                    <Button variant="primary" type="submit" className="rounded">
-                      SEND PASSWORD
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      className="rounded"
+                      disabled={submitting || !!forgotSuccess}
+                    >
+                      {submitting ? "SENDING..." : "SEND RESET LINK"}
                     </Button>
                   </div>
                   <p className="login-text mt-2 mb-2">
@@ -243,12 +253,9 @@ Note -: In our place jewellery is made by applying gold, silver and diamond in P
 const mapStateToProps = (state) => ({
   auth: state.auth,
   isLoggedIn: "isLoggedIn" in state.auth ? state.auth.isLoggedIn : false,
-  forgotError: "forgotError" in state.auth ? state.auth.forgotError : "",
-  forgotSuccess: "forgotSuccess" in state.auth ? state.auth.forgotSuccess : "",
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators({ forgotPassword }, dispatch),
-});
+// The reset-link request is a plain promise call, so nothing to bind here.
+const mapDispatchToProps = (dispatch) => ({});
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ForgotPassword));
