@@ -14,7 +14,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 // import "./styles.css";
-import { FreeMode, Navigation, Thumbs } from "swiper";
+import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import InputGroup from "react-bootstrap/InputGroup";
 import withRouter from "helpers/withRouter";
 import { connect, useSelector } from "react-redux";
