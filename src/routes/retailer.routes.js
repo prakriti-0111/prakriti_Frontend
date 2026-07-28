@@ -12,6 +12,7 @@ const Orders = Loadable(lazy(() => import('pages/Retailer/Orders')));
 const Cart = Loadable(lazy(() => import('pages/Retailer/Cart')));
 const EditProfile = Loadable(lazy(() => import('pages/Retailer/EditProfile')));
 const ForgotPassword = Loadable(lazy(() => import('pages/Retailer/ForgotPassword')));
+const ResetPassword = Loadable(lazy(() => import('pages/Retailer/ResetPassword')));
 const PageNotFound = Loadable(lazy(() => import('pages/Retailer/PageNotFound')));
 const PrivacyPolicy = Loadable(lazy(() => import('pages/Retailer/PrivacyPolicy')));
 const ProductDetails = Loadable(lazy(() => import('pages/Retailer/ProductDetails')));
@@ -64,6 +65,10 @@ const RetailerRoutes = (isLoggedIn) => [
             {
                 path: `${routePrefix}/forgot-password`,
                 element: <ForgotPassword />
+            },
+            {
+                path: `${routePrefix}/reset-password`,
+                element: <ResetPassword />
             },
             {
                 path: `${routePrefix}/page-not-found`,
