@@ -29,7 +29,7 @@ import Button from "react-bootstrap/Button";
 import Accordion from "react-bootstrap/Accordion";
 
 // import "./styles.css";
-import { FreeMode, Navigation, Thumbs } from "swiper";
+import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import InputGroup from "react-bootstrap/InputGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import dollar from "src/assets/images/dollar.png";
@@ -71,7 +71,9 @@ import {
   convertUnitToGram,
   weightFormat,
   setLastVisitPage,
+  fetchAnyCertificateDetails,
 } from "src/helpers/helper";
+import Modal from "react-bootstrap/Modal";
 import _ from "lodash";
 import { RESET_WISHLIST } from "actionTypes/Customer/wishlist.type";
 import { RESET_ADDCART } from "actionTypes/Customer/addcart.types";
@@ -106,9 +108,15 @@ class ProductDetails extends React.Component {
       weight: "",
       weight_err: "",
       qty_err: "",
+      certificateModalOpen: false,
+      certificateNo: "",
+      certificateLoading: false,
+      certificateDetails: null,
+      lightboxOpen: false,
     };
 
     this.videoRef = React.createRef();
+    this.mainSwiperRef = React.createRef();
   }
 
   componentDidMount() {
@@ -358,12 +366,19 @@ class ProductDetails extends React.Component {
       imageIndex: index,
       play_video: false,
     });
+    if (this.mainSwiperRef.current) {
+      this.mainSwiperRef.current.slideTo(index);
+    }
   };
 
   playVideo = () => {
+    if (this.mainSwiperRef.current) {
+      this.mainSwiperRef.current.slideTo(0);
+    }
     this.setState(
       {
         play_video: true,
+        imageIndex: 0,
       },
       () => {
         setTimeout(() => {
@@ -373,6 +388,14 @@ class ProductDetails extends React.Component {
         }, 200);
       }
     );
+  };
+
+  openLightbox = () => {
+    this.setState({ lightboxOpen: true });
+  };
+
+  closeLightbox = () => {
+    this.setState({ lightboxOpen: false });
   };
 
   handleSizeChange = (index) => {
@@ -880,6 +903,46 @@ class ProductDetails extends React.Component {
     return id;
   };
 
+  handleCertificateClick = async (certificateNo) => {
+    if (!certificateNo) return;
+    this.setState({
+      certificateModalOpen: true,
+      certificateNo: certificateNo,
+      certificateLoading: true,
+      certificateDetails: null,
+    });
+    const result = await fetchAnyCertificateDetails(certificateNo);
+    this.setState({
+      certificateDetails: result,
+      certificateLoading: false,
+    });
+  };
+
+  handleCertificateModalClose = () => {
+    this.setState({
+      certificateModalOpen: false,
+      certificateNo: "",
+      certificateDetails: null,
+    });
+  };
+
+  renderCertRow = (label, value, suffix = "", last = false) => (
+    <div
+      className="d-flex justify-content-between"
+      style={{
+        paddingBottom: "12px",
+        borderBottom: last ? "none" : "1px solid #ddd",
+        marginBottom: last ? "0" : "12px",
+      }}
+    >
+      <span style={{ fontWeight: 700, fontSize: "13px" }}>{label}</span>
+      <span style={{ fontSize: "14px" }}>
+        {value}
+        {suffix}
+      </span>
+    </div>
+  );
+
   render() {
     const { product, review_data } = this.state;
     const sizeMaterial = product
@@ -974,35 +1037,44 @@ class ProductDetails extends React.Component {
                               "--swiper-pagination-color": "#fff",
                             }}
                             spaceBetween={10}
-                            // loop={true}
+                            navigation={true}
                             modules={[FreeMode, Navigation, Thumbs]}
                             className="mySwiper2"
+                            onSwiper={(swiper) => (this.mainSwiperRef.current = swiper)}
+                            onSlideChange={(swiper) =>
+                              this.setState({ imageIndex: swiper.activeIndex, play_video: false })
+                            }
                           >
-                            <SwiperSlide
-                              className="p_details_slider_wrapper border rounded"
-                              style={{ maxHeight: "100px" }}
-                            >
-                              {this.state.play_video && product.video != "" ? (
-                                <video
-                                  style={{
-                                    objectFit: "cover",
-                                    width: "100%",
-                                    height: "385px",
-                                  }}
-                                  controls
-                                  autoPlay
-                                  loop
-                                  ref={this.videoRef}
-                                >
-                                  <source src={product.video} />
-                                </video>
-                              ) : (
-                                <img
-                                  className="p_details_slider rounded"
-                                  src={product.images[this.state.imageIndex]}
-                                />
-                              )}
-                            </SwiperSlide>
+                            {product.images.map((image, key) => (
+                              <SwiperSlide
+                                key={key}
+                                className="p_details_slider_wrapper border rounded"
+                                style={{ maxHeight: "100px" }}
+                              >
+                                {this.state.play_video && key === 0 && product.video != "" ? (
+                                  <video
+                                    style={{
+                                      objectFit: "cover",
+                                      width: "100%",
+                                      height: "385px",
+                                    }}
+                                    controls
+                                    autoPlay
+                                    loop
+                                    ref={this.videoRef}
+                                  >
+                                    <source src={product.video} />
+                                  </video>
+                                ) : (
+                                  <img
+                                    className="p_details_slider rounded"
+                                    src={image}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={this.openLightbox}
+                                  />
+                                )}
+                              </SwiperSlide>
+                            ))}
                           </Swiper>
                           {((product.video != "" && product.images.length > 0) || (product.images.length > 1)) && <Swiper
                             spaceBetween={10}
@@ -1013,7 +1085,6 @@ class ProductDetails extends React.Component {
                             watchSlidesProgress={true}
                             modules={[FreeMode, Navigation, Thumbs]}
                             className="mySwiper"
-                            onSwiper={this.setThumbsSwiper}
                           >
                             {product.video != "" ? (
                               <SwiperSlide className="slider-thumbnail border rounded">
@@ -1175,7 +1246,7 @@ class ProductDetails extends React.Component {
                               </h2>
                             </div>
                             <div className="price-breakup mt-3 rounded bg-white shadow">
-                              <div className="price-breakup-title"><h2>Price Breakup</h2><span>{product.certificate_no}</span></div>
+                              <div className="price-breakup-title"><h2>Price Breakup</h2><span style={{cursor: product.certificate_no ? "pointer" : "default", textDecoration: product.certificate_no ? "underline" : "none"}} onClick={() => this.handleCertificateClick(product.certificate_no)}>{product.certificate_no}</span></div>
                               <div className="underline"></div>
                               <div className="breakup-content">
                                 {!hasGrMaterials?(sizeMaterial.materials.map((item, key) => (
@@ -1868,9 +1939,13 @@ class ProductDetails extends React.Component {
                               "--swiper-pagination-color": "#fff",
                             }}
                             spaceBetween={10}
-                            // loop={true}
+                            navigation={true}
                             modules={[FreeMode, Navigation, Thumbs]}
                             className="mySwiper2"
+                            onSwiper={(swiper) => (this.mainSwiperRef.current = swiper)}
+                            onSlideChange={(swiper) =>
+                              this.setState({ imageIndex: swiper.activeIndex, play_video: false })
+                            }
                           >
                             {product.images.map((image, index) => (
                               <SwiperSlide
@@ -1879,6 +1954,7 @@ class ProductDetails extends React.Component {
                                 style={{ maxHeight: "100px" }}
                               >
                                 {this.state.play_video &&
+                                index === 0 &&
                                 product.video != "" ? (
                                   <video
                                     style={{
@@ -1897,6 +1973,8 @@ class ProductDetails extends React.Component {
                                   <img
                                     className="p_details_slider rounded"
                                     src={image}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={this.openLightbox}
                                   />
                                 )}
                               </SwiperSlide>
@@ -1911,7 +1989,6 @@ class ProductDetails extends React.Component {
                             watchSlidesProgress={true}
                             modules={[FreeMode, Navigation, Thumbs]}
                             className="mySwiper"
-                            onSwiper={this.setThumbsSwiper}
                           >
                             {product.video != "" ? (
                               <SwiperSlide className="slider-thumbnail border rounded">
@@ -2044,7 +2121,7 @@ class ProductDetails extends React.Component {
                           </div>
 
                           <div className="price-breakup mt-3 rounded bg-light shadow">
-                            <div className="price-breakup-title"><h2>Price Breakup</h2><span>{product.certificate_no}</span></div>
+                            <div className="price-breakup-title"><h2>Price Breakup</h2><span style={{cursor: product.certificate_no ? "pointer" : "default", textDecoration: product.certificate_no ? "underline" : "none"}} onClick={() => this.handleCertificateClick(product.certificate_no)}>{product.certificate_no}</span></div>
                             <div className="underline"></div>
                             <div className="breakup-content">
                               {!hasGrMaterials?(sizeMaterial.materials.map((item, key) => (
@@ -2798,6 +2875,157 @@ class ProductDetails extends React.Component {
               </>
             )}
           </>
+        )}
+        <Modal
+          show={this.state.certificateModalOpen}
+          onHide={this.handleCertificateModalClose}
+          centered
+        >
+          <Modal.Header closeButton style={{ background: "#000", color: "#fff" }} closeVariant="white">
+            <Modal.Title style={{ fontSize: "16px" }}>
+              Certificate Number: {this.state.certificateNo}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{ maxHeight: "60vh", overflowY: "auto" }}>
+            {this.state.certificateLoading ? (
+              <div className="text-center py-5">
+                <div className="spinner-border" role="status" />
+              </div>
+            ) : typeof this.state.certificateDetails === "string" ? (
+              <p className="mb-0">⚠️ {this.state.certificateDetails}</p>
+            ) : this.state.certificateDetails?.success &&
+              this.state.certificateDetails?.iiglData ? (
+              <div>
+                <div className="fw-bold text-uppercase mb-2" style={{ fontSize: "13px" }}>
+                  IIGL Certificate Details
+                </div>
+                <div style={{ background: "#f5f5f5", border: "1px solid #000", padding: "14px" }}>
+                  {this.state.certificateDetails.iiglData.map(([key, value], idx, arr) => (
+                    <React.Fragment key={idx}>
+                      {this.renderCertRow(
+                        key,
+                        value && value.startsWith && value.startsWith("http") ? (
+                          <img src={value} alt={key} style={{ maxWidth: "100px", maxHeight: "100px" }} />
+                        ) : (
+                          value
+                        ),
+                        "",
+                        idx === arr.length - 1
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            ) : this.state.certificateDetails?.success ? (
+              <div>
+                {this.state.certificateDetails.certificateData?.jewelry?.type && (
+                  <div className="mb-4">
+                    <div className="fw-bold text-uppercase mb-2" style={{ fontSize: "13px" }}>
+                      Jewelry Details
+                    </div>
+                    <div style={{ background: "#f5f5f5", border: "1px solid #000", padding: "14px" }}>
+                      {this.renderCertRow("Type", this.state.certificateDetails.certificateData.jewelry.type)}
+                      {this.state.certificateDetails.certificateData.jewelry.metal &&
+                        this.renderCertRow("Metal", this.state.certificateDetails.certificateData.jewelry.metal)}
+                      {this.state.certificateDetails.certificateData.jewelry.color &&
+                        this.renderCertRow("Color", this.state.certificateDetails.certificateData.jewelry.color)}
+                      {this.state.certificateDetails.certificateData.jewelry.weight_grams &&
+                        this.renderCertRow(
+                          "Weight",
+                          this.state.certificateDetails.certificateData.jewelry.weight_grams,
+                          "g",
+                          true
+                        )}
+                    </div>
+                  </div>
+                )}
+
+                {(this.state.certificateDetails.certificateData?.diamonds?.quantity ||
+                  this.state.certificateDetails.certificateData?.diamonds?.total_carat_weight) && (
+                  <div className="mb-4">
+                    <div className="fw-bold text-uppercase mb-2" style={{ fontSize: "13px" }}>
+                      Diamond/Gemstone Details
+                    </div>
+                    <div style={{ background: "#f5f5f5", border: "1px solid #000", padding: "14px" }}>
+                      {this.state.certificateDetails.certificateData.diamonds.quantity &&
+                        this.renderCertRow("Quantity", this.state.certificateDetails.certificateData.diamonds.quantity)}
+                      {this.state.certificateDetails.certificateData.diamonds.shape &&
+                        this.renderCertRow("Shape", this.state.certificateDetails.certificateData.diamonds.shape)}
+                      {this.state.certificateDetails.certificateData.diamonds.cut &&
+                        this.renderCertRow("Cut", this.state.certificateDetails.certificateData.diamonds.cut)}
+                      {this.state.certificateDetails.certificateData.diamonds.color_grade &&
+                        this.renderCertRow("Color Grade", this.state.certificateDetails.certificateData.diamonds.color_grade)}
+                      {this.state.certificateDetails.certificateData.diamonds.clarity_grade &&
+                        this.renderCertRow("Clarity Grade", this.state.certificateDetails.certificateData.diamonds.clarity_grade)}
+                      {this.state.certificateDetails.certificateData.diamonds.total_carat_weight &&
+                        this.renderCertRow(
+                          "Total Carat Weight",
+                          this.state.certificateDetails.certificateData.diamonds.total_carat_weight,
+                          "ct",
+                          true
+                        )}
+                    </div>
+                  </div>
+                )}
+
+                {this.state.certificateDetails.certificateData?.comments?.length > 0 && (
+                  <div className="mb-4">
+                    <div className="fw-bold text-uppercase mb-2" style={{ fontSize: "13px" }}>
+                      Comments
+                    </div>
+                    <div style={{ background: "#f5f5f5", border: "1px solid #000", padding: "14px 16px", lineHeight: "1.6" }}>
+                      {this.state.certificateDetails.certificateData.comments.join(" ")}
+                    </div>
+                  </div>
+                )}
+
+                <Button
+                  variant="dark"
+                  className="w-100"
+                  onClick={() => {
+                    const blob = new Blob([this.state.certificateDetails.data], {
+                      type: "application/pdf",
+                    });
+                    const url = window.URL.createObjectURL(blob);
+                    window.open(url, "_blank");
+                  }}
+                >
+                  VIEW PDF
+                </Button>
+              </div>
+            ) : null}
+          </Modal.Body>
+        </Modal>
+        {product && (
+          <Modal
+            show={this.state.lightboxOpen}
+            onHide={this.closeLightbox}
+            size="lg"
+            centered
+          >
+            <Modal.Header closeButton />
+            <Modal.Body className="p-0">
+              <Swiper
+                style={{
+                  "--swiper-navigation-color": "#000",
+                }}
+                navigation={true}
+                initialSlide={this.state.imageIndex}
+                onSlideChange={(swiper) => this.setState({ imageIndex: swiper.activeIndex })}
+                modules={[Navigation]}
+              >
+                {product.images.map((image, index) => (
+                  <SwiperSlide key={index}>
+                    <img
+                      src={image}
+                      alt={product.name}
+                      style={{ width: "100%", maxHeight: "80vh", objectFit: "contain" }}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </Modal.Body>
+          </Modal>
         )}
       </div>
     );
