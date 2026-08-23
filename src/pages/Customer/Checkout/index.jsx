@@ -48,8 +48,7 @@ import { login, existingUser, signup } from "actions/Customer/auth.actions";
 import { BsPhone } from "react-icons/bs";
 import Select from "react-select";
 import Modal from "react-bootstrap/Modal";
-import LoadingOverlay from "react-loading-overlay";
-LoadingOverlay.propTypes = undefined;
+import LoadingOverlay from "react-loading-overlay-ts";
 
 class CheckoutPage extends React.Component {
   constructor(props) {
