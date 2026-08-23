@@ -56,8 +56,7 @@ import {
 import { promocodeList } from "actions/Customer/home.actions";
 import { WishListAdd } from "actions/Customer/wishlist.actions";
 import { UPDATE_WISHLIST_COUNT } from "actionTypes/Customer/wishlist.type";
-import LoadingOverlay from "react-loading-overlay";
-LoadingOverlay.propTypes = undefined;
+import LoadingOverlay from "react-loading-overlay-ts";
 
 class CartPage extends React.Component {
   constructor(props) {
@@ -185,7 +184,25 @@ class CartPage extends React.Component {
     this.props.navigate("/checkout");
   };
 
+  // Stock (current-stock) cart lines are locked: that exact piece is reserved,
+  // so size / purity / weight / quantity cannot be changed from the cart.
+  // /customer/carts/store-stock saves stock_id + certificate_no; /customer/carts/store
+  // always saves stock_id = null and the plain product view returns no certificate_no.
+  // The stock listing does not expose stock_id, so rows added from there arrive with
+  // an empty stock_id and a certificate_no - both count as stock. The API sends ''
+  // instead of null for empty values.
+  isStockItem = (item) =>
+    !!(item && (!isEmpty(item.stock_id) || !isEmpty(item.certificate_no)));
+
+  isStockCartId = (cartId) =>
+    this.isStockItem(_.find(this.state.items, { id: cartId }));
+
+  isStockIndex = (index) => this.isStockItem(this.state.items[index]);
+
   handleQtyChange = (cartId, qty) => {
+    if (this.isStockCartId(cartId)) {
+      return;
+    }
     this.setState({
       loading: true,
     });
@@ -193,6 +210,9 @@ class CartPage extends React.Component {
   };
 
   handleSizeChange = (item, sizeId) => {
+    if (this.isStockItem(item)) {
+      return;
+    }
     let sizeMaterial = _.filter(item.size_materials, function (s) {
       return s.size_id == sizeId;
     });
@@ -246,6 +266,9 @@ class CartPage extends React.Component {
   };
 
   handlPurityChange = (cartId, materialId, purityId) => {
+    if (this.isStockCartId(cartId)) {
+      return;
+    }
     this.setState({
       loading: true,
     });
@@ -352,7 +375,7 @@ class CartPage extends React.Component {
 
     let data = {
       product_id: cart.product_id,
-      stock_id: null,
+      stock_id: cart.stock_id ? cart.stock_id : null,
       total_weight: total_weight,
       size_id: cart.product_type != "material" ? cart.size_id : null,
       type: cart.product_type,
@@ -371,6 +394,9 @@ class CartPage extends React.Component {
   };
 
   handleWeight = (e, index) => {
+    if (this.isStockIndex(index)) {
+      return;
+    }
     const re = /^[0-9\b]+$/;
     if (e.target.value === "" || e.target.value.match(/^\d{1,}(\.\d{0,3})?$/)) {
       let items = this.state.items;
@@ -380,6 +406,9 @@ class CartPage extends React.Component {
   };
 
   handleQty = (e, index) => {
+    if (this.isStockIndex(index)) {
+      return;
+    }
     const re = /^[0-9\b]+$/;
     let value = e.target.value;
     if (value === "" || re.test(value)) {
@@ -394,6 +423,9 @@ class CartPage extends React.Component {
   };
 
   handleManulUpdate = (index) => {
+    if (this.isStockIndex(index)) {
+      return;
+    }
     let items = this.state.items;
     let weight_errrs = this.state.weight_errrs;
     let qty_errrs = this.state.qty_errrs;
@@ -486,7 +518,9 @@ class CartPage extends React.Component {
                 <Row>
                   <Col xs={12} md={7} lg={8}>
                     {cartList.length > 0 ? (
-                      cartList.map((val, index) => (
+                      cartList.map((val, index) => {
+                        const isStock = this.isStockItem(val);
+                        return (
                         <React.Fragment key={index}>
                           <div>
                             <div
@@ -550,6 +584,7 @@ class CartPage extends React.Component {
                                               <Form.Select
                                                 value={val.size_id}
                                                 className="rounded"
+                                                disabled={isStock}
                                                 onChange={(e) =>
                                                   this.handleSizeChange(
                                                     val,
@@ -583,6 +618,7 @@ class CartPage extends React.Component {
                                             <Form.Select
                                               className="rounded"
                                               value={val.quantity}
+                                              disabled={isStock}
                                               onChange={(e) =>
                                                 this.handleQtyChange(
                                                   val.id,
@@ -631,6 +667,7 @@ class CartPage extends React.Component {
                                                     ? item.purities[0].id
                                                     : "")
                                                 }
+                                                disabled={isStock}
                                                 onChange={(e) =>
                                                   this.handlPurityChange(
                                                     val.id,
@@ -709,6 +746,7 @@ class CartPage extends React.Component {
                                                   type="text"
                                                   placeholder="Enter weight rounded-start"
                                                   value={val.manual_weight}
+                                                  disabled={isStock}
                                                   onChange={(e) =>
                                                     this.handleWeight(e, index)
                                                   }
@@ -736,6 +774,7 @@ class CartPage extends React.Component {
                                                   type="text"
                                                   placeholder="Enter quantity"
                                                   value={val.manual_qty}
+                                                  disabled={isStock}
                                                   onChange={(e) =>
                                                     this.handleQty(e, index)
                                                   }
@@ -758,6 +797,7 @@ class CartPage extends React.Component {
                                                 <Button
                                                   variant="primary"
                                                   className="dark_button"
+                                                  disabled={isStock}
                                                   onClick={() =>
                                                     this.handleManulUpdate(
                                                       index,
@@ -820,7 +860,8 @@ class CartPage extends React.Component {
                             </div>
                           </div>
                         </React.Fragment>
-                      ))
+                        );
+                      })
                     ) : (
                       <div
                         style={{ display: "flex", justifyContent: "center" }}
@@ -1020,7 +1061,9 @@ class CartPage extends React.Component {
               <Container>
                 <h3>My Shopping Cart</h3>
                 <Row>
-                  {cartList.map((val, index) => (
+                  {cartList.map((val, index) => {
+                    const isStock = this.isStockItem(val);
+                    return (
                     <Col xs={12} md={9} key={index}>
                       <div className="cart-inner-wrapper rounded shadow-none border mb-3">
                         <div className="cart-inner">
@@ -1071,6 +1114,7 @@ class CartPage extends React.Component {
                                 <Form.Label>Size:</Form.Label>
                                 <Form.Select
                                   value={val.size_id}
+                                  disabled={isStock}
                                   onChange={(e) =>
                                     this.handleSizeChange(val, e.target.value)
                                   }
@@ -1087,6 +1131,7 @@ class CartPage extends React.Component {
                               <Form.Label>Quantity</Form.Label>
                               <Form.Select
                                 value={val.quantity}
+                                disabled={isStock}
                                 onChange={(e) =>
                                   this.handleQtyChange(val.id, e.target.value)
                                 }
@@ -1123,6 +1168,7 @@ class CartPage extends React.Component {
                                         val,
                                         item.material_id,
                                       )}
+                                      disabled={isStock}
                                       onChange={(e) =>
                                         this.handlPurityChange(
                                           val.id,
@@ -1176,6 +1222,7 @@ class CartPage extends React.Component {
                                       placeholder="Enter weight"
                                       value={val.manual_weight}
                                       className="rounded"
+                                      disabled={isStock}
                                       onChange={(e) =>
                                         this.handleWeight(e, index)
                                       }
@@ -1197,6 +1244,7 @@ class CartPage extends React.Component {
                                       type="text"
                                       placeholder="Enter quantity"
                                       value={val.manual_qty}
+                                      disabled={isStock}
                                       onChange={(e) => this.handleQty(e, index)}
                                       className={
                                         this.getManualErr(index, "qty")
@@ -1211,6 +1259,7 @@ class CartPage extends React.Component {
                                     <Button
                                       variant="primary"
                                       className="dark_button"
+                                      disabled={isStock}
                                       onClick={() =>
                                         this.handleManulUpdate(index)
                                       }
@@ -1244,7 +1293,8 @@ class CartPage extends React.Component {
                         </div>
                       </div>
                     </Col>
-                  ))}
+                    );
+                  })}
                   <Col xs={12} md={3}>
                     <div className="order-summary-header">
                       <h4 className="text-primary-emphasis">ORDER SUMMARY</h4>
