@@ -28,8 +28,7 @@ import { promocodeList } from "actions/Customer/home.actions";
 import { WishListAdd } from "actions/Customer/wishlist.actions";
 import { UPDATE_WISHLIST_COUNT } from 'actionTypes/Customer/wishlist.type';
 import RetailerForm from 'forms/RetailerForm';
-import LoadingOverlay from 'react-loading-overlay';
-LoadingOverlay.propTypes = undefined
+import LoadingOverlay from 'react-loading-overlay-ts';
 
 class RetailerCreatePage extends React.Component {
 
