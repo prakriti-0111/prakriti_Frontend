@@ -27,8 +27,9 @@ import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Accordion from "react-bootstrap/Accordion";
+import Modal from "react-bootstrap/Modal";
 // import "./styles.css";
-import { FreeMode, Navigation, Thumbs } from "swiper";
+import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import InputGroup from "react-bootstrap/InputGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import dollar from "src/assets/images/dollar.png";
@@ -107,9 +108,11 @@ class ProductDetails extends React.Component {
       weight: "",
       weight_err: "",
       qty_err: "",
+      lightboxOpen: false,
     };
 
     this.videoRef = React.createRef();
+    this.mainSwiperRef = React.createRef();
   }
 
   componentDidMount() {
@@ -328,12 +331,19 @@ class ProductDetails extends React.Component {
       imageIndex: index,
       play_video: false,
     });
+    if (this.mainSwiperRef.current) {
+      this.mainSwiperRef.current.slideTo(index);
+    }
   };
 
   playVideo = () => {
+    if (this.mainSwiperRef.current) {
+      this.mainSwiperRef.current.slideTo(0);
+    }
     this.setState(
       {
         play_video: true,
+        imageIndex: 0,
       },
       () => {
         setTimeout(() => {
@@ -343,6 +353,14 @@ class ProductDetails extends React.Component {
         }, 200);
       }
     );
+  };
+
+  openLightbox = () => {
+    this.setState({ lightboxOpen: true });
+  };
+
+  closeLightbox = () => {
+    this.setState({ lightboxOpen: false });
   };
 
   handleSizeChange = (index) => {
@@ -1104,35 +1122,44 @@ class ProductDetails extends React.Component {
                               "--swiper-pagination-color": "#fff",
                             }}
                             spaceBetween={10}
-                            // loop={true}
+                            navigation={true}
                             modules={[FreeMode, Navigation, Thumbs]}
                             className="mySwiper2"
+                            onSwiper={(swiper) => (this.mainSwiperRef.current = swiper)}
+                            onSlideChange={(swiper) =>
+                              this.setState({ imageIndex: swiper.activeIndex, play_video: false })
+                            }
                           >
-                            <SwiperSlide
-                              className="p_details_slider_wrapper border rounded"
-                              style={{ maxHeight: "100px" }}
-                            >
-                              {this.state.play_video && product.video != "" ? (
-                                <video
-                                  style={{
-                                    objectFit: "cover",
-                                    width: "100%",
-                                    height: "385px",
-                                  }}
-                                  controls
-                                  autoPlay
-                                  loop
-                                  ref={this.videoRef}
-                                >
-                                  <source src={product.video} />
-                                </video>
-                              ) : (
-                                <img
-                                  className="p_details_slider rounded"
-                                  src={product.images[this.state.imageIndex]}
-                                />
-                              )}
-                            </SwiperSlide>
+                            {product.images.map((image, key) => (
+                              <SwiperSlide
+                                key={key}
+                                className="p_details_slider_wrapper border rounded"
+                                style={{ maxHeight: "100px" }}
+                              >
+                                {this.state.play_video && key === 0 && product.video != "" ? (
+                                  <video
+                                    style={{
+                                      objectFit: "cover",
+                                      width: "100%",
+                                      height: "385px",
+                                    }}
+                                    controls
+                                    autoPlay
+                                    loop
+                                    ref={this.videoRef}
+                                  >
+                                    <source src={product.video} />
+                                  </video>
+                                ) : (
+                                  <img
+                                    className="p_details_slider rounded"
+                                    src={image}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={this.openLightbox}
+                                  />
+                                )}
+                              </SwiperSlide>
+                            ))}
                           </Swiper>
                           {((product.video != "" && product.images.length > 0) || (product.images.length > 1)) && <Swiper
                             spaceBetween={10}
@@ -1143,7 +1170,6 @@ class ProductDetails extends React.Component {
                             watchSlidesProgress={true}
                             modules={[FreeMode, Navigation, Thumbs]}
                             className="mySwiper"
-                            onSwiper={this.setThumbsSwiper}
                           >
                             {product.video != "" ? (
                               <SwiperSlide className="slider-thumbnail border rounded">
@@ -2024,9 +2050,13 @@ class ProductDetails extends React.Component {
                               "--swiper-pagination-color": "#fff",
                             }}
                             spaceBetween={10}
-                            // loop={true}
+                            navigation={true}
                             modules={[FreeMode, Navigation, Thumbs]}
                             className="mySwiper2"
+                            onSwiper={(swiper) => (this.mainSwiperRef.current = swiper)}
+                            onSlideChange={(swiper) =>
+                              this.setState({ imageIndex: swiper.activeIndex, play_video: false })
+                            }
                           >
                             {product.images.map((image, index) => (
                               <SwiperSlide
@@ -2035,6 +2065,7 @@ class ProductDetails extends React.Component {
                                 style={{ maxHeight: "100px" }}
                               >
                                 {this.state.play_video &&
+                                index === 0 &&
                                 product.video != "" ? (
                                   <video
                                     style={{
@@ -2053,6 +2084,8 @@ class ProductDetails extends React.Component {
                                   <img
                                     className="p_details_slider rounded"
                                     src={image}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={this.openLightbox}
                                   />
                                 )}
                               </SwiperSlide>
@@ -2067,7 +2100,6 @@ class ProductDetails extends React.Component {
                             watchSlidesProgress={true}
                             modules={[FreeMode, Navigation, Thumbs]}
                             className="mySwiper"
-                            onSwiper={this.setThumbsSwiper}
                           >
                             {product.video != "" ? (
                               <SwiperSlide className="slider-thumbnail border rounded">
@@ -3029,6 +3061,37 @@ class ProductDetails extends React.Component {
               </>
             )}
           </>
+        )}
+        {product && (
+          <Modal
+            show={this.state.lightboxOpen}
+            onHide={this.closeLightbox}
+            size="lg"
+            centered
+          >
+            <Modal.Header closeButton />
+            <Modal.Body className="p-0">
+              <Swiper
+                style={{
+                  "--swiper-navigation-color": "#000",
+                }}
+                navigation={true}
+                initialSlide={this.state.imageIndex}
+                onSlideChange={(swiper) => this.setState({ imageIndex: swiper.activeIndex })}
+                modules={[Navigation]}
+              >
+                {product.images.map((image, index) => (
+                  <SwiperSlide key={index}>
+                    <img
+                      src={image}
+                      alt={product.name}
+                      style={{ width: "100%", maxHeight: "80vh", objectFit: "contain" }}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </Modal.Body>
+          </Modal>
         )}
       </div>
     );

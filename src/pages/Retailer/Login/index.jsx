@@ -86,7 +86,7 @@ class Login extends React.Component {
         let formErrors = this.state.formErrors;
         let hasErr = false;
         if(!formValaues.mobile){
-            formErrors.mobile = "Mobile # is required.";
+            formErrors.mobile = "Mobile / Email is required.";
             hasErr = true;
         }else{
             formErrors.mobile = null;
@@ -131,7 +131,7 @@ class Login extends React.Component {
                                 }
                                 <form onSubmit={this.onSubmit}>
                                     <Form.Group className="mb-4 mt-4" controlId="formEmailAddress">
-                                        <Form.Control name='mobile' onChange={(e)=>this.handleChange(e)} value={formValaues.mobile} type="text" placeholder="Enter Mobile Number" required/>
+                                        <Form.Control name='mobile' onChange={(e)=>this.handleChange(e)} value={formValaues.mobile} type="text" placeholder="Enter Mobile Number or Email" required/>
                                         <span type='invalid' style={{color:"red"}}> { formErrors.mobile } </span>
                                     </Form.Group>
                                     <Form.Group className="mb-2" controlId="formBasicPassword">
@@ -141,7 +141,7 @@ class Login extends React.Component {
                                     </Form.Group>
                                     <Form.Group className="mt-2 d-flex justify-content-between forgot-password" controlId="formBasicCheckbox">
                                         <Form.Check type="checkbox" label="Remember Me" />
-                                        <a href=''>Forgot Password?</a>
+                                        <a href='/retailer/forgot-password'>Forgot Password?</a>
                                     </Form.Group>
 
                                     <div className='login-button mb-0 mt-4'>

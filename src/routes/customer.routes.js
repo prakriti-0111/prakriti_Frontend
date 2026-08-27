@@ -33,6 +33,7 @@ const WhyBuyFromUs = Loadable(lazy(() => import('pages/Customer/WhyBuyFromUs')))
 const CustomerLogin = Loadable(lazy(()=>import('pages/Customer/Login')));
 const CustomerSignup= Loadable(lazy(()=> import('pages/Customer/Signup')));
 const CustomerForgotPassword = Loadable(lazy(()=>import('pages/Customer/ForgotPassword')));
+const CustomerResetPassword = Loadable(lazy(()=>import('pages/Customer/ResetPassword')));
 const OrderSuccessful= Loadable(lazy(()=> import('pages/Customer/Orders/OrderSuccess')));
 const Wishlist = Loadable(lazy(()=>import('pages/Customer/Wishlist')));
 const ChangePassword = Loadable(lazy(()=>import('pages/Customer/ChangePassword')));
@@ -150,6 +151,10 @@ const CustomerRoutes = (isLoggedIn) => [
             {
                 path: `forgot-password`,
                 element: <CustomerForgotPassword />
+            },
+            {
+                path: `reset-password`,
+                element: <CustomerResetPassword />
             },
             {
                 path: 'cart',
