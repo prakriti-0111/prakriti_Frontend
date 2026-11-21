@@ -765,212 +765,11 @@ class CheckoutPage extends React.Component {
         </div>*/}
             </div>
             <Row>
-              <Col xs={12} md={7} className="order ">
-                <div className="checkout-single-wrapper bg-white border-right rounded">
-                  <hr />
-                  <div className="c-address-area ">
-                    <div className="header " style={{display:"flex", justifyContent:"space-between"}}>
-                      {/* <h4>Delivery Details</h4> */}
-                      {this.state.isLoggedIn && !this.isSalesExecutive ? (
-                        <>
-                          <h5>Address</h5>
-                        </>
-                      ) : null}
-                      {this.state.isLoggedIn && !this.isSalesExecutive ? (
-                          <>
-                            <div
-                              className="add-address rounded bg-primary font-bold p-1 px-4"
-                              onClick={this.handleNewAddress}
-                            >
-                              {newAddress ? (
-                                <AiOutlineMinus />
-                              ) : (
-                                <AiOutlinePlus />
-                              )}
-                              ADD
-                            </div>
-                          </>
-                        ) : null}
-
-                      {/* {!this.state.isLoggedIn ? (
-                        <>
-                          <h5>
-                            Your Details{" "}
-                            <span>
-                              Required to Save Cart and Send Order Updates
-                            </span>
-                          </h5>
-                          <div className="login-address-details">
-                            {loginError ? (
-                              <Alert variant="danger">{loginError}</Alert>
-                            ) : null}
-                            <Form onSubmit={this.onLoginSubmit}>
-                              <Row>
-                                <Col xs={12} md={6}>
-                                  <InputGroup
-                                    className={
-                                      "mb-3 rounded-3" +
-                                      (formErrors.mobile ? " error_input" : "")
-                                    }
-                                  >
-                                    <InputGroup.Text id="basic-addon1">
-                                      <BsPhone />
-                                    </InputGroup.Text>
-                                    <FloatingLabel
-                                      label="Mobile #"
-                                      className=""
-                                    >
-                                      <Form.Control
-                                        type="text"
-                                        placeholder="Enter mobile number"
-                                        name="mobile"
-                                        className="rounded-3"
-                                        onChange={(e) =>
-                                          this.handleLoginFormChange(e)
-                                        }
-                                        value={formValaues.mobile}
-                                        disabled={
-                                          this.state.login_step != 0
-                                            ? true
-                                            : false
-                                        }
-                                      />
-                                    </FloatingLabel>
-                                  </InputGroup>
-                                </Col>
-                                {this.state.login_step == 2 ? (
-                                  <Col xs={12} md={6}>
-                                    <InputGroup
-                                      className={
-                                        "mb-3 rounded-3" +
-                                        (formErrors.email ? " error_input" : "")
-                                      }
-                                    >
-                                      <InputGroup.Text id="basic-addon1">
-                                        <AiOutlineMail />
-                                      </InputGroup.Text>
-                                      <FloatingLabel
-                                        controlId="floatingInput"
-                                        label="Email"
-                                        className=""
-                                      >
-                                        <Form.Control
-                                          type="text"
-                                          placeholder="Email"
-                                          name="email"
-                                          onChange={(e) =>
-                                            this.handleLoginFormChange(e)
-                                          }
-                                          value={formValaues.email}
-                                        />
-                                      </FloatingLabel>
-                                    </InputGroup>
-                                  </Col>
-                                ) : null}
-                                {this.state.login_step == 2 ? (
-                                  <Col xs={12} md={6}>
-                                    <InputGroup
-                                      className={
-                                        "mb-3 rounded-3" +
-                                        (formErrors.name ? " error_input" : "")
-                                      }
-                                    >
-                                      <InputGroup.Text id="basic-addon1">
-                                        <AiOutlineUser />
-                                      </InputGroup.Text>
-                                      <FloatingLabel
-                                        controlId="floatingInput"
-                                        label="Name"
-                                        className=""
-                                      >
-                                        <Form.Control
-                                          type="text"
-                                          placeholder="Name"
-                                          name="name"
-                                          onChange={(e) =>
-                                            this.handleLoginFormChange(e)
-                                          }
-                                          value={formValaues.name}
-                                        />
-                                      </FloatingLabel>
-                                    </InputGroup>
-                                  </Col>
-                                ) : null}
-                                {this.state.login_step != 0 ? (
-                                  <Col xs={12} md={6}>
-                                    <InputGroup
-                                      className={
-                                        "mb-3 rounded-3" +
-                                        (formErrors.password
-                                          ? " error_input"
-                                          : "")
-                                      }
-                                    >
-                                      <InputGroup.Text id="basic-addon1">
-                                        <AiOutlineLock />
-                                      </InputGroup.Text>
-                                      <FloatingLabel
-                                        controlId="floatingInput"
-                                        label="Password"
-                                        className="rounded d-flex align-items-center"
-                                      >
-                                        <Form.Control
-                                          type={this.state.Password}
-                                          className="rounded"
-                                          placeholder="Password"
-                                          name="password"
-                                          onChange={(e) =>
-                                            this.handleLoginFormChange(e)
-                                          }
-                                          value={formValaues.password}
-                                        />
-                                        <i
-                                          class={`bi ${this.state.PasswordIcon} fs-4 me-2`}
-                                          onClick={() => {
-                                            this.state.Password == `password`
-                                              ? this.setState({
-                                                  Password: `text`,
-                                                  PasswordIcon: `bi-eye`,
-                                                })
-                                              : this.setState({
-                                                  Password: `password`,
-                                                  PasswordIcon: `bi-eye-slash`,
-                                                });
-                                          }}
-                                        ></i>
-                                      </FloatingLabel>
-                                    </InputGroup>
-                                  </Col>
-                                ) : null}
-                                <Col xs={12}>
-                                  {this.state.login_step != 0 ? (
-                                    <Button
-                                      variant="primary"
-                                      className="add_submit rounded"
-                                      type="button"
-                                      onClick={this.handleLoginReset}
-                                    >
-                                      RESET
-                                    </Button>
-                                  ) : null}
-                                  &nbsp;
-                                  <Button
-                                    variant="primary"
-                                    className="add_submit rounded"
-                                    type="submit"
-                                  >
-                                    CONTINUE
-                                  </Button>
-                                </Col>
-                              </Row>
-                            </Form>
-                          </div>
-                        </>
-                      ) : null} */}
-                    </div>
-
+              <Col xs={12} md={{ span: 8, offset: 2 }}>
+                <div className="checkout-single-wrapper padding-left">
+                  <div className="checkout-summary-area rounded">
                     {this.isRetailer && this.state.isLoggedIn ? (
-                      <div style={{ flexGrow: 1 }}>
+                      <div className="mb-3">
                         <Form.Group>
                           <Form.Label className="se_heading">
                             Sales Executive
@@ -993,479 +792,679 @@ class CheckoutPage extends React.Component {
                         </Form.Group>
                       </div>
                     ) : null}
-                  </div>
-                  {this.state.isLoggedIn ? (
-                    <>
-                      {addressList.map((item, key) => (
-                        <div
-                          className="single-address my-2 border rounded p-2"
-                          key={key}
-                        >
-                          <div className="single-address-header">
-                            <div className="address-radio">
-                              <Form.Check
-                                type="radio"
-                                name="address_id"
-                                value={item.id}
-                                onChange={(e) => this.handleChange(e)}
-                                checked={
-                                  this.state.address_id == item.id
-                                    ? true
-                                    : false
-                                }
-                              />
-                              <span>{item.name}</span>
-                              <span> {item.contact} </span>
-                            </div>
-                            <div className="address-edit">
-                              {" "}
-                              {/*<strong> EDIT </strong>*/}
-                            </div>
-                          </div>
-                          <p>{item.formated_address}</p>
-                        </div>
-                      ))}
-                    </>
-                  ) : null}
+                    {this.state.isLoggedIn ? (
+                      <div className="checkout-single-wrapper bg-white rounded p-3 mb-3">
+                      <div className="c-address-area ">
+                        <div className="header " style={{display:"flex", justifyContent:"space-between"}}>
+                          {/* <h4>Delivery Details</h4> */}
+                          {this.state.isLoggedIn && !this.isSalesExecutive ? (
+                            <>
+                              <h5>Address</h5>
+                            </>
+                          ) : null}
+                          {this.state.isLoggedIn && !this.isSalesExecutive ? (
+                              <>
+                                <div
+                                  className="add-address rounded bg-primary font-bold p-1 px-4"
+                                  onClick={this.handleNewAddress}
+                                >
+                                  {newAddress ? (
+                                    <AiOutlineMinus />
+                                  ) : (
+                                    <AiOutlinePlus />
+                                  )}
+                                  ADD
+                                </div>
+                              </>
+                            ) : null}
 
-                                <hr />
-                   {newAddress && (
-                        <Form
-                          onSubmit={this.onAddressSubmit}
-                          className="login-address-details"
-                        >
-                          <Form.Group>
-                            <Row>
-                              <Col xs={12} md={12}>
-                                {/* <Form.Label>Name : </Form.Label> */}
-                                <div className="form-inner-control mb-2 mt-2">
-                                  <InputGroup
-                                    className={
-                                      addressFormErrors.name
-                                        ? " error_input"
-                                        : ""
-                                    }
-                                  >
-                                    <InputGroup.Text id="basic-addon1">
-                                      <AiOutlineUser />
-                                    </InputGroup.Text>
-                                    <FloatingLabel
-                                      controlId="floatingInput"
-                                      label="Enter your Name"
-                                      className=""
-                                    >
-                                      <Form.Control
-                                        name="name"
-                                        value={addressForm.name}
-                                        onChange={(e) =>
-                                          this.handleAddressChange(e)
+                          {/* {!this.state.isLoggedIn ? (
+                            <>
+                              <h5>
+                                Your Details{" "}
+                                <span>
+                                  Required to Save Cart and Send Order Updates
+                                </span>
+                              </h5>
+                              <div className="login-address-details">
+                                {loginError ? (
+                                  <Alert variant="danger">{loginError}</Alert>
+                                ) : null}
+                                <Form onSubmit={this.onLoginSubmit}>
+                                  <Row>
+                                    <Col xs={12} md={6}>
+                                      <InputGroup
+                                        className={
+                                          "mb-3 rounded-3" +
+                                          (formErrors.mobile ? " error_input" : "")
                                         }
-                                        placeholder="Enter your Name"
+                                      >
+                                        <InputGroup.Text id="basic-addon1">
+                                          <BsPhone />
+                                        </InputGroup.Text>
+                                        <FloatingLabel
+                                          label="Mobile #"
+                                          className=""
+                                        >
+                                          <Form.Control
+                                            type="text"
+                                            placeholder="Enter mobile number"
+                                            name="mobile"
+                                            className="rounded-3"
+                                            onChange={(e) =>
+                                              this.handleLoginFormChange(e)
+                                            }
+                                            value={formValaues.mobile}
+                                            disabled={
+                                              this.state.login_step != 0
+                                                ? true
+                                                : false
+                                            }
+                                          />
+                                        </FloatingLabel>
+                                      </InputGroup>
+                                    </Col>
+                                    {this.state.login_step == 2 ? (
+                                      <Col xs={12} md={6}>
+                                        <InputGroup
+                                          className={
+                                            "mb-3 rounded-3" +
+                                            (formErrors.email ? " error_input" : "")
+                                          }
+                                        >
+                                          <InputGroup.Text id="basic-addon1">
+                                            <AiOutlineMail />
+                                          </InputGroup.Text>
+                                          <FloatingLabel
+                                            controlId="floatingInput"
+                                            label="Email"
+                                            className=""
+                                          >
+                                            <Form.Control
+                                              type="text"
+                                              placeholder="Email"
+                                              name="email"
+                                              onChange={(e) =>
+                                                this.handleLoginFormChange(e)
+                                              }
+                                              value={formValaues.email}
+                                            />
+                                          </FloatingLabel>
+                                        </InputGroup>
+                                      </Col>
+                                    ) : null}
+                                    {this.state.login_step == 2 ? (
+                                      <Col xs={12} md={6}>
+                                        <InputGroup
+                                          className={
+                                            "mb-3 rounded-3" +
+                                            (formErrors.name ? " error_input" : "")
+                                          }
+                                        >
+                                          <InputGroup.Text id="basic-addon1">
+                                            <AiOutlineUser />
+                                          </InputGroup.Text>
+                                          <FloatingLabel
+                                            controlId="floatingInput"
+                                            label="Name"
+                                            className=""
+                                          >
+                                            <Form.Control
+                                              type="text"
+                                              placeholder="Name"
+                                              name="name"
+                                              onChange={(e) =>
+                                                this.handleLoginFormChange(e)
+                                              }
+                                              value={formValaues.name}
+                                            />
+                                          </FloatingLabel>
+                                        </InputGroup>
+                                      </Col>
+                                    ) : null}
+                                    {this.state.login_step != 0 ? (
+                                      <Col xs={12} md={6}>
+                                        <InputGroup
+                                          className={
+                                            "mb-3 rounded-3" +
+                                            (formErrors.password
+                                              ? " error_input"
+                                              : "")
+                                          }
+                                        >
+                                          <InputGroup.Text id="basic-addon1">
+                                            <AiOutlineLock />
+                                          </InputGroup.Text>
+                                          <FloatingLabel
+                                            controlId="floatingInput"
+                                            label="Password"
+                                            className="rounded d-flex align-items-center"
+                                          >
+                                            <Form.Control
+                                              type={this.state.Password}
+                                              className="rounded"
+                                              placeholder="Password"
+                                              name="password"
+                                              onChange={(e) =>
+                                                this.handleLoginFormChange(e)
+                                              }
+                                              value={formValaues.password}
+                                            />
+                                            <i
+                                              class={`bi ${this.state.PasswordIcon} fs-4 me-2`}
+                                              onClick={() => {
+                                                this.state.Password == `password`
+                                                  ? this.setState({
+                                                      Password: `text`,
+                                                      PasswordIcon: `bi-eye`,
+                                                    })
+                                                  : this.setState({
+                                                      Password: `password`,
+                                                      PasswordIcon: `bi-eye-slash`,
+                                                    });
+                                              }}
+                                            ></i>
+                                          </FloatingLabel>
+                                        </InputGroup>
+                                      </Col>
+                                    ) : null}
+                                    <Col xs={12}>
+                                      {this.state.login_step != 0 ? (
+                                        <Button
+                                          variant="primary"
+                                          className="add_submit rounded"
+                                          type="button"
+                                          onClick={this.handleLoginReset}
+                                        >
+                                          RESET
+                                        </Button>
+                                      ) : null}
+                                      &nbsp;
+                                      <Button
+                                        variant="primary"
+                                        className="add_submit rounded"
+                                        type="submit"
+                                      >
+                                        CONTINUE
+                                      </Button>
+                                    </Col>
+                                  </Row>
+                                </Form>
+                              </div>
+                            </>
+                          ) : null} */}
+                        </div>
+
+                      </div>
+                      {this.state.isLoggedIn ? (
+                        <>
+                          {addressList.map((item, key) => (
+                            <div
+                              className="single-address my-2 border rounded p-2"
+                              key={key}
+                            >
+                              <div className="single-address-header">
+                                <div className="address-radio">
+                                  <Form.Check
+                                    type="radio"
+                                    name="address_id"
+                                    value={item.id}
+                                    onChange={(e) => this.handleChange(e)}
+                                    checked={
+                                      this.state.address_id == item.id
+                                        ? true
+                                        : false
+                                    }
+                                  />
+                                  <span>{item.name}</span>
+                                  <span> {item.contact} </span>
+                                </div>
+                                <div className="address-edit">
+                                  {" "}
+                                  {/*<strong> EDIT </strong>*/}
+                                </div>
+                              </div>
+                              <p>{item.formated_address}</p>
+                            </div>
+                          ))}
+                        </>
+                      ) : null}
+
+                                    <hr />
+                       {newAddress && (
+                            <Form
+                              onSubmit={this.onAddressSubmit}
+                              className="login-address-details"
+                            >
+                              <Form.Group>
+                                <Row>
+                                  <Col xs={12} md={12}>
+                                    {/* <Form.Label>Name : </Form.Label> */}
+                                    <div className="form-inner-control mb-2 mt-2">
+                                      <InputGroup
                                         className={
                                           addressFormErrors.name
-                                            ? "is-invalid"
+                                            ? " error_input"
                                             : ""
                                         }
-                                      />
-                                    </FloatingLabel>
-                                  </InputGroup>
-                                  <Form.Control.Feedback type="invalid">
-                                    Please provide a name.
-                                  </Form.Control.Feedback>
-                                </div>
+                                      >
+                                        <InputGroup.Text id="basic-addon1">
+                                          <AiOutlineUser />
+                                        </InputGroup.Text>
+                                        <FloatingLabel
+                                          controlId="floatingInput"
+                                          label="Enter your Name"
+                                          className=""
+                                        >
+                                          <Form.Control
+                                            name="name"
+                                            value={addressForm.name}
+                                            onChange={(e) =>
+                                              this.handleAddressChange(e)
+                                            }
+                                            placeholder="Enter your Name"
+                                            className={
+                                              addressFormErrors.name
+                                                ? "is-invalid"
+                                                : ""
+                                            }
+                                          />
+                                        </FloatingLabel>
+                                      </InputGroup>
+                                      <Form.Control.Feedback type="invalid">
+                                        Please provide a name.
+                                      </Form.Control.Feedback>
+                                    </div>
 
-                                {/*<Form.Control name='name' value={addressForm.name}
-                                                            onChange={(e) => this.handleAddressChange(e)}
-                                                            placeholder="Enter your Name"
-                                                            className={addressFormErrors.name ? 'is-invalid' : ''}
-                                    />*/}
-                              </Col>
-                            </Row>
-                          </Form.Group>
-                          <Form.Group>
-                            <Row>
-                              <Col xs={12} md={6}>
-                                <div className="form-inner-control mb-2">
-                                  <InputGroup
-                                    className={
-                                      addressFormErrors.contact
-                                        ? " error_input"
-                                        : ""
-                                    }
-                                  >
-                                    <InputGroup.Text id="basic-addon1">
-                                      <BsPhone />
-                                    </InputGroup.Text>
-                                    <FloatingLabel
-                                      controlId="floatingInput"
-                                      label="Phone Number"
-                                      className=""
-                                    >
-                                      <Form.Control
-                                        name="contact"
-                                        value={addressForm.contact}
-                                        onChange={(e) =>
-                                          this.handleAddressChange(e)
-                                        }
-                                        placeholder="Phone Number"
+                                    {/*<Form.Control name='name' value={addressForm.name}
+                                                                onChange={(e) => this.handleAddressChange(e)}
+                                                                placeholder="Enter your Name"
+                                                                className={addressFormErrors.name ? 'is-invalid' : ''}
+                                        />*/}
+                                  </Col>
+                                </Row>
+                              </Form.Group>
+                              <Form.Group>
+                                <Row>
+                                  <Col xs={12} md={6}>
+                                    <div className="form-inner-control mb-2">
+                                      <InputGroup
                                         className={
                                           addressFormErrors.contact
-                                            ? "is-invalid"
+                                            ? " error_input"
                                             : ""
                                         }
-                                      />
-                                    </FloatingLabel>
-                                  </InputGroup>
-                                  <Form.Control.Feedback type="invalid">
-                                    Please provide a valid mobile number.
-                                  </Form.Control.Feedback>
-                                </div>
+                                      >
+                                        <InputGroup.Text id="basic-addon1">
+                                          <BsPhone />
+                                        </InputGroup.Text>
+                                        <FloatingLabel
+                                          controlId="floatingInput"
+                                          label="Phone Number"
+                                          className=""
+                                        >
+                                          <Form.Control
+                                            name="contact"
+                                            value={addressForm.contact}
+                                            onChange={(e) =>
+                                              this.handleAddressChange(e)
+                                            }
+                                            placeholder="Phone Number"
+                                            className={
+                                              addressFormErrors.contact
+                                                ? "is-invalid"
+                                                : ""
+                                            }
+                                          />
+                                        </FloatingLabel>
+                                      </InputGroup>
+                                      <Form.Control.Feedback type="invalid">
+                                        Please provide a valid mobile number.
+                                      </Form.Control.Feedback>
+                                    </div>
 
-                                {/*<Form.Label>Phone : </Form.Label>
-                                                        <Form.Control name='contact' value={addressForm.contact}
-                                                            onChange={(e) => this.handleAddressChange(e)}
-                                                            placeholder="Phone Number" className={addressFormErrors.contact ? 'is-invalid' : ''} />
-                                                        <Form.Control.Feedback type="invalid">
-                                                            Please provide a valid mobile number.
-                                    </Form.Control.Feedback>*/}
-                              </Col>
-                              <Col xs={12} md={6}>
-                                <div className="form-inner-control mb-2">
-                                  <InputGroup
-                                    className={
-                                      addressFormErrors.zipcode
-                                        ? " error_input"
-                                        : ""
-                                    }
-                                  >
-                                    <FloatingLabel
-                                      controlId="floatingInput"
-                                      label="PIN Code"
-                                      className=""
-                                    >
-                                      <Form.Control
-                                        name="zipcode"
-                                        value={addressForm.zipcode}
-                                        onChange={(e) =>
-                                          this.handleAddressChange(e)
-                                        }
-                                        placeholder="PIN Code"
+                                    {/*<Form.Label>Phone : </Form.Label>
+                                                            <Form.Control name='contact' value={addressForm.contact}
+                                                                onChange={(e) => this.handleAddressChange(e)}
+                                                                placeholder="Phone Number" className={addressFormErrors.contact ? 'is-invalid' : ''} />
+                                                            <Form.Control.Feedback type="invalid">
+                                                                Please provide a valid mobile number.
+                                        </Form.Control.Feedback>*/}
+                                  </Col>
+                                  <Col xs={12} md={6}>
+                                    <div className="form-inner-control mb-2">
+                                      <InputGroup
                                         className={
                                           addressFormErrors.zipcode
-                                            ? "is-invalid"
+                                            ? " error_input"
                                             : ""
                                         }
-                                      />
-                                    </FloatingLabel>
-                                  </InputGroup>
-                                  <Form.Control.Feedback type="invalid">
-                                    Please provide a Pin code.
-                                  </Form.Control.Feedback>
-                                </div>
+                                      >
+                                        <FloatingLabel
+                                          controlId="floatingInput"
+                                          label="PIN Code"
+                                          className=""
+                                        >
+                                          <Form.Control
+                                            name="zipcode"
+                                            value={addressForm.zipcode}
+                                            onChange={(e) =>
+                                              this.handleAddressChange(e)
+                                            }
+                                            placeholder="PIN Code"
+                                            className={
+                                              addressFormErrors.zipcode
+                                                ? "is-invalid"
+                                                : ""
+                                            }
+                                          />
+                                        </FloatingLabel>
+                                      </InputGroup>
+                                      <Form.Control.Feedback type="invalid">
+                                        Please provide a Pin code.
+                                      </Form.Control.Feedback>
+                                    </div>
 
-                                {/*<Form.Label>PIN Code : </Form.Label>
-                                                        <Form.Control name='zipcode' value={addressForm.zipcode}
-                                                            onChange={(e) => this.handleAddressChange(e)}
-                                                            placeholder="PIN Code"
-                                                            className={addressFormErrors.zipcode ? 'is-invalid' : ''}
-                                                        />
-                                                        <Form.Control.Feedback type="invalid">
-                                                            Please provide a Pin code.
-                                    </Form.Control.Feedback>*/}
-                              </Col>
-                            </Row>
-                          </Form.Group>
-                          <Form.Group className="">
-                            <Row>
-                              <Col xs={12} md={6}>
-                                <div className="form-inner-control mb-2">
-                                  <FloatingLabel
-                                    controlId="floatingSelectGrid"
-                                    label="Country"
-                                  >
-                                    <Form.Select
-                                      name="country_id"
-                                      value={addressForm.country_id}
-                                      onChange={(e) =>
-                                        this.handleAddressChange(e)
-                                      }
-                                      className={
-                                        addressFormErrors.country_id
-                                          ? "is-invalid error_input"
-                                          : ""
-                                      }
-                                    >
-                                      <option value="">select country</option>
-                                      {countryList.map((item, key) => (
-                                        <option value={item.id} key={key}>
-                                          {item.name}
-                                        </option>
-                                      ))}
-                                    </Form.Select>
-                                  </FloatingLabel>
-                                  <Form.Control.Feedback type="invalid">
-                                    Please select country.
-                                  </Form.Control.Feedback>
-                                </div>
+                                    {/*<Form.Label>PIN Code : </Form.Label>
+                                                            <Form.Control name='zipcode' value={addressForm.zipcode}
+                                                                onChange={(e) => this.handleAddressChange(e)}
+                                                                placeholder="PIN Code"
+                                                                className={addressFormErrors.zipcode ? 'is-invalid' : ''}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                                Please provide a Pin code.
+                                        </Form.Control.Feedback>*/}
+                                  </Col>
+                                </Row>
+                              </Form.Group>
+                              <Form.Group className="">
+                                <Row>
+                                  <Col xs={12} md={6}>
+                                    <div className="form-inner-control mb-2">
+                                      <FloatingLabel
+                                        controlId="floatingSelectGrid"
+                                        label="Country"
+                                      >
+                                        <Form.Select
+                                          name="country_id"
+                                          value={addressForm.country_id}
+                                          onChange={(e) =>
+                                            this.handleAddressChange(e)
+                                          }
+                                          className={
+                                            addressFormErrors.country_id
+                                              ? "is-invalid error_input"
+                                              : ""
+                                          }
+                                        >
+                                          <option value="">select country</option>
+                                          {countryList.map((item, key) => (
+                                            <option value={item.id} key={key}>
+                                              {item.name}
+                                            </option>
+                                          ))}
+                                        </Form.Select>
+                                      </FloatingLabel>
+                                      <Form.Control.Feedback type="invalid">
+                                        Please select country.
+                                      </Form.Control.Feedback>
+                                    </div>
 
-                                {/*<Form.Label>Country : </Form.Label>
-                                                        <Form.Select
-                                                            name='country_id' value={addressForm.country_id}
-                                                            onChange={(e) => this.handleAddressChange(e)}
-                                                            className={addressFormErrors.country_id ? 'is-invalid' : ''}
-                                                        >
-                                                            <option value=''>select country</option>
-                                                            {
-                                                                countryList.map((item, key) => (
-                                                                    <option value={item.id} key={key}>{item.name}</option>
-                                                                ))
-                                                            }
-                                                        </Form.Select>
-                                                        <Form.Control.Feedback type="invalid">
-                                                            Please select country.
+                                    {/*<Form.Label>Country : </Form.Label>
+                                                            <Form.Select
+                                                                name='country_id' value={addressForm.country_id}
+                                                                onChange={(e) => this.handleAddressChange(e)}
+                                                                className={addressFormErrors.country_id ? 'is-invalid' : ''}
+                                                            >
+                                                                <option value=''>select country</option>
+                                                                {
+                                                                    countryList.map((item, key) => (
+                                                                        <option value={item.id} key={key}>{item.name}</option>
+                                                                    ))
+                                                                }
+                                                            </Form.Select>
+                                                            <Form.Control.Feedback type="invalid">
+                                                                Please select country.
+                                                            </Form.Control.Feedback>*/}
+                                  </Col>
+                                  <Col xs={12} md={6}>
+                                    <div className="form-inner-control mb-2">
+                                      <FloatingLabel
+                                        controlId="floatingSelectGrid"
+                                        label="State"
+                                      >
+                                        <Form.Select
+                                          name="state_id"
+                                          value={addressForm.state_id}
+                                          onChange={(e) =>
+                                            this.handleAddressChange(e)
+                                          }
+                                          className={
+                                            addressFormErrors.state_id
+                                              ? "is-invalid error_input"
+                                              : ""
+                                          }
+                                        >
+                                          <option value="">select state</option>
+                                          {stateList.map((item, key) => (
+                                            <option value={item.id} key={key}>
+                                              {item.name}
+                                            </option>
+                                          ))}
+                                        </Form.Select>
+                                      </FloatingLabel>
+                                      <Form.Control.Feedback type="invalid">
+                                        Please select state.
+                                      </Form.Control.Feedback>
+                                    </div>
+
+                                    {/*<Form.Label>State : </Form.Label>
+                                                            <Form.Select
+                                                                name='state_id' value={addressForm.state_id}
+                                                                onChange={(e) => this.handleAddressChange(e)}
+                                                                className={addressFormErrors.state_id ? 'is-invalid' : ''}
+                                                            >
+                                                                <option value=''>select state</option>
+                                                                {
+                                                                    stateList.map((item, key) => (
+                                                                        <option value={item.id} key={key}>{item.name}</option>
+                                                                    ))
+                                                                }
+                                                            </Form.Select>
+                                                            <Form.Control.Feedback type="invalid">
+                                                                Please select state.
+                                                            </Form.Control.Feedback>*/}
+                                  </Col>
+                                </Row>
+                              </Form.Group>
+
+                              <Form.Group className="">
+                                <Row>
+                                  <Col xs={12} md={6}>
+                                    <div className="form-inner-control mb-2">
+                                      <FloatingLabel
+                                        controlId="floatingSelectGrid"
+                                        label="District"
+                                      >
+                                        <Form.Select
+                                          name="district_id"
+                                          value={addressForm.district_id}
+                                          onChange={(e) =>
+                                            this.handleAddressChange(e)
+                                          }
+                                          className={
+                                            addressFormErrors.district_id
+                                              ? "is-invalid error_input"
+                                              : ""
+                                          }
+                                        >
+                                          <option value="">select district</option>
+                                          {districtList.map((item, key) => (
+                                            <option value={item.id} key={key}>
+                                              {item.name}
+                                            </option>
+                                          ))}
+                                        </Form.Select>
+                                      </FloatingLabel>
+                                      <Form.Control.Feedback type="invalid">
+                                        Please select district.
+                                      </Form.Control.Feedback>
+                                    </div>
+
+                                    {/*} <Form.Label>District : </Form.Label>
+                                                            <Form.Select
+                                                                name='district_id' value={addressForm.district_id}
+                                                                onChange={(e) => this.handleAddressChange(e)}
+                                                                className={addressFormErrors.district_id ? 'is-invalid' : ''}
+                                                            >
+                                                                <option value=''>select district</option>
+                                                                {
+                                                                    districtList.map((item, key) => (
+                                                                        <option value={item.id} key={key}>{item.name}</option>
+                                                                    ))
+                                                                }
+                                                            </Form.Select>
+                                                            <Form.Control.Feedback type="invalid">
+                                                                Please select district.
+                                                            </Form.Control.Feedback>*/}
+                                  </Col>
+                                  <Col xs={12} md={6}>
+                                    <div className="form-inner-control mb-2">
+                                      <InputGroup
+                                        className={
+                                          addressFormErrors.city
+                                            ? " error_input"
+                                            : ""
+                                        }
+                                      >
+                                        <InputGroup.Text id="basic-addon1">
+                                          <AiOutlineMail />
+                                        </InputGroup.Text>
+                                        <FloatingLabel
+                                          controlId="floatingInput"
+                                          label="Town/ City"
+                                          className=""
+                                        >
+                                          <Form.Control
+                                            name="city"
+                                            value={addressForm.city}
+                                            onChange={(e) =>
+                                              this.handleAddressChange(e)
+                                            }
+                                            placeholder="Town/ City"
+                                            className={
+                                              addressFormErrors.city
+                                                ? "is-invalid"
+                                                : ""
+                                            }
+                                          />
+                                        </FloatingLabel>
+                                      </InputGroup>
+                                      <Form.Control.Feedback type="invalid">
+                                        Please provide a Town/city.
+                                      </Form.Control.Feedback>
+                                    </div>
+
+                                    {/*<Form.Label>Town/City : </Form.Label>
+                                                            <Form.Control name='city' value={addressForm.city}
+                                                                onChange={(e) => this.handleAddressChange(e)}
+                                                                placeholder="Town/ City"
+                                                                className={addressFormErrors.city ? 'is-invalid' : ''}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                                Please provide a Town/city.
                                                         </Form.Control.Feedback>*/}
-                              </Col>
-                              <Col xs={12} md={6}>
-                                <div className="form-inner-control mb-2">
-                                  <FloatingLabel
-                                    controlId="floatingSelectGrid"
-                                    label="State"
-                                  >
-                                    <Form.Select
-                                      name="state_id"
-                                      value={addressForm.state_id}
-                                      onChange={(e) =>
-                                        this.handleAddressChange(e)
-                                      }
-                                      className={
-                                        addressFormErrors.state_id
-                                          ? "is-invalid error_input"
-                                          : ""
-                                      }
-                                    >
-                                      <option value="">select state</option>
-                                      {stateList.map((item, key) => (
-                                        <option value={item.id} key={key}>
-                                          {item.name}
-                                        </option>
-                                      ))}
-                                    </Form.Select>
-                                  </FloatingLabel>
-                                  <Form.Control.Feedback type="invalid">
-                                    Please select state.
-                                  </Form.Control.Feedback>
-                                </div>
+                                  </Col>
+                                </Row>
+                              </Form.Group>
 
-                                {/*<Form.Label>State : </Form.Label>
-                                                        <Form.Select
-                                                            name='state_id' value={addressForm.state_id}
-                                                            onChange={(e) => this.handleAddressChange(e)}
-                                                            className={addressFormErrors.state_id ? 'is-invalid' : ''}
-                                                        >
-                                                            <option value=''>select state</option>
-                                                            {
-                                                                stateList.map((item, key) => (
-                                                                    <option value={item.id} key={key}>{item.name}</option>
-                                                                ))
-                                                            }
-                                                        </Form.Select>
-                                                        <Form.Control.Feedback type="invalid">
-                                                            Please select state.
-                                                        </Form.Control.Feedback>*/}
-                              </Col>
-                            </Row>
-                          </Form.Group>
-
-                          <Form.Group className="">
-                            <Row>
-                              <Col xs={12} md={6}>
+                              <Form.Group className="">
                                 <div className="form-inner-control mb-2">
-                                  <FloatingLabel
-                                    controlId="floatingSelectGrid"
-                                    label="District"
-                                  >
-                                    <Form.Select
-                                      name="district_id"
-                                      value={addressForm.district_id}
-                                      onChange={(e) =>
-                                        this.handleAddressChange(e)
-                                      }
-                                      className={
-                                        addressFormErrors.district_id
-                                          ? "is-invalid error_input"
-                                          : ""
-                                      }
-                                    >
-                                      <option value="">select district</option>
-                                      {districtList.map((item, key) => (
-                                        <option value={item.id} key={key}>
-                                          {item.name}
-                                        </option>
-                                      ))}
-                                    </Form.Select>
-                                  </FloatingLabel>
-                                  <Form.Control.Feedback type="invalid">
-                                    Please select district.
-                                  </Form.Control.Feedback>
-                                </div>
-
-                                {/*} <Form.Label>District : </Form.Label>
-                                                        <Form.Select
-                                                            name='district_id' value={addressForm.district_id}
-                                                            onChange={(e) => this.handleAddressChange(e)}
-                                                            className={addressFormErrors.district_id ? 'is-invalid' : ''}
-                                                        >
-                                                            <option value=''>select district</option>
-                                                            {
-                                                                districtList.map((item, key) => (
-                                                                    <option value={item.id} key={key}>{item.name}</option>
-                                                                ))
-                                                            }
-                                                        </Form.Select>
-                                                        <Form.Control.Feedback type="invalid">
-                                                            Please select district.
-                                                        </Form.Control.Feedback>*/}
-                              </Col>
-                              <Col xs={12} md={6}>
-                                <div className="form-inner-control mb-2">
-                                  <InputGroup
-                                    className={
-                                      addressFormErrors.city
-                                        ? " error_input"
-                                        : ""
-                                    }
-                                  >
-                                    <InputGroup.Text id="basic-addon1">
-                                      <AiOutlineMail />
-                                    </InputGroup.Text>
+                                  <InputGroup className="">
                                     <FloatingLabel
                                       controlId="floatingInput"
-                                      label="Town/ City"
+                                      label="Landmark"
                                       className=""
                                     >
                                       <Form.Control
-                                        name="city"
-                                        value={addressForm.city}
+                                        name="landmark"
+                                        value={addressForm.landmark}
                                         onChange={(e) =>
                                           this.handleAddressChange(e)
                                         }
-                                        placeholder="Town/ City"
-                                        className={
-                                          addressFormErrors.city
-                                            ? "is-invalid"
-                                            : ""
-                                        }
+                                        placeholder="landmark"
                                       />
                                     </FloatingLabel>
                                   </InputGroup>
+                                </div>
+
+                                {/*} <Form.Label>Landmark : </Form.Label>
+                                                    <Form.Control name='landmark' value={addressForm.landmark}
+                                                        onChange={(e) => this.handleAddressChange(e)}
+                                                    placeholder="landmark" />*/}
+                              </Form.Group>
+                              <Form.Group className="">
+                                <div className="form-inner-control mb-2">
+                                  <FloatingLabel
+                                    controlId="floatingSelectGrid"
+                                    label="Select Type"
+                                  >
+                                    <Form.Select
+                                      name="type"
+                                      value={addressForm.type}
+                                      onChange={(e) => this.handleAddressChange(e)}
+                                      className={
+                                        addressFormErrors.type
+                                          ? "is-invalid error_input"
+                                          : ""
+                                      }
+                                    >
+                                      <option value="">Select type</option>
+                                      <option value="Office">Office</option>
+                                      <option value="Home">Home</option>
+                                      <option value="Other">Other</option>
+                                    </Form.Select>
+                                  </FloatingLabel>
                                   <Form.Control.Feedback type="invalid">
-                                    Please provide a Town/city.
+                                    Please provide a type.
                                   </Form.Control.Feedback>
                                 </div>
 
-                                {/*<Form.Label>Town/City : </Form.Label>
-                                                        <Form.Control name='city' value={addressForm.city}
-                                                            onChange={(e) => this.handleAddressChange(e)}
-                                                            placeholder="Town/ City"
-                                                            className={addressFormErrors.city ? 'is-invalid' : ''}
-                                                        />
-                                                        <Form.Control.Feedback type="invalid">
-                                                            Please provide a Town/city.
-                                                    </Form.Control.Feedback>*/}
-                              </Col>
-                            </Row>
-                          </Form.Group>
-
-                          <Form.Group className="">
-                            <div className="form-inner-control mb-2">
-                              <InputGroup className="">
-                                <FloatingLabel
-                                  controlId="floatingInput"
-                                  label="Landmark"
-                                  className=""
+                                {/* <Form.Label>Select Type : </Form.Label>
+                                                    <Form.Select name='type' value={addressForm.type}
+                                                        onChange={(e) => this.handleAddressChange(e)}
+                                                        className={addressFormErrors.type ? 'is-invalid' : ''}
+                                                    >
+                                                        <option value=''>Select type</option>
+                                                        <option value="Office">Office</option>
+                                                        <option value="Home">Home</option>
+                                                        <option value="Other">Other</option>
+                                                    </Form.Select>
+                                                    <Form.Control.Feedback type="invalid">
+                                                        Please provide a type.
+                                                </Form.Control.Feedback>*/}
+                              </Form.Group>
+                              <div className="address-btn">
+                                <Button
+                                  variant="primary"
+                                  type="submit"
+                                  className="rounded"
                                 >
-                                  <Form.Control
-                                    name="landmark"
-                                    value={addressForm.landmark}
-                                    onChange={(e) =>
-                                      this.handleAddressChange(e)
-                                    }
-                                    placeholder="landmark"
-                                  />
-                                </FloatingLabel>
-                              </InputGroup>
-                            </div>
-
-                            {/*} <Form.Label>Landmark : </Form.Label>
-                                                <Form.Control name='landmark' value={addressForm.landmark}
-                                                    onChange={(e) => this.handleAddressChange(e)}
-                                                placeholder="landmark" />*/}
-                          </Form.Group>
-                          <Form.Group className="">
-                            <div className="form-inner-control mb-2">
-                              <FloatingLabel
-                                controlId="floatingSelectGrid"
-                                label="Select Type"
-                              >
-                                <Form.Select
-                                  name="type"
-                                  value={addressForm.type}
-                                  onChange={(e) => this.handleAddressChange(e)}
-                                  className={
-                                    addressFormErrors.type
-                                      ? "is-invalid error_input"
-                                      : ""
-                                  }
+                                  SAVE & CONTINUE
+                                </Button>
+                                <Button
+                                  variant="default"
+                                  className="rounded"
+                                  type="button"
+                                  onClick={this.cancelAddressCreate}
                                 >
-                                  <option value="">Select type</option>
-                                  <option value="Office">Office</option>
-                                  <option value="Home">Home</option>
-                                  <option value="Other">Other</option>
-                                </Form.Select>
-                              </FloatingLabel>
-                              <Form.Control.Feedback type="invalid">
-                                Please provide a type.
-                              </Form.Control.Feedback>
-                            </div>
-
-                            {/* <Form.Label>Select Type : </Form.Label>
-                                                <Form.Select name='type' value={addressForm.type}
-                                                    onChange={(e) => this.handleAddressChange(e)}
-                                                    className={addressFormErrors.type ? 'is-invalid' : ''}
-                                                >
-                                                    <option value=''>Select type</option>
-                                                    <option value="Office">Office</option>
-                                                    <option value="Home">Home</option>
-                                                    <option value="Other">Other</option>
-                                                </Form.Select>
-                                                <Form.Control.Feedback type="invalid">
-                                                    Please provide a type.
-                                            </Form.Control.Feedback>*/}
-                          </Form.Group>
-                          <div className="address-btn">
-                            <Button
-                              variant="primary"
-                              type="submit"
-                              className="rounded"
-                            >
-                              SAVE & CONTINUE
-                            </Button>
-                            <Button
-                              variant="default"
-                              className="rounded"
-                              type="button"
-                              onClick={this.cancelAddressCreate}
-                            >
-                              CANCEL
-                            </Button>
-                          </div>
-                        </Form>
-                      )}
-                </div>
-              </Col>
-              <Col xs={12} md={5} className="">
-                <div className="checkout-single-wrapper padding-left">
-                  <div className="checkout-summary-area rounded">
+                                  CANCEL
+                                </Button>
+                              </div>
+                            </Form>
+                          )}
+                      </div>
+                    ) : null}
                     <div className="checkout-s-header">
                       <h3>Order Summary</h3>
                     </div>

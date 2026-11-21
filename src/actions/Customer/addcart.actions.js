@@ -54,6 +54,10 @@ export const AddToCartStockRaw = (data) => {
     return axios.post(`/customer/carts/store-stock`,data)
 }
 
+export const CartDeleteRaw = (id) => {
+    return axios.delete(`/customer/carts/delete/${id}${objectToQuery({cookie_id: GetCookieID()}, true)}`)
+}
+
 
 export const AddFetch = (id) => {
     return (dispatch) => {
@@ -73,7 +77,7 @@ export const AddFetch = (id) => {
 
 export const CartUpdate = (id, data) => { 
     return (dispatch) => {
-        axios.post(`/customer/carts/update/${id}`, data)
+        axios.post(`/customer/carts/update/${id}${objectToQuery({cookie_id: GetCookieID()}, true)}`, data)
             .then(response => {
                 dispatch({
                     type: UPDATE_ADDCART,
@@ -87,7 +91,7 @@ export const CartUpdate = (id, data) => {
 
 export const CartDelete = (id) => {  //data
     return (dispatch) => {
-        axios.delete(`/customer/carts/delete/${id}`)
+        axios.delete(`/customer/carts/delete/${id}${objectToQuery({cookie_id: GetCookieID()}, true)}`)
             .then(response => {
                 dispatch({
                     type: DELETE_ADDCART,
@@ -101,7 +105,7 @@ export const CartDelete = (id) => {  //data
 
 export const CartUpdateSizeMaterial = (id, data) => { 
     return (dispatch) => {
-        axios.post(`/customer/carts/update-size-material/${id}`, data)
+        axios.post(`/customer/carts/update-size-material/${id}${objectToQuery({cookie_id: GetCookieID()}, true)}`, data)
             .then(response => {
                 dispatch({
                     type: UPDATE_ADDCART,
