@@ -73,6 +73,29 @@
     color: #fff;
 }
 
+/* already in the cart - keep the buttons showing instead of only on hover */
+.search-button.in-cart {
+    opacity: 1;
+}
+
+/* labels stay on one line - a wrapped second line is clipped by the button */
+.search-button .btn {
+    white-space: nowrap;
+}
+
+/* already in the cart - red, so it reads differently from Add to Cart */
+.search-button .btn-primary.in-cart,
+.cart-icon.in-cart {
+    background-color: #d32f2f;
+    border-color: #d32f2f;
+    color: #fff;
+}
+.search-button .btn-primary.in-cart:hover,
+.cart-icon.in-cart:hover {
+    background-color: #b71c1c !important;
+    border-color: #b71c1c !important;
+}
+
 
 @media screen and (max-width: 400px) {
     .search-wrapper .offers-wrapper {

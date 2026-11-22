@@ -21,6 +21,7 @@ import {
   AddToCart,
   CartList,
   AddToCartRaw,
+  CartDeleteRaw,
 } from "actions/Customer/addcart.actions";
 import { WishListAdd } from "actions/Customer/wishlist.actions";
 import withRouter from "src/helpers/withRouter";
@@ -246,6 +247,10 @@ class ProductsPage extends React.Component {
     for (let i = 0; i < selected_materials.length; i++) {
       let thisM = selected_materials[i];
       let m = _.filter(thisM.purities, { is_selected: true });
+      // listing data has no is_selected purity; default to the first, as the details page does
+      if (m.length == 0 && thisM.purities && thisM.purities.length > 0) {
+        m = [thisM.purities[0]];
+      }
 
       let total_gram = convertUnitToGram(
         thisM.unit_name,
@@ -283,8 +288,7 @@ class ProductsPage extends React.Component {
     let res = await AddToCartRaw(data);
     if (res.data.success) {
       toast.success(res.data.message);
-      this.props.actions.CartList();
-      this.props.navigate("/cart");
+      this.props.actions.CartList(); // refreshes the header cart count; stay on the page
       return true;
     } else {
       toast.error(res.data.message);
@@ -292,6 +296,31 @@ class ProductsPage extends React.Component {
     }
 
     //this.props.actions.AddToCart(data);
+  };
+
+  /* a cart row names a stock piece by certificate or stock id, but rows added
+     from some screens carry only the stock id, so fall back to the product */
+  cartRowsFor = (product) =>
+    (this.props.cartItems || []).filter(
+      (item) =>
+        (product.certificate_no && item.certificate_no == product.certificate_no) ||
+        (product.stock_id && item.stock_id == product.stock_id) ||
+        (item.product_id == product.id && !item.certificate_no),
+    );
+
+  isInCart = (product) => this.cartRowsFor(product).length > 0;
+
+  /* the in-cart button toggles back: take every matching row out so it flips to Add */
+  handleRemoveFromCart = async (product) => {
+    try {
+      await Promise.all(
+        this.cartRowsFor(product).map((item) => CartDeleteRaw(item.id)),
+      );
+      toast.success("Product removed from cart");
+    } catch (e) {
+      toast.error("Could not remove the product from cart");
+    }
+    this.props.actions.CartList();
   };
 
   wishlistHandler = async (product) => {
@@ -800,15 +829,25 @@ class ProductsPage extends React.Component {
                             </div>
                           </div>
                         ) : null}
-                        <div className="search-button">
-                          <Button
-                            variant="primary"
-                            className="rounded "
-                            onClick={() => this.handleAddToCart(product)}
-                          >
-                            <i class="bi bi-cart-plus-fill me-2 h6"></i> ADD TO
-                            CART
-                          </Button>{" "}
+                        <div className={"search-button" + (this.isInCart(product) ? " in-cart" : "")}>
+                          {this.isInCart(product) ? (
+                            <Button
+                              variant="primary"
+                              className="rounded in-cart"
+                              onClick={() => this.handleRemoveFromCart(product)}
+                            >
+                              <i class="bi bi-cart-dash-fill me-2 h6"></i> REMOVE
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="primary"
+                              className="rounded "
+                              onClick={() => this.handleAddToCart(product)}
+                            >
+                              <i class="bi bi-cart-plus-fill me-2 h6"></i> ADD TO
+                              CART
+                            </Button>
+                          )}{" "}
                           <Button
                             variant="secondary"
                             className="rounded "
@@ -826,10 +865,15 @@ class ProductsPage extends React.Component {
                           <h2>{product.name}</h2>
                           <Button
                             /* variant="primary" */
-                            className="rounded mt-1 cart-icon"
-                            onClick={() => this.handleAddToCart(product)}
+                            className={"rounded mt-1 cart-icon" + (this.isInCart(product) ? " in-cart" : "")}
+                            onClick={(e) => {
+                              e.stopPropagation(); // the card behind opens the details page
+                              this.isInCart(product)
+                                ? this.handleRemoveFromCart(product)
+                                : this.handleAddToCart(product);
+                            }}
                           >
-                            <i class="bi bi-cart-plus-fill h6"></i> 
+                            <i class={"bi h6 " + (this.isInCart(product) ? "bi-cart-dash-fill" : "bi-cart-plus-fill")}></i>
                           </Button>
                         </div>
                         <div className="content-name">
@@ -915,6 +959,7 @@ class ProductsPage extends React.Component {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  cartItems: state.customer.cart.items,
   //products: state.customer.product.items,
   categories: state.customer.categories.items,
   //total: state.customer.product.total,
