@@ -82,11 +82,6 @@ class Signup extends React.Component {
 
   onSubmit = (event) => {
     event.preventDefault();
-    fetch("http://localhost:8089/signup/customer")
-      .then((data) => data.json())
-      .then((data) => {
-        console.log(data);
-      });
     if (this.formValidate()) {
       this.props.actions.signup(this.state.formValaues);
     }
@@ -101,6 +96,15 @@ class Signup extends React.Component {
       hasErr = true;
     } else {
       formErrors.name = null;
+    }
+    if (!formValaues.email) {
+      formErrors.email = "Email is required.";
+      hasErr = true;
+    } else if (!/^\S+@\S+\.\S+$/.test(formValaues.email.trim())) {
+      formErrors.email = "Please enter a valid email.";
+      hasErr = true;
+    } else {
+      formErrors.email = null;
     }
     if (!formValaues.mobile) {
       formErrors.mobile = "Mobile # is required.";

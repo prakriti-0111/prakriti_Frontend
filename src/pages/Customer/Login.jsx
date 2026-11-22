@@ -110,7 +110,7 @@ class Login extends React.Component {
     let formErrors = this.state.formErrors;
     let hasErr = false;
     if (!formValaues.mobile) {
-      formErrors.mobile = "Mobile # is required.";
+      formErrors.mobile = "Mobile / Email is required.";
       hasErr = true;
     } else {
       formErrors.mobile = null;
@@ -256,7 +256,7 @@ Note -: In our place jewellery is made by applying gold, silver and diamond in P
                       value={formValaues.mobile}
                       type="text"
                       className="rounded"
-                      placeholder="Enter Mobile Number"
+                      placeholder="Enter Mobile Number or Email"
                       required
                     />
                     <span type="invalid" style={{ color: "red" }}>

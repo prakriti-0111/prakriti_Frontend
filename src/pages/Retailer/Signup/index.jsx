@@ -40,6 +40,8 @@ const Signup = (props) => {
              case 'email':
                 if (!value) {
                     return "'Please input email!'"
+                } else if (!/^\S+@\S+\.\S+$/.test(value.trim())) {
+                    return "'Please input a valid email!'"
                 } else {
                     return '';
                 }
@@ -71,7 +73,9 @@ const Signup = (props) => {
                 })
             setSuccessUser('')
         }else{
-            setSuccessUser(auth.loginError)
+            // signup failures land in signupErr — loginError stays empty here,
+            // which is why server-side errors (duplicate email/mobile) never showed.
+            setSuccessUser(auth.signupErr || auth.loginError)
         }
     },[auth])
 
