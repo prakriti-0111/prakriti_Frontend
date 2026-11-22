@@ -319,6 +319,13 @@ class CartPage extends React.Component {
     return val;
   };
 
+  // Purity shown in the select: the saved one, else the material's first purity
+  // (rows from the listing quick-add can have a null purity_id). Shared by the
+  // desktop and mobile layouts so they show the same value.
+  getDisplayPurity = (cartItem, material) =>
+    this.getSelectedPurity(cartItem, material.material_id) ||
+    (material.purities.length > 0 ? material.purities[0].id : "");
+
   applyPromocode = () => {
     if (isEmpty(this.state.code)) {
       this.setState({
@@ -658,15 +665,10 @@ class CartPage extends React.Component {
                                                 :
                                               </Form.Label>
                                               <Form.Select
-                                                value={
-                                                  this.getSelectedPurity(
-                                                    val,
-                                                    item.material_id,
-                                                  ) ||
-                                                  (item.purities.length > 0
-                                                    ? item.purities[0].id
-                                                    : "")
-                                                }
+                                                value={this.getDisplayPurity(
+                                                  val,
+                                                  item,
+                                                )}
                                                 disabled={isStock}
                                                 onChange={(e) =>
                                                   this.handlPurityChange(
@@ -1164,9 +1166,9 @@ class CartPage extends React.Component {
                                   </Col>
                                   <Col xs={4} md={4}>
                                     <Form.Select
-                                      value={this.getSelectedPurity(
+                                      value={this.getDisplayPurity(
                                         val,
-                                        item.material_id,
+                                        item,
                                       )}
                                       disabled={isStock}
                                       onChange={(e) =>
@@ -1177,18 +1179,13 @@ class CartPage extends React.Component {
                                         )
                                       }
                                       className={
-                                        this.getSelectedPurity(
-                                          val,
-                                          item.material_id,
-                                        ) == ""
+                                        this.getDisplayPurity(val, item) == ""
                                           ? "error_input"
                                           : ""
                                       }
                                     >
-                                      {this.getSelectedPurity(
-                                        val,
-                                        item.material_id,
-                                      ) == "" ? (
+                                      {this.getDisplayPurity(val, item) ==
+                                      "" ? (
                                         <option value=""></option>
                                       ) : null}
                                       {item.purities.map((i, k) => (
